@@ -1,0 +1,21 @@
+[submodule "open-access-uk-site"]
+	path = open-access-uk-site
+	url = https://github.com/tarunag10/open-access-uk-site.git
+[submodule "letter-generator"]
+	path = letter-generator
+	url = https://github.com/tarunag10/letter-generator.git
+[submodule "accessible-forms"]
+	path = accessible-forms
+	url = https://github.com/tarunag10/accessible-forms.git
+[submodule "public-service-directory"]
+	path = public-service-directory
+	url = https://github.com/tarunag10/public-service-directory.git
+[submodule "legal-templates"]
+	path = legal-templates
+	url = https://github.com/tarunag10/legal-templates.git
+[submodule "design-system"]
+	path = design-system
+	url = https://github.com/tarunag10/design-system.git
+[submodule "good-first-issues"]
+	path = good-first-issues
+	url = https://github.com/tarunag10/good-first-issues.git
