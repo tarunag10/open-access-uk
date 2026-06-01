@@ -16,6 +16,3 @@
 [submodule "design-system"]
 	path = design-system
 	url = https://github.com/tarunag10/design-system.git
-[submodule "good-first-issues"]
-	path = good-first-issues
-	url = https://github.com/tarunag10/good-first-issues.git

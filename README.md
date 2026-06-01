@@ -1,18 +1,12 @@
 # Open Access UK
 
-Open Access UK is a seven-repo starter suite for open-source tools that make public services fairer, easier to navigate, and easier to improve in public.
+Open Access UK is a parent suite for open-source tools that make public services fairer, easier to navigate, and easier to improve in public.
 
-The suite is deliberately static and browser-only. Demos should work by opening `index.html`, keep user input local to the browser, avoid analytics and hidden data collection, and stay honest about their limits. These projects provide information, drafting support, source-backed patterns, and maintainer tooling; they are not legal advice.
+The suite is deliberately static and browser-only. Public demos should work by opening `index.html`, keep user input local to the browser, avoid analytics and hidden data collection, and stay honest about their limits. These projects provide information, drafting support, and source-backed patterns; they are not legal advice.
 
 Open [open-access-uk-site/index.html](./open-access-uk-site/index.html) to browse the organisation-style umbrella site.
 
-## Slice 2 dashboard
-
-The umbrella site now works as a publishable open-source front door for all seven repos. Each repo card shows what is usable now, the likely next feature, persistence/export status, local demo/README links, and the current GitHub repository.
-
-The site also includes a browser-only role selector for law, design, accessibility, civic tech, and maintainer contributors. It filters the local repo cards in place without a backend, analytics, or stored user data. A suite roadmap groups all seven repos into Now, Next, and Later work so contributors can see release priorities before choosing a repo.
-
-## Repositories
+## Public Repositories
 
 | Repo | GitHub | Local path | Purpose | Demo | Accessibility |
 | --- | --- | --- | --- | --- | --- |
@@ -22,7 +16,19 @@ The site also includes a browser-only role selector for law, design, accessibili
 | [Public Service Directory](./public-service-directory/README.md) | https://github.com/tarunag10/public-service-directory.git | `./public-service-directory` | Sourceable escalation routes and support directory patterns for public-service issues. | [Open demo](./public-service-directory/index.html) | [Statement](./public-service-directory/ACCESSIBILITY.md) |
 | [Legal Templates UK](./legal-templates/README.md) | https://github.com/tarunag10/legal-templates.git | `./legal-templates` | Plain-English civic and legal letter templates for drafting support and community review. | [Open demo](./legal-templates/index.html) | [Statement](./legal-templates/ACCESSIBILITY.md) |
 | [Open Access Design System](./design-system/README.md) | https://github.com/tarunag10/design-system.git | `./design-system` | Accessible tokens, components, copy patterns, and high-contrast public-service UI foundations. | [Open demo](./design-system/index.html) | [Statement](./design-system/ACCESSIBILITY.md) |
-| [Open Source Maintainer Helper](./good-first-issues/README.md) | https://github.com/tarunag10/good-first-issues.git | `./good-first-issues` | Repository readiness checks and contributor-friendly issue ideas for docs, accessibility, security, and starter governance. | [Open demo](./good-first-issues/index.html) | [Statement](./good-first-issues/ACCESSIBILITY.md) |
+
+## Parent Contributor Tooling
+
+The maintainer helper now lives inside this parent repo at [contributor-tools/maintainer-helper](./contributor-tools/maintainer-helper/README.md). It is useful for contributors and maintainers, but it is not part of the public product toolkit.
+
+Run it locally when improving the suite:
+
+```sh
+cd contributor-tools/maintainer-helper
+npm test
+npm run build
+node --check src/app.js
+```
 
 ## Suite metadata
 
@@ -36,7 +42,7 @@ Use this suite-level metadata in place of a separate `REPOS.md` file for slice 2
 | `./public-service-directory` | `npm test && npm run build && node --check src/app.js` | Run checks, commit directory-data changes, push to `https://github.com/tarunag10/public-service-directory.git`, then publish the static demo. |
 | `./legal-templates` | `npm test && npm run build && node --check src/app.js` | Run checks, commit template changes, push to `https://github.com/tarunag10/legal-templates.git`, then publish the static demo. |
 | `./design-system` | `npm test && npm run build && node --check src/app.js` | Run checks, commit token/component changes, push to `https://github.com/tarunag10/design-system.git`, then publish the static demo. |
-| `./good-first-issues` | `npm test && npm run build && node --check src/app.js` | Run checks, commit maintainer-helper changes, push to `https://github.com/tarunag10/good-first-issues.git`, then publish the static demo. |
+| `./contributor-tools/maintainer-helper` | `npm test && npm run build && node --check src/app.js` | Run checks and commit changes in this parent repo. This is contributor infrastructure, not a separate public mini-app deployment. |
 
 Run the full-suite verifier from this directory before publishing a coordinated release:
 
@@ -50,7 +56,7 @@ Publish workflow for a coordinated suite release:
 2. Review each nested repo with `git -C <repo> status --short`.
 3. Commit and push each repo independently to its GitHub remote.
 4. Refresh static hosting for changed demos and check the umbrella site links.
-5. Tag or note the suite release in the umbrella site README once all seven repos are green.
+5. Tag or note the suite release in the umbrella site README once all public repos and parent contributor tooling are green.
 
 ## Shared principles
 
@@ -58,15 +64,15 @@ Publish workflow for a coordinated suite release:
 - Privacy-first by default: avoid collecting personal data, accounts, analytics, or telemetry unless a future repo has a separate public privacy review.
 - Accessibility-first by default: target WCAG 2.2 AA with semantic HTML, visible focus styles, labelled controls, high contrast colours, responsive layouts, and keyboard testing.
 - Plain English by default: explain public-service steps clearly and avoid pretending a template or tool can decide legal rights, deadlines, or outcomes.
-- Open contribution by default: every repo includes a README, `CONTRIBUTING.md`, `ACCESSIBILITY.md`, licence, test/build scripts, and a good-first-issue template.
+- Open contribution by default: every public repo includes a README, `CONTRIBUTING.md`, `ACCESSIBILITY.md`, licence, and test/build scripts. Parent contributor tooling supports issue-template and good-first-issue hygiene.
 
 ## Contribution paths
 
 - Law and advice-sector contributors can review wording, source notes, template limits, and safety language in `legal-templates` and `letter-generator`.
 - Service designers can improve public-service journeys, form structure, plain-English labels, and reusable patterns in `accessible-forms` and `design-system`.
-- Accessibility contributors can test keyboard flows, screen-reader names, focus order, colour contrast, and responsive behaviour across all seven repos.
+- Accessibility contributors can test keyboard flows, screen-reader names, focus order, colour contrast, and responsive behaviour across all public tools.
 - Civic technologists can improve static JavaScript helpers, directory data, source-backed routing, and no-backend demos without adding personal-data collection.
-- Maintainers can improve issue templates, onboarding, project readiness checks, contribution docs, and repo health through `good-first-issues`.
+- Maintainers can improve issue templates, onboarding, project readiness checks, contribution docs, and repo health through `contributor-tools/maintainer-helper`.
 
 ## Local checks
 

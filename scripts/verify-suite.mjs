@@ -1,12 +1,18 @@
-import { readdirSync, existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const repos = readdirSync(root)
-  .filter((entry) => existsSync(join(root, entry, 'package.json')))
-  .sort();
+const repos = [
+  'open-access-uk-site',
+  'letter-generator',
+  'accessible-forms',
+  'public-service-directory',
+  'legal-templates',
+  'design-system',
+  'contributor-tools/maintainer-helper'
+].filter((entry) => existsSync(join(root, entry, 'package.json')));
 
 const summaries = [];
 
@@ -30,7 +36,7 @@ for (const repo of repos) {
   summaries.push({
     repo,
     packageName: packageJson.name || repo,
-    remote: remote.status === 0 ? remote.stdout.trim() : 'No origin remote'
+    remote: remote.status === 0 ? remote.stdout.trim() : 'Tracked in parent repo'
   });
 }
 
@@ -38,4 +44,4 @@ console.log('\nOpen Access UK suite summary');
 for (const summary of summaries) {
   console.log(`- ${summary.repo}: ${summary.packageName} | ${summary.remote}`);
 }
-console.log(`Verified ${repos.length} Open Access UK repos.`);
+console.log(`Verified ${repos.length} Open Access UK suite entries.`);

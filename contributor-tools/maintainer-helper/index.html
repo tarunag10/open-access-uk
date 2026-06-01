@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Source Maintainer Helper</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">Open Access UK</a>
+    <nav aria-label="Primary"><a href="#tool">Tool</a><a href="#guidance">Guidance</a><a href="#contribute">Contribute</a></nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Open Source Maintainer Helper</h1>
+        <p>Generate contributor-friendly project chores: README gaps, security policy, accessibility notes, issue templates, and good-first-issue ideas.</p>
+        <div class="hero-actions">
+          <a class="button" href="#tool">Create onboarding pack</a>
+          <a class="button secondary" href="https://github.com/tarunag10/open-access-uk/tree/main/contributor-tools/maintainer-helper">View parent repo</a>
+        </div>
+      </div>
+      <div class="product-panel" aria-label="Maintainer helper product preview">
+        <div class="mini-window">
+          <span>Repository readiness</span>
+          <strong>README · SECURITY · accessibility · roadmap</strong>
+          <i></i><i></i><i></i>
+          <b>Contributor pack ready</b>
+        </div>
+      </div>
+    </section>
+    <section class="gtm-strip" aria-label="Maintainer helper feature highlights">
+      <article><span>01</span><h2>Audit signals</h2><p>Paste repo files, labels, or README clues to get a maintainer readiness score.</p></article>
+      <article><span>02</span><h2>Create issues</h2><p>Generate grouped good-first-issue markdown with labels and acceptance criteria.</p></article>
+      <article><span>03</span><h2>Onboard contributors</h2><p>Turn gaps into a beginner-friendly sequence and copyable onboarding pack.</p></article>
+    </section>
+    <section class="use-cases" aria-label="Maintainer helper use cases">
+      <h2>Make open-source projects easier to join.</h2>
+      <div class="cards">
+        <article class="card"><h3>Civic tech maintainers</h3><p>Prepare static demos, governance docs, accessibility notes, and starter labels.</p></article>
+        <article class="card"><h3>New contributors</h3><p>Give beginners clear context, expected files, and verification commands.</p></article>
+        <article class="card"><h3>Project health</h3><p>Save file-list examples locally and reuse presets for common repo states.</p></article>
+      </div>
+    </section>
+    <section id="tool" class="grid"><div class="panel"><label for="files">Repository files, labels, or README clues</label><textarea id="files" aria-describedby="file-help">README.md
+LICENSE
+CONTRIBUTING.md</textarea><p id="file-help">Paste one file, label, or visible project signal per line. Everything runs in this page.</p><button id="sample" type="button">Load sample signals</button><div id="presets" class="preset-list"></div><div id="saved-examples" class="preset-list" aria-live="polite"></div></div><div id="output" class="preview" aria-live="polite"></div></section>
+    <section id="guidance" class="footer-band"><h2>Current open-source guidance</h2><div id="current-guidance" class="cards" aria-label="Current open-source guidance sources"></div></section>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
