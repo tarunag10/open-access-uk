@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security or privacy report
+    url: https://github.com/tarunag10/open-access-uk/security/policy
+    about: Report security, privacy, XSS, or unsafe generated-content issues privately.
+  - name: Support and limits
+    url: https://github.com/tarunag10/open-access-uk/blob/main/SUPPORT.md
+    about: Read support routes and the no-legal-advice boundary.

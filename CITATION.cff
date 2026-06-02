@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use Open Access UK, please cite the project."
+title: "Open Access UK"
+type: software
+authors:
+  - family-names: "Agarwal"
+    given-names: "Tarun"
+repository-code: "https://github.com/tarunag10/open-access-uk"
+url: "https://openaccessuk.vercel.app/"
+license: "MIT"
+date-released: "2026-06-02"

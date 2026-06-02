@@ -1,0 +1,16 @@
+# Notice
+
+Open Access UK is an open-source civic toolkit. Code in the root suite is
+licensed under the MIT License unless a file or subrepo states otherwise.
+
+Public-service wording, legal-template text, source notes, and documentation are
+provided for general information and drafting support. They are not legal advice,
+do not create a solicitor-client relationship, and should not be treated as a
+complete statement of law, policy, or procedure.
+
+Some subrepos may contain their own licence and notice files. Check the relevant
+subrepo before reusing code, copy, templates, images, or generated assets.
+
+Third-party references are used for source provenance and attribution. Official
+sources remain owned by their respective publishers. Verify current source terms
+before copying substantial third-party material.

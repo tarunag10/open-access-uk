@@ -1,0 +1,41 @@
+name: Accessibility report
+description: Report an accessibility barrier or testing result.
+title: "[Accessibility]: "
+labels: ["accessibility", "needs triage"]
+body:
+  - type: textarea
+    id: barrier
+    attributes:
+      label: Barrier
+      description: What made the tool difficult or impossible to use?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - open-access-uk-site
+        - letter-generator
+        - accessible-forms
+        - public-service-directory
+        - legal-templates
+        - design-system
+        - maintainer-helper
+        - root suite
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, device, viewport, assistive technology, keyboard-only, screen reader, or contrast settings.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected accessible behaviour
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Screenshots, screen-reader notes, axe output, keyboard steps, or affected markup.

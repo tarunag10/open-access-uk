@@ -6,6 +6,18 @@ The suite is deliberately static and browser-only. Public demos should work by o
 
 Open [open-access-uk-site/index.html](./open-access-uk-site/index.html) to browse the organisation-style umbrella site.
 
+## Governance And Trust
+
+- [Contributing](./CONTRIBUTING.md)
+- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- [Security Policy](./SECURITY.md)
+- [Support](./SUPPORT.md)
+- [Maintainers](./MAINTAINERS.md)
+- [Governance](./GOVERNANCE.md)
+- [Roadmap](./ROADMAP.md)
+- [Changelog](./CHANGELOG.md)
+- [Notice](./NOTICE)
+
 ## Public Repositories
 
 | Repo | GitHub | Local path | Purpose | Demo | Accessibility |

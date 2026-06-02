@@ -1,0 +1,41 @@
+name: Content source update
+description: Suggest a source correction or new source-backed content.
+title: "[Source]: "
+labels: ["content", "source review", "needs triage"]
+body:
+  - type: textarea
+    id: content
+    attributes:
+      label: Content affected
+      description: Which page, template, route, or guidance text is affected?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source URL
+      description: Prefer official or specialist public-interest sources.
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      options:
+        - low
+        - medium
+        - high
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Suggested change
+      description: What should be added, corrected, removed, or reviewed?
+    validations:
+      required: true
+  - type: input
+    id: checked
+    attributes:
+      label: Date checked
+      placeholder: "2026-06-02"

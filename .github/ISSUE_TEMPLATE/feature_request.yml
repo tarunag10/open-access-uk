@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest a focused improvement.
+title: "[Feature]: "
+labels: ["enhancement", "needs triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user need or contributor need does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the smallest useful version.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - open-access-uk-site
+        - letter-generator
+        - accessible-forms
+        - public-service-directory
+        - legal-templates
+        - design-system
+        - maintainer-helper
+        - root suite
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: This can remain static and browser-only.
+        - label: This does not require collecting personal data.
+        - label: This does not require analytics or tracking.
+        - label: This may affect high-risk legal or public-service content.
