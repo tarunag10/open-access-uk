@@ -3,6 +3,7 @@ import {
   buildCategoryIssueMarkdown,
   buildContributorOnboardingPack,
   buildIssueMarkdown,
+  buildMaintainerActionPlan,
   buildMaintainerLaunchPack,
   buildMaintainerRoadmap,
   currentGuidance,
@@ -188,6 +189,7 @@ function update() {
     projectName: 'Open Access UK repo'
   });
   const launchPack = buildMaintainerLaunchPack(files, { projectName: 'Open Access UK repo' });
+  const actionPlan = buildMaintainerActionPlan(files, { projectName: 'Open Access UK repo' });
   output.innerHTML = `<h2>Readiness score: ${analysis.score}%</h2>
     <p>${analysis.present.length} of ${analysis.total} maintainer signals found.</p>
     <h3>Found</h3>
@@ -202,6 +204,7 @@ function update() {
       <textarea id="onboarding-pack" readonly>${onboardingPack.markdown}</textarea>
       <button id="copy-onboarding-pack" type="button" class="secondary">Copy onboarding pack</button>
       <button id="copy-launch-pack" type="button" class="secondary">Copy launch pack</button>
+      <button id="copy-action-plan" type="button" class="secondary">Copy action plan</button>
     </article>
     <h3>Good-first-issue suggestions</h3>
     <div class="cards">${renderIssues(issues)}</div>`;
@@ -245,6 +248,10 @@ function update() {
 
   document.querySelector('#copy-launch-pack').addEventListener('click', async () => {
     await copyText(launchPack.markdown);
+  });
+
+  document.querySelector('#copy-action-plan').addEventListener('click', async () => {
+    await copyText(actionPlan.markdown);
   });
 }
 

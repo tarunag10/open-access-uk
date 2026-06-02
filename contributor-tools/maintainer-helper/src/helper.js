@@ -427,3 +427,48 @@ export function buildMaintainerLaunchPack(files, options = {}) {
     ].join('\n')
   };
 }
+
+export function buildMaintainerActionPlan(files, options = {}) {
+  const projectName =
+    String(options.projectName || 'Open-source project').trim() || 'Open-source project';
+  const roadmap = buildMaintainerRoadmap(files);
+  const todoItems = roadmap
+    .flatMap((group) => group.items.map((item) => ({ ...item, category: group.category })))
+    .filter((item) => item.status === 'todo');
+
+  const priorityOrder = ['Security', 'Accessibility', 'Community', 'Documentation', 'Demo quality'];
+  const rankedItems = todoItems.sort((a, b) => {
+    const categoryDiff = priorityOrder.indexOf(a.category) - priorityOrder.indexOf(b.category);
+    return categoryDiff || a.title.localeCompare(b.title);
+  });
+  const weekLimit = Number(options.limit || 6);
+  const weekItems = rankedItems.slice(0, weekLimit);
+  const analysis = analyzeRepoReadiness(files);
+
+  return {
+    projectName,
+    readinessScore: analysis.score,
+    actionCount: weekItems.length,
+    nextActions: weekItems,
+    markdown: [
+      `# ${projectName} maintainer action plan`,
+      '',
+      `Readiness score: ${analysis.score}%`,
+      '',
+      '## This week',
+      ...(weekItems.length
+        ? weekItems.map(
+            (item, index) =>
+              `${index + 1}. ${item.title}\n   Category: ${item.category}\n   Labels: ${item.labels.join(', ')}\n   Verify: ${item.acceptanceCriteria.join('; ')}`
+          )
+        : ['1. Keep maintainer files current and verify the demo still works.']),
+      '',
+      '## Review rhythm',
+      '- [ ] Re-run this helper after each merged maintainer change.',
+      '- [ ] Keep beginner tasks small enough for one focused pull request.',
+      '- [ ] Archive or close stale starter issues that no longer match the repo.',
+      '',
+      'Generated locally in the browser. Nothing was sent to a server.'
+    ].join('\n')
+  };
+}

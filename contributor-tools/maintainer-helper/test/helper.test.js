@@ -5,6 +5,7 @@ import {
   buildCategoryIssueMarkdown,
   buildContributorOnboardingPack,
   buildIssueMarkdown,
+  buildMaintainerActionPlan,
   buildMaintainerLaunchPack,
   buildMaintainerRoadmap,
   currentGuidance,
@@ -161,6 +162,21 @@ test('builds maintainer launch packs with labels and onboarding content', () => 
   assert.match(pack.markdown, /## Suggested labels/);
   assert.match(pack.markdown, /## Contributor onboarding/);
   assert.match(pack.markdown, /Civic Repairs contributor onboarding pack/);
+});
+
+test('builds maintainer action plans from readiness gaps', () => {
+  const plan = buildMaintainerActionPlan(['README.md', 'LICENSE'], {
+    projectName: 'Civic Repairs',
+    limit: 4
+  });
+
+  assert.equal(plan.projectName, 'Civic Repairs');
+  assert.equal(plan.actionCount, 4);
+  assert.match(plan.markdown, /^# Civic Repairs maintainer action plan/m);
+  assert.match(plan.markdown, /## This week/);
+  assert.match(plan.markdown, /Category: Security/);
+  assert.match(plan.markdown, /Generated locally in the browser/);
+  assert.ok(plan.nextActions[0].labels.includes('good first issue'));
 });
 
 test('exposes current GitHub maintainer guidance sources', () => {
