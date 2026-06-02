@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   analyzeRepoReadiness,
+  analyzeSourceFreshness,
   buildCategoryIssueMarkdown,
   buildContributorOnboardingPack,
   buildIssueMarkdown,
@@ -177,6 +178,39 @@ test('builds maintainer action plans from readiness gaps', () => {
   assert.match(plan.markdown, /Category: Security/);
   assert.match(plan.markdown, /Generated locally in the browser/);
   assert.ok(plan.nextActions[0].labels.includes('good first issue'));
+});
+
+test('analyses source freshness for maintainer review queues', () => {
+  const dashboard = analyzeSourceFreshness(
+    [
+      {
+        id: 'high-overdue',
+        name: 'High overdue source',
+        risk_level: 'high',
+        review_due: '2026-05-01'
+      },
+      {
+        id: 'medium-soon',
+        name: 'Medium due source',
+        risk_level: 'medium',
+        review_due: '2026-06-15'
+      },
+      {
+        id: 'low-current',
+        name: 'Low current source',
+        risk_level: 'low',
+        review_due: '2026-12-01'
+      }
+    ],
+    { today: '2026-06-02', soonDays: 30 }
+  );
+
+  assert.equal(dashboard.summary.total, 3);
+  assert.equal(dashboard.summary.highRisk, 1);
+  assert.equal(dashboard.summary.overdue, 1);
+  assert.equal(dashboard.summary.dueSoon, 1);
+  assert.equal(dashboard.items[0].id, 'high-overdue');
+  assert.equal(dashboard.items[0].status, 'overdue');
 });
 
 test('exposes current GitHub maintainer guidance sources', () => {

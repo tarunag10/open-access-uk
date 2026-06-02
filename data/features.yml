@@ -1,0 +1,80 @@
+- id: product-map
+  name: Product map and user journeys
+  tool: open-access-uk-site
+  status: shipped
+  priority: high
+  risk_level: low
+  source_needs: internal
+  mvp: Personas, user journeys, tool flows, and backlog themes.
+- id: feature-registry
+  name: Feature registry
+  tool: maintainer-helper
+  status: shipped
+  priority: high
+  risk_level: low
+  source_needs: internal
+  mvp: Validated feature records with priority, risk, source needs, and MVP notes.
+- id: metadata-driven-tool-cards
+  name: Metadata-driven homepage tool cards
+  tool: open-access-uk-site
+  status: shipped
+  priority: high
+  risk_level: medium
+  source_needs: repository-metadata
+  mvp: Generated static repository module used to keep homepage tool cards aligned.
+- id: source-safety-page
+  name: Public source and safety section
+  tool: open-access-uk-site
+  status: shipped
+  priority: high
+  risk_level: medium
+  source_needs: sources
+  mvp: Visible not-legal-advice, source review, and stale-content reporting language.
+- id: source-freshness-dashboard
+  name: Source freshness dashboard
+  tool: maintainer-helper
+  status: shipped
+  priority: high
+  risk_level: medium
+  source_needs: sources
+  mvp: Local dashboard for high-risk and overdue source review records.
+- id: privacy-centre
+  name: Privacy centre pattern
+  tool: open-access-uk-site
+  status: shipped
+  priority: high
+  risk_level: low
+  source_needs: internal
+  mvp: Shared local-storage registry and clear-known-storage helper.
+- id: shared-export-helper
+  name: Shared export helper
+  tool: shared
+  status: shipped
+  priority: medium
+  risk_level: low
+  source_needs: internal
+  mvp: Shared helpers for Markdown, text downloads, and print documents.
+- id: deadline-rules-engine
+  name: Shared deadline rules engine
+  tool: shared
+  status: shipped
+  priority: high
+  risk_level: high
+  source_needs: sources
+  mvp: Static deadline rule data, validator, and date-calculation helper.
+- id: foi-request-builder
+  name: FOI request builder
+  tool: letter-generator
+  status: planned
+  priority: high
+  risk_level: high
+  source_needs: govuk-foi-request
+  mvp: FOI form, generated letter, copy/print/export, source note.
+- id: sar-request-builder
+  name: SAR request builder
+  tool: letter-generator
+  status: planned
+  priority: high
+  risk_level: high
+  source_needs: ico-subject-access-request
+  mvp: SAR form, generated request, response deadline, source note.

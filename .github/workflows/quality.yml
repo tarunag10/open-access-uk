@@ -16,5 +16,8 @@ jobs:
       - run: npm install
       - run: npm run validate:sources
       - run: npm run validate:repositories
+      - run: npm run validate:features
+      - run: npm run validate:deadlines
+      - run: npm run validate:shared
       - run: npm run quality:static
       - run: npm run format:check

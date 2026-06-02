@@ -1,0 +1,35 @@
+- id: foi-response
+  name: Freedom of Information response
+  source_id: govuk-foi-request
+  days: 20
+  day_type: working
+  risk_level: high
+  explanation: Public authorities normally have 20 working days to respond to an FOI request, subject to statutory rules and exceptions.
+- id: sar-response
+  name: Subject access request response
+  source_id: ico-subject-access-request
+  months: 1
+  day_type: calendar
+  risk_level: high
+  explanation: Organisations should usually respond to a subject access request within one month unless an extension lawfully applies.
+- id: financial-ombudsman-firm-response
+  name: Financial firm complaint response
+  source_id: financial-ombudsman-complaint-checker
+  weeks: 8
+  day_type: calendar
+  risk_level: high
+  explanation: Many financial firms have up to 8 weeks to provide a final response before the ombudsman route is usually available.
+- id: rail-ombudsman-provider-window
+  name: Rail provider complaint window
+  source_id: rail-ombudsman-faq
+  days: 40
+  day_type: working
+  risk_level: high
+  explanation: The Rail Ombudsman route may become available after deadlock or when the provider has not resolved the complaint within 40 working days.
+- id: oia-complaint-limit
+  name: OIA complaint limit
+  source_id: oia-time-limits
+  months: 12
+  day_type: calendar
+  risk_level: high
+  explanation: The OIA says students normally have a maximum of 12 months from the Completion of Procedures Letter date to complain.

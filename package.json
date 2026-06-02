@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "verify": "node scripts/verify-suite.mjs",
+    "sync:metadata": "node scripts/sync-static-metadata.mjs",
+    "validate:features": "node scripts/validate-features.mjs",
+    "validate:deadlines": "node scripts/validate-deadline-rules.mjs",
+    "validate:shared": "node --test shared/privacy/local-storage.test.mjs shared/exports/index.test.mjs shared/deadlines/index.test.mjs",
     "validate:sources": "node scripts/validate-sources.mjs",
     "validate:repositories": "node scripts/validate-repositories.mjs",
     "quality:static": "node scripts/static-quality.mjs",

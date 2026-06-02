@@ -2,6 +2,8 @@
 node_modules
 **/node_modules
 **/.vercel
+contributor-tools/maintainer-helper/src/source-records.js
+open-access-uk-site/src/repositories.js
 accessible-forms/
 design-system/
 legal-templates/

@@ -20,6 +20,7 @@ Open [open-access-uk-site/index.html](./open-access-uk-site/index.html) to brows
 - [Changelog](./CHANGELOG.md)
 - [Notice](./NOTICE)
 - [Architecture](./docs/architecture.md)
+- [Product map](./docs/product-map.md)
 - [Repository map](./docs/repo-map.md)
 - [Data provenance](./docs/data-provenance.md)
 - [Accessibility testing](./docs/accessibility-testing.md)
@@ -75,6 +76,9 @@ Validate source and repository metadata:
 ```sh
 node scripts/validate-sources.mjs
 node scripts/validate-repositories.mjs
+npm run validate:features
+npm run validate:deadlines
+npm run validate:shared
 npm run quality:static
 npm run lighthouse
 ```

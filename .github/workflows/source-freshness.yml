@@ -19,3 +19,5 @@ jobs:
           node-version: 20
       - run: node scripts/validate-sources.mjs
       - run: node scripts/validate-repositories.mjs
+      - run: node scripts/validate-features.mjs
+      - run: node scripts/validate-deadline-rules.mjs

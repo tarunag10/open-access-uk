@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open Access UK deadline rule",
+  "type": "object",
+  "required": ["id", "name", "source_id", "day_type", "risk_level", "explanation"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "source_id": { "type": "string" },
+    "days": { "type": "number" },
+    "weeks": { "type": "number" },
+    "months": { "type": "number" },
+    "day_type": { "enum": ["calendar", "working"] },
+    "risk_level": { "enum": ["low", "medium", "high"] },
+    "explanation": { "type": "string" }
+  }
+}

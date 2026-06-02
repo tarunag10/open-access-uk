@@ -472,3 +472,50 @@ export function buildMaintainerActionPlan(files, options = {}) {
     ].join('\n')
   };
 }
+
+function daysBetween(a, b) {
+  const start = new Date(`${a}T00:00:00Z`);
+  const end = new Date(`${b}T00:00:00Z`);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+  return Math.round((end - start) / 86400000);
+}
+
+export function analyzeSourceFreshness(records = [], options = {}) {
+  const today = options.today || new Date().toISOString().slice(0, 10);
+  const soonDays = Number(options.soonDays || 30);
+  const items = records.map((record) => {
+    const daysUntilReview = daysBetween(today, record.review_due);
+    const status =
+      daysUntilReview === null
+        ? 'unknown'
+        : daysUntilReview < 0
+          ? 'overdue'
+          : daysUntilReview <= soonDays
+            ? 'due-soon'
+            : 'current';
+    return {
+      ...record,
+      daysUntilReview,
+      status,
+      highRisk: record.risk_level === 'high'
+    };
+  });
+
+  const summary = {
+    total: items.length,
+    highRisk: items.filter((item) => item.highRisk).length,
+    overdue: items.filter((item) => item.status === 'overdue').length,
+    dueSoon: items.filter((item) => item.status === 'due-soon').length,
+    current: items.filter((item) => item.status === 'current').length
+  };
+
+  return {
+    today,
+    summary,
+    items: items.sort((a, b) => {
+      const risk = Number(b.highRisk) - Number(a.highRisk);
+      if (risk) return risk;
+      return (a.daysUntilReview ?? 9999) - (b.daysUntilReview ?? 9999);
+    })
+  };
+}

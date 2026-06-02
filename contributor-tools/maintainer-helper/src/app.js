@@ -1,5 +1,6 @@
 import {
   analyzeRepoReadiness,
+  analyzeSourceFreshness,
   buildCategoryIssueMarkdown,
   buildContributorOnboardingPack,
   buildIssueMarkdown,
@@ -11,6 +12,7 @@ import {
   suggestGoodFirstIssues,
   suggestPolicyTodos
 } from './helper.js';
+import { sourceRecords } from './source-records.js';
 
 const input = document.querySelector('#files');
 const output = document.querySelector('#output');
@@ -155,15 +157,28 @@ function renderSavedExamples() {
 }
 
 function renderCurrentGuidance() {
-  currentGuidanceMount.innerHTML = currentGuidance
-    .map(
-      (item) => `<article class="card">
+  const freshness = analyzeSourceFreshness(sourceRecords);
+  currentGuidanceMount.innerHTML =
+    `<article class="card">
+    <h3>Source freshness dashboard</h3>
+    <p>${freshness.summary.highRisk} high-risk sources. ${freshness.summary.overdue} overdue. ${freshness.summary.dueSoon} due soon.</p>
+    <ul>${freshness.items
+      .slice(0, 8)
+      .map(
+        (item) =>
+          `<li><strong>${item.status}</strong>: ${item.name} (${item.risk_level}, review due ${item.review_due})</li>`
+      )
+      .join('')}</ul>
+  </article>` +
+    currentGuidance
+      .map(
+        (item) => `<article class="card">
     <h3>${item.title}</h3>
     <p>${item.detail}</p>
     <a href="${item.url}" rel="noreferrer">${item.source}</a>
   </article>`
-    )
-    .join('');
+      )
+      .join('');
 }
 
 async function copyText(value) {
