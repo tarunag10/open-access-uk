@@ -65,7 +65,7 @@
 - id: foi-request-builder
   name: FOI request builder
   tool: letter-generator
-  status: planned
+  status: shipped
   priority: high
   risk_level: high
   source_needs: govuk-foi-request
@@ -73,8 +73,16 @@
 - id: sar-request-builder
   name: SAR request builder
   tool: letter-generator
-  status: planned
+  status: shipped
   priority: high
   risk_level: high
   source_needs: ico-subject-access-request
   mvp: SAR form, generated request, response deadline, source note.
+- id: complaint-follow-up-generator
+  name: Complaint follow-up generator
+  tool: letter-generator
+  status: shipped
+  priority: high
+  risk_level: high
+  source_needs: sources
+  mvp: Follow-up letter using original request date, reference/context, requested next action, and route wording.
