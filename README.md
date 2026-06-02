@@ -52,7 +52,7 @@ node --check src/app.js
 
 ## Suite metadata
 
-Use this suite-level metadata in place of a separate `REPOS.md` file for slice 2.
+This table summarises the public tools and the parent contributor helper so maintainers can verify, publish, and support the suite consistently.
 
 | Repo                                    | Verification command                                   | Publish workflow                                                                                                                                          |
 | --------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -93,7 +93,7 @@ Publish workflow for a coordinated suite release:
 - Privacy-first by default: avoid collecting personal data, accounts, analytics, or telemetry unless a future repo has a separate public privacy review.
 - Accessibility-first by default: target WCAG 2.2 AA with semantic HTML, visible focus styles, labelled controls, high contrast colours, responsive layouts, and keyboard testing.
 - Plain English by default: explain public-service steps clearly and avoid pretending a template or tool can decide legal rights, deadlines, or outcomes.
-- Open contribution by default: every public repo includes a README, `CONTRIBUTING.md`, `ACCESSIBILITY.md`, licence, and test/build scripts. Parent contributor tooling supports issue-template and good-first-issue hygiene.
+- Open contribution by default: every public repo includes a README, `CONTRIBUTING.md`, `ACCESSIBILITY.md`, licence, and test/build scripts. Parent contributor tooling helps maintainers keep issues, onboarding, and repository health clear.
 
 ## Contribution paths
 
@@ -113,7 +113,7 @@ npm run build
 node --check src/app.js
 ```
 
-For this slice, verify the umbrella site directly:
+Verify the umbrella site directly:
 
 ```sh
 cd open-access-uk-site
