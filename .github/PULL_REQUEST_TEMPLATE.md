@@ -19,4 +19,3 @@
 ## Source Or Provenance Notes
 
 ## Screenshots
-

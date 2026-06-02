@@ -1,7 +1,7 @@
 ---
 name: Good first issue
 about: A small, well-scoped contribution
-title: ""
+title: ''
 labels: good first issue
 ---
 
@@ -12,6 +12,7 @@ labels: good first issue
 ## Suggested files
 
 ## Acceptance checks
+
 - [ ] Works with keyboard only
 - [ ] Copy is plain English
 - [ ] Tests or examples updated

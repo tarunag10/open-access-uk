@@ -1,0 +1,141 @@
+- id: govuk-equality-act-guidance
+  name: GOV.UK Equality Act 2010 guidance
+  publisher: GOV.UK
+  url: https://www.gov.uk/guidance/equality-act-2010-guidance
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - letter-generator
+    - legal-templates
+    - public-service-directory
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for reasonable-adjustment and public-service equality context. Not legal advice.
+- id: govuk-accessibility-requirements
+  name: GOV.UK accessibility requirements for public sector websites and apps
+  publisher: GOV.UK
+  url: https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - accessible-forms
+    - design-system
+    - open-access-uk-site
+  risk_level: medium
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for WCAG 2.2 AA and accessibility statement expectations.
+- id: ico-subject-access-request
+  name: ICO subject access request guidance
+  publisher: Information Commissioner's Office
+  url: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/subject-access-requests/a-guide-to-subject-access/
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - letter-generator
+    - legal-templates
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for SAR timing and request wording guidance. Not legal advice.
+- id: govuk-foi-request
+  name: GOV.UK freedom of information request guidance
+  publisher: GOV.UK
+  url: https://www.gov.uk/make-a-freedom-of-information-request/how-to-make-an-foi-request
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - letter-generator
+    - legal-templates
+    - public-service-directory
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for FOI timing and accessible-help context. Not legal advice.
+- id: govuk-council-complaints
+  name: GOV.UK council complaints guidance
+  publisher: GOV.UK
+  url: https://www.gov.uk/understand-how-your-council-works/make-a-complaint
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - public-service-directory
+    - legal-templates
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for council complaint route ordering.
+- id: financial-ombudsman-complaint-checker
+  name: Financial Ombudsman complaint checker
+  publisher: Financial Ombudsman Service
+  url: https://www.financial-ombudsman.org.uk/consumers/how-to-complain/complaint-checker
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - public-service-directory
+    - legal-templates
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for finance complaint escalation timing. Not legal advice.
+- id: oia-time-limits
+  name: OIA time limits guidance
+  publisher: Office of the Independent Adjudicator
+  url: https://www.oiahe.org.uk/about-us/our-scheme/our-rules/guidance-on-the-rules/rule-8/
+  jurisdiction: England and Wales
+  licence: to-be-confirmed
+  used_by:
+    - public-service-directory
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for student complaint deadline context.
+- id: rail-ombudsman-faq
+  name: Rail Ombudsman FAQ
+  publisher: Rail Ombudsman
+  url: https://www.railombudsman.org/faq
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - public-service-directory
+    - letter-generator
+  risk_level: high
+  last_checked: 2026-06-02
+  review_due: 2026-09-02
+  reviewer: tarunag10
+  notes: Used for deadlock and 40 working day route context.
+- id: govuk-design-system-error-summary
+  name: GOV.UK Design System error summary
+  publisher: GOV.UK Design System
+  url: https://design-system.service.gov.uk/components/error-summary/
+  jurisdiction: UK
+  licence: to-be-confirmed
+  used_by:
+    - accessible-forms
+    - design-system
+  risk_level: low
+  last_checked: 2026-06-02
+  review_due: 2026-12-02
+  reviewer: tarunag10
+  notes: Used for accessible error summary and field error behaviour.
+- id: github-good-first-issue-labels
+  name: GitHub Docs good first issue labels guidance
+  publisher: GitHub Docs
+  url: https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/encouraging-helpful-contributions-to-your-project-with-labels
+  jurisdiction: Global
+  licence: to-be-confirmed
+  used_by:
+    - maintainer-helper
+  risk_level: low
+  last_checked: 2026-06-02
+  review_due: 2026-12-02
+  reviewer: tarunag10
+  notes: Used for maintainer-helper onboarding guidance.

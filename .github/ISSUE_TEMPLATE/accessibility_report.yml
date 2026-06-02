@@ -1,7 +1,7 @@
 name: Accessibility report
 description: Report an accessibility barrier or testing result.
-title: "[Accessibility]: "
-labels: ["accessibility", "needs triage"]
+title: '[Accessibility]: '
+labels: ['accessibility', 'needs triage']
 body:
   - type: textarea
     id: barrier

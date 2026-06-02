@@ -1,7 +1,7 @@
 name: Content source update
 description: Suggest a source correction or new source-backed content.
-title: "[Source]: "
-labels: ["content", "source review", "needs triage"]
+title: '[Source]: '
+labels: ['content', 'source review', 'needs triage']
 body:
   - type: textarea
     id: content
@@ -38,4 +38,4 @@ body:
     id: checked
     attributes:
       label: Date checked
-      placeholder: "2026-06-02"
+      placeholder: '2026-06-02'

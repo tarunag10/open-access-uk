@@ -1,0 +1,10 @@
+:root {
+  --oa-bg: #03070c;
+  --oa-fg: #f7fbff;
+  --oa-muted: #9ba8b8;
+  --oa-blue: #0a84ff;
+  --oa-green: #32d74b;
+  --oa-focus: #ffd60a;
+  --oa-radius-card: 8px;
+  --oa-radius-control: 8px;
+}

@@ -1,0 +1,16 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "changelog-sections": [
+        { "type": "feat", "section": "Product" },
+        { "type": "fix", "section": "Maintenance" },
+        { "type": "docs", "section": "Documentation" },
+        { "type": "security", "section": "Security" },
+        { "type": "accessibility", "section": "Accessibility" },
+        { "type": "data", "section": "Data/source updates" },
+        { "type": "community", "section": "Community" }
+      ]
+    }
+  }
+}

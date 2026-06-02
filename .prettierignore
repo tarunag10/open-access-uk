@@ -1,0 +1,17 @@
+.git
+node_modules
+**/node_modules
+**/.vercel
+accessible-forms/
+design-system/
+legal-templates/
+letter-generator/
+public-service-directory/
+open-access-uk-site/.vercel/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.ico
+package-lock.json

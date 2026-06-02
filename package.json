@@ -1,0 +1,24 @@
+{
+  "name": "open-access-uk-suite",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node scripts/verify-suite.mjs",
+    "validate:sources": "node scripts/validate-sources.mjs",
+    "validate:repositories": "node scripts/validate-repositories.mjs",
+    "quality:static": "node scripts/static-quality.mjs",
+    "format:check": "prettier . --check",
+    "format": "prettier . --write",
+    "lint": "npm run quality:static",
+    "test:e2e": "playwright test -c open-access-uk-site/playwright.config.js open-access-uk-site/tests/e2e",
+    "test:a11y": "playwright test -c open-access-uk-site/playwright.config.js open-access-uk-site/tests/a11y"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.45.0",
+    "http-server": "^14.1.1",
+    "prettier": "^3.3.3"
+  },
+  "license": "MIT"
+}

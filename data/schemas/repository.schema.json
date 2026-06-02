@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open Access UK repository record",
+  "type": "object",
+  "required": ["id", "name", "repo", "demo", "category", "status", "risk_level", "maintainers"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "repo": { "type": "string" },
+    "demo": { "type": "string" },
+    "category": { "type": "string" },
+    "status": { "type": "string" },
+    "risk_level": { "enum": ["low", "medium", "high"] },
+    "maintainers": { "type": "array", "items": { "type": "string" } }
+  }
+}

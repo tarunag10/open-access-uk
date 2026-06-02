@@ -11,12 +11,17 @@ import {
   fileListPresets,
   scoreRepoReadiness,
   suggestGoodFirstIssues,
-  suggestPolicyTodos,
+  suggestPolicyTodos
 } from '../src/helper.js';
 
 test('scores repository readiness and suggests contributor issues', () => {
-  assert.equal(scoreRepoReadiness(['README.md', 'LICENSE', 'CONTRIBUTING.md']).missing.includes('SECURITY'), true);
-  assert.ok(suggestGoodFirstIssues(['README.md']).some((issue) => /accessibility/i.test(issue.title)));
+  assert.equal(
+    scoreRepoReadiness(['README.md', 'LICENSE', 'CONTRIBUTING.md']).missing.includes('SECURITY'),
+    true
+  );
+  assert.ok(
+    suggestGoodFirstIssues(['README.md']).some((issue) => /accessibility/i.test(issue.title))
+  );
 });
 
 test('checks expected maintainer signals', () => {
@@ -31,7 +36,7 @@ test('checks expected maintainer signals', () => {
     '.github/labels.yml',
     'ROADMAP.md',
     'index.html',
-    'docs/getting-started.md',
+    'docs/getting-started.md'
   ]);
 
   assert.equal(analysis.score, 100);
@@ -53,7 +58,7 @@ test('groups maintainer roadmap recommendations by improvement area', () => {
 
   assert.deepEqual(
     roadmap.map((group) => group.category),
-    ['Documentation', 'Accessibility', 'Security', 'Community', 'Demo quality'],
+    ['Documentation', 'Accessibility', 'Security', 'Community', 'Demo quality']
   );
 
   const security = roadmap.find((group) => group.category === 'Security');
@@ -77,7 +82,7 @@ test('marks grouped maintainer recommendations complete when signals are present
     '.github/labels.yml',
     'ROADMAP.md',
     'index.html',
-    'docs/getting-started.md',
+    'docs/getting-started.md'
   ]);
 
   assert.ok(roadmap.every((group) => group.items.every((item) => item.status === 'complete')));
@@ -99,8 +104,9 @@ test('generates GitHub issue markdown for a roadmap recommendation', () => {
 });
 
 test('generates category issue markdown grouped by recommendation category', () => {
-  const documentation = buildMaintainerRoadmap(['README.md'])
-    .find((group) => group.category === 'Documentation');
+  const documentation = buildMaintainerRoadmap(['README.md']).find(
+    (group) => group.category === 'Documentation'
+  );
 
   const markdown = buildCategoryIssueMarkdown(documentation);
 
@@ -113,19 +119,26 @@ test('generates category issue markdown grouped by recommendation category', () 
 test('provides starter repository file-list presets', () => {
   assert.ok(fileListPresets.length >= 3);
   assert.ok(fileListPresets.some((preset) => preset.id === 'empty-static'));
-  assert.ok(fileListPresets.every((preset) => preset.files.includes('README.md') || preset.id === 'empty-static'));
+  assert.ok(
+    fileListPresets.every(
+      (preset) => preset.files.includes('README.md') || preset.id === 'empty-static'
+    )
+  );
   assert.ok(fileListPresets.every((preset) => preset.description.length > 20));
 });
 
 test('builds a contributor onboarding pack from missing maintainer signals', () => {
   const pack = buildContributorOnboardingPack(['README.md', 'LICENSE'], {
     projectName: 'Civic Repairs',
-    limit: 3,
+    limit: 3
   });
 
   assert.equal(pack.projectName, 'Civic Repairs');
   assert.equal(pack.starterSequence.length, 3);
-  assert.match(pack.suggestedFirstIssue.title, /Roadmap|Beginner-friendly|accessibility|CONTRIBUTING/i);
+  assert.match(
+    pack.suggestedFirstIssue.title,
+    /Roadmap|Beginner-friendly|accessibility|CONTRIBUTING/i
+  );
   assert.match(pack.markdown, /^# Civic Repairs contributor onboarding pack/m);
   assert.match(pack.markdown, /Readiness score:/);
   assert.match(pack.markdown, /Beginner-safe issue sequence/);
@@ -136,7 +149,7 @@ test('builds a contributor onboarding pack from missing maintainer signals', () 
 test('builds maintainer launch packs with labels and onboarding content', () => {
   const pack = buildMaintainerLaunchPack(['README.md', 'LICENSE'], {
     projectName: 'Civic Repairs',
-    limit: 2,
+    limit: 2
   });
 
   assert.equal(pack.title, 'Civic Repairs maintainer launch pack');

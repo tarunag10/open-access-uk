@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open Access UK source record",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "publisher",
+    "url",
+    "used_by",
+    "risk_level",
+    "last_checked",
+    "review_due"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "publisher": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "jurisdiction": { "type": "string" },
+    "licence": { "type": "string" },
+    "used_by": { "type": "array", "items": { "type": "string" } },
+    "risk_level": { "enum": ["low", "medium", "high"] },
+    "last_checked": { "type": "string", "format": "date" },
+    "review_due": { "type": "string", "format": "date" },
+    "reviewer": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

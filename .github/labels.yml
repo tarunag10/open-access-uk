@@ -1,33 +1,33 @@
 - name: accessibility
-  color: "0E8A16"
+  color: '0E8A16'
   description: Accessibility testing, fixes, or WCAG-related work.
 - name: bug
-  color: "D73A4A"
+  color: 'D73A4A'
   description: Something is broken.
 - name: content
-  color: "5319E7"
+  color: '5319E7'
   description: Public-service copy, templates, source notes, or docs.
 - name: documentation
-  color: "0075CA"
+  color: '0075CA'
   description: README, docs, contribution, or support material.
 - name: enhancement
-  color: "A2EEEF"
+  color: 'A2EEEF'
   description: New or improved feature.
 - name: good first issue
-  color: "7057FF"
+  color: '7057FF'
   description: Beginner-friendly, scoped work.
 - name: help wanted
-  color: "008672"
+  color: '008672'
   description: Maintainers welcome community help.
 - name: needs triage
-  color: "FBCA04"
+  color: 'FBCA04'
   description: Needs maintainer review and routing.
 - name: privacy
-  color: "BFD4F2"
+  color: 'BFD4F2'
   description: Data handling, local-first, or tracking concerns.
 - name: security
-  color: "B60205"
+  color: 'B60205'
   description: Security vulnerability or hardening work.
 - name: source review
-  color: "C5DEF5"
+  color: 'C5DEF5'
   description: Needs source provenance or source freshness review.

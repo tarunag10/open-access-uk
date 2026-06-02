@@ -8,7 +8,7 @@ import {
   currentGuidance,
   fileListPresets,
   suggestGoodFirstIssues,
-  suggestPolicyTodos,
+  suggestPolicyTodos
 } from './helper.js';
 
 const input = document.querySelector('#files');
@@ -28,7 +28,10 @@ index.html
 .github/labels.yml`;
 
 function parseFiles() {
-  return input.value.split(/\n|,/).map((x) => x.trim()).filter(Boolean);
+  return input.value
+    .split(/\n|,/)
+    .map((x) => x.trim())
+    .filter(Boolean);
 }
 
 function renderList(items) {
@@ -36,25 +39,37 @@ function renderList(items) {
 }
 
 function renderIssues(issues) {
-  return issues.map((issue, index) => `<article class="card">
+  return issues
+    .map(
+      (issue, index) => `<article class="card">
     <h3>${issue.title}</h3>
     <p>${issue.body}</p>
     <p class="keywords"><strong>Labels:</strong> ${issue.labels.join(', ')}</p>
     <button type="button" class="secondary copy-suggestion" data-suggestion="${index}">Copy issue text</button>
-  </article>`).join('');
+  </article>`
+    )
+    .join('');
 }
 
 function renderRoadmap(roadmap) {
-  return roadmap.map((group, groupIndex) => `<section class="recommendation-group">
+  return roadmap
+    .map(
+      (group, groupIndex) => `<section class="recommendation-group">
     <h4>${group.category} <span>${group.complete}/${group.total}</span></h4>
     <button type="button" class="secondary copy-category" data-group="${groupIndex}">Copy category issue</button>
-    <ul>${group.items.map((item) => `<li>
+    <ul>${group.items
+      .map(
+        (item) => `<li>
       <strong>${item.status === 'complete' ? 'Done' : 'Next'}:</strong> ${item.title}
       <p>${item.why}</p>
       <p class="keywords"><strong>Acceptance:</strong> ${item.acceptanceCriteria.join('; ')}</p>
       <button type="button" class="secondary copy-recommendation" data-item="${item.id}">Copy issue text</button>
-    </li>`).join('')}</ul>
-  </section>`).join('');
+    </li>`
+      )
+      .join('')}</ul>
+  </section>`
+    )
+    .join('');
 }
 
 function loadSavedExamples() {
@@ -66,7 +81,7 @@ function loadSavedExamples() {
       .map((example) => ({
         id: String(example.id || `saved-${Date.now()}`),
         name: String(example.name || 'Saved file list'),
-        files: example.files.map(String).filter(Boolean),
+        files: example.files.map(String).filter(Boolean)
       }));
   } catch {
     return [];
@@ -76,11 +91,14 @@ function loadSavedExamples() {
 function saveCurrentExample() {
   const files = parseFiles();
   if (files.length === 0) return;
-  const examples = [{
-    id: `saved-${Date.now()}`,
-    name: `Saved example ${new Date().toLocaleString()}`,
-    files,
-  }, ...loadSavedExamples()].slice(0, 5);
+  const examples = [
+    {
+      id: `saved-${Date.now()}`,
+      name: `Saved example ${new Date().toLocaleString()}`,
+      files
+    },
+    ...loadSavedExamples()
+  ].slice(0, 5);
   localStorage.setItem(savedExamplesKey, JSON.stringify(examples));
   renderSavedExamples();
 }
@@ -105,10 +123,17 @@ function renderPresetButtons() {
 function renderSavedExamples() {
   const examples = loadSavedExamples();
   savedExamples.innerHTML = `<h2>Saved examples</h2>
-    ${examples.length
-    ? examples.map((example) => `<button type="button" class="secondary saved-example" data-example="${example.id}">${example.name}</button>`).join('') +
-      '<button id="clear-examples" type="button" class="secondary">Clear examples</button>'
-    : '<p>No saved file lists yet.</p>'}`;
+    ${
+      examples.length
+        ? examples
+            .map(
+              (example) =>
+                `<button type="button" class="secondary saved-example" data-example="${example.id}">${example.name}</button>`
+            )
+            .join('') +
+          '<button id="clear-examples" type="button" class="secondary">Clear examples</button>'
+        : '<p>No saved file lists yet.</p>'
+    }`;
 
   for (const button of document.querySelectorAll('.saved-example')) {
     button.addEventListener('click', () => {
@@ -129,11 +154,15 @@ function renderSavedExamples() {
 }
 
 function renderCurrentGuidance() {
-  currentGuidanceMount.innerHTML = currentGuidance.map((item) => `<article class="card">
+  currentGuidanceMount.innerHTML = currentGuidance
+    .map(
+      (item) => `<article class="card">
     <h3>${item.title}</h3>
     <p>${item.detail}</p>
     <a href="${item.url}" rel="noreferrer">${item.source}</a>
-  </article>`).join('');
+  </article>`
+    )
+    .join('');
 }
 
 async function copyText(value) {
@@ -155,7 +184,9 @@ function update() {
   const todos = suggestPolicyTodos(files);
   const roadmap = buildMaintainerRoadmap(files);
   const issues = suggestGoodFirstIssues(files);
-  const onboardingPack = buildContributorOnboardingPack(files, { projectName: 'Open Access UK repo' });
+  const onboardingPack = buildContributorOnboardingPack(files, {
+    projectName: 'Open Access UK repo'
+  });
   const launchPack = buildMaintainerLaunchPack(files, { projectName: 'Open Access UK repo' });
   output.innerHTML = `<h2>Readiness score: ${analysis.score}%</h2>
     <p>${analysis.present.length} of ${analysis.total} maintainer signals found.</p>
@@ -183,7 +214,9 @@ function update() {
 
   for (const button of document.querySelectorAll('.copy-recommendation')) {
     button.addEventListener('click', async () => {
-      const item = roadmap.flatMap((group) => group.items).find((recommendation) => recommendation.id === button.dataset.item);
+      const item = roadmap
+        .flatMap((group) => group.items)
+        .find((recommendation) => recommendation.id === button.dataset.item);
       await copyText(buildIssueMarkdown(item));
     });
   }
@@ -191,16 +224,18 @@ function update() {
   for (const button of document.querySelectorAll('.copy-suggestion')) {
     button.addEventListener('click', async () => {
       const issue = issues[Number(button.dataset.suggestion)];
-      await copyText([
-        '## Summary',
-        issue.title,
-        '',
-        '## Task',
-        issue.body,
-        '',
-        '## Suggested labels',
-        `Labels: ${issue.labels.join(', ')}`,
-      ].join('\n'));
+      await copyText(
+        [
+          '## Summary',
+          issue.title,
+          '',
+          '## Task',
+          issue.body,
+          '',
+          '## Suggested labels',
+          `Labels: ${issue.labels.join(', ')}`
+        ].join('\n')
+      );
     });
   }
 

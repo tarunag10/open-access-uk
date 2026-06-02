@@ -1,0 +1,11 @@
+name: Release Notes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Use CHANGELOG.md and release categories before publishing a tagged release."
