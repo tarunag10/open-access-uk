@@ -75,6 +75,8 @@ Validate source and repository metadata:
 ```sh
 node scripts/validate-sources.mjs
 node scripts/validate-repositories.mjs
+npm run quality:static
+npm run lighthouse
 ```
 
 Publish workflow for a coordinated suite release:

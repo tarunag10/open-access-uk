@@ -1,4 +1,5 @@
 node_modules/
+.lighthouseci/
 playwright-report/
 test-results/
 .DS_Store

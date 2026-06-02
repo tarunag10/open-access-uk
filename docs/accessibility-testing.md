@@ -6,9 +6,11 @@ Automated checks are useful but not enough. Open Access UK targets WCAG 2.2 AA.
 
 ```sh
 npm run test:a11y
+npm run lighthouse
 ```
 
 The axe gate should have no serious or critical violations.
+The Lighthouse gate keeps the homepage accessibility score at or above 0.95.
 
 ## Manual Matrix
 

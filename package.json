@@ -11,11 +11,13 @@
     "format:check": "prettier . --check",
     "format": "prettier . --write",
     "lint": "npm run quality:static",
+    "lighthouse": "lhci autorun",
     "test:e2e": "playwright test -c open-access-uk-site/playwright.config.js open-access-uk-site/tests/e2e",
     "test:a11y": "playwright test -c open-access-uk-site/playwright.config.js open-access-uk-site/tests/a11y"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.45.0",
     "http-server": "^14.1.1",
     "prettier": "^3.3.3"
