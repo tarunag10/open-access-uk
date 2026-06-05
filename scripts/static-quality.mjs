@@ -36,7 +36,9 @@ for (const required of [
   'aria-live',
   'aria-pressed',
   'id="source-safety"',
-  'id="privacy"'
+  'id="privacy"',
+  'id="privacy-clear"',
+  'privacy-interactive'
 ]) {
   if (!siteHtml.includes(required)) throw new Error(`Site missing quality marker: ${required}`);
 }
