@@ -17,7 +17,9 @@ const requiredRootFiles = [
   'data/deadline-rules.yml',
   'shared/privacy/local-storage.mjs',
   'shared/exports/index.mjs',
-  'shared/deadlines/index.mjs'
+  'shared/deadlines/index.mjs',
+  'shared/design-tokens.mjs',
+  'shared/case/index.mjs'
 ];
 
 for (const file of requiredRootFiles) {

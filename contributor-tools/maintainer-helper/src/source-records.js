@@ -170,5 +170,56 @@ export const sourceRecords = [
     "review_due": "2026-12-02",
     "reviewer": "tarunag10",
     "notes": "Used for maintainer-helper onboarding guidance."
+  },
+  {
+    "id": "housing-ombudsman-guidance",
+    "name": "Housing Ombudsman guidance for residents",
+    "publisher": "Housing Ombudsman",
+    "url": "https://www.housing-ombudsman.org.uk/residents/make-a-complaint/",
+    "jurisdiction": "UK",
+    "licence": "to-be-confirmed",
+    "used_by": [
+      "public-service-directory",
+      "legal-templates"
+    ],
+    "risk_level": "high",
+    "last_checked": "2026-06-05",
+    "review_due": "2026-09-05",
+    "reviewer": "tarunag10",
+    "notes": "Used for housing complaint stages, evidence, and escalation timing. Not legal advice."
+  },
+  {
+    "id": "citizens-advice-consumer",
+    "name": "Citizens Advice consumer rights and complaints",
+    "publisher": "Citizens Advice",
+    "url": "https://www.citizensadvice.org.uk/consumer/get-more-help/if-you-need-more-help-about-a-consumer-issue/",
+    "jurisdiction": "UK",
+    "licence": "to-be-confirmed",
+    "used_by": [
+      "public-service-directory",
+      "legal-templates"
+    ],
+    "risk_level": "medium",
+    "last_checked": "2026-06-05",
+    "review_due": "2026-12-05",
+    "reviewer": "tarunag10",
+    "notes": "Used for consumer complaint routes and Trading Standards signposting."
+  },
+  {
+    "id": "govuk-benefits-appeals",
+    "name": "GOV.UK benefits and appeals guidance",
+    "publisher": "GOV.UK",
+    "url": "https://www.gov.uk/appeal-benefit-decision",
+    "jurisdiction": "UK",
+    "licence": "to-be-confirmed",
+    "used_by": [
+      "accessible-forms",
+      "public-service-directory"
+    ],
+    "risk_level": "high",
+    "last_checked": "2026-06-05",
+    "review_due": "2026-09-05",
+    "reviewer": "tarunag10",
+    "notes": "Used for benefits evidence upload patterns and escalation. Not legal advice."
   }
 ];
