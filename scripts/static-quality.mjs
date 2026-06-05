@@ -38,7 +38,11 @@ for (const required of [
   'id="source-safety"',
   'id="privacy"',
   'id="privacy-clear"',
-  'privacy-interactive'
+  'privacy-interactive',
+  'id="glossary"',
+  'id="glossary-filter"',
+  'data-workflow="plan"',
+  'sw.js'
 ]) {
   if (!siteHtml.includes(required)) throw new Error(`Site missing quality marker: ${required}`);
 }

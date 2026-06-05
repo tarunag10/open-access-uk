@@ -62,6 +62,8 @@ Reusable helpers are exported from `src/helper.js`:
 - spot missing governance and safety files
 - make static demos easier for beginners to understand
 
+This helper (and the parent suite patterns) can be reused as a template for other civic/open-source projects. Copy the checks, presets, onboarding pack generator, and source freshness dashboard. See parent docs for full governance + data provenance setup.
+
 ## Open-source basics
 
 - Code: MIT licence

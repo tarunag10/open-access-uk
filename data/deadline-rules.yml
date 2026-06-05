@@ -33,3 +33,11 @@
   day_type: calendar
   risk_level: high
   explanation: The OIA says students normally have a maximum of 12 months from the Completion of Procedures Letter date to complain.
+
+- id: housing-ombudsman-stage
+  name: Housing Ombudsman stage response times
+  source_id: housing-ombudsman-guidance
+  days: 10
+  day_type: working
+  risk_level: high
+  explanation: Social landlords should respond at stage 1 within 10 working days and stage 2 within 20 working days (acknowledgement in 5 working days).

@@ -6,6 +6,7 @@
 - Strengthen governance, support, security, and contribution routes.
 - Add CI and quality gates for the root suite.
 - Improve metadata, security headers, SEO, and source provenance.
+- Phase 1 of recommendations: interactive privacy centre (clear/export/import), unified shared deadlines + ICS exports in letter generator, glossary + journey wizard workflows, minimal PWA SW, case aggregator foundations in shared, expanded sourced data (benefits, housing, consumer), all gates/tests/verify green.
 
 ## Next
 

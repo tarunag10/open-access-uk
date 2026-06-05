@@ -86,3 +86,27 @@
   risk_level: high
   source_needs: sources
   mvp: Follow-up letter using original request date, reference/context, requested next action, and route wording.
+- id: interactive-privacy-centre
+  name: Interactive privacy centre with clear/export/import
+  tool: open-access-uk-site
+  status: shipped
+  priority: high
+  risk_level: low
+  source_needs: internal
+  mvp: Full UI for listing known localStorage, one-click clear of registry keys, JSON export/import of packs.
+- id: glossary-and-freshness
+  name: Glossary and source freshness badges
+  tool: open-access-uk-site
+  status: in-progress
+  priority: medium
+  risk_level: low
+  source_needs: sources
+  mvp: Searchable glossary of public-service terms with source links; freshness/review-due notes in guidance and packs.
+- id: benefits-escalation-route
+  name: Benefits and social security escalation route
+  tool: public-service-directory
+  status: shipped
+  priority: high
+  risk_level: high
+  source_needs: govuk-benefits-appeals
+  mvp: New route for mandatory reconsideration and tribunal appeals with evidence checklist and current note.
