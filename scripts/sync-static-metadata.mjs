@@ -35,6 +35,12 @@ const toolCopy = {
     iconClass: 'cyan',
     icon: '⌘',
     summary: 'Use accessible components, tokens, and implementation recipes.'
+  },
+  'case-aggregator': {
+    toolKey: 'case',
+    iconClass: 'amber',
+    icon: '⧉',
+    summary: 'Compose local case files and combined packs from the rest of the suite.'
   }
 };
 

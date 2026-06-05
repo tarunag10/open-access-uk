@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case Aggregator | Open Access UK</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">Open Access UK</a>
+    <nav aria-label="Primary">
+      <a href="#tool">Compose</a>
+      <a href="#guidance">Guidance</a>
+      <a href="https://github.com/tarunag10/open-access-uk">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Local Case File Aggregator</h1>
+        <p>Combine exported packs, letters, plans, and reports from the Open Access UK suite into one unified case file — all in your browser.</p>
+        <div class="hero-actions">
+          <a class="button" href="#tool">Start composing</a>
+          <a class="button secondary" href="https://github.com/tarunag10/open-access-uk">View on GitHub</a>
+        </div>
+      </div>
+      <div class="product-panel" aria-label="Case aggregator preview">
+        <div class="mini-window">
+          <span>Combined case</span>
+          <strong>Letter + Directory plan + Form remediation</strong>
+          <b>Single MD + checklist + sources</b>
+        </div>
+      </div>
+    </section>
+
+    <section id="tool" class="panel">
+      <h2>Compose a case file</h2>
+      <p>Select example packs from the suite or paste your own exported Markdown/text from any tool. Then compose.</p>
+
+      <form novalidate>
+        <fieldset>
+          <legend>Example packs (from other tools)</legend>
+          <div id="examples" class="examples-grid" aria-label="Select example packs"></div>
+        </fieldset>
+
+        <div>
+          <label for="custom-packs">Paste additional packs (optional)</label>
+          <textarea id="custom-packs" rows="6" placeholder="--- My letter ---
+Dear sir...
+--- My plan ---
+First step..."></textarea>
+          <p class="hint">Separate multiple pastes with --- Title --- lines.</p>
+        </div>
+
+        <div class="actions">
+          <button id="compose" type="button" class="primary">Compose case file</button>
+          <button id="reset" type="button" class="secondary">Reset</button>
+        </div>
+      </form>
+
+      <div class="preview-area">
+        <h3>Combined case file preview</h3>
+        <pre id="preview" aria-live="polite" class="preview-box"></pre>
+
+        <div class="export-actions">
+          <button id="copyPack" type="button" class="secondary">Copy</button>
+          <button id="downloadPack" type="button" class="secondary">Download .md</button>
+          <button id="printPack" type="button" class="secondary">Print</button>
+        </div>
+        <p id="status" class="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="guidance" class="footer-band">
+      <h2>Before using a combined case file</h2>
+      <p>Review every source pack for accuracy and sensitive details. The aggregator only stitches what you provide. Always verify deadlines and official routes directly.</p>
+      <h2>Current guidance</h2>
+      <div id="current-guidance" class="cards" aria-label="Current guidance"></div>
+    </section>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

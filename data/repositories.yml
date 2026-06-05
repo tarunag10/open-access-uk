@@ -61,3 +61,12 @@
   risk_level: low
   maintainers:
     - tarunag10
+- id: case-aggregator
+  name: Case Aggregator
+  repo: tarunag10/open-access-uk
+  demo: local-only
+  category: tools
+  status: usable
+  risk_level: low
+  maintainers:
+    - tarunag10
