@@ -40,6 +40,13 @@ export const storageRegistry = [
     label: 'Saved maintainer examples',
     storage: 'localStorage',
     contains: 'Repository file-list examples saved by maintainers'
+  },
+  {
+    key: 'open-access-uk:theme',
+    tool: 'suite',
+    label: 'Theme preference',
+    storage: 'localStorage',
+    contains: 'Chosen light or dark theme for the suite'
   }
 ];
 
