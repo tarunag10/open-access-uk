@@ -15,6 +15,7 @@
 ## File Structure
 
 **Create:**
+
 - `shared/claude/tokens.css` — CSS custom properties (light + dark themes), warm palette.
 - `shared/claude/components.css` — reusable component classes (button, card, input, panel, tag, table, header/nav, footer, hero, code-window, toast, meter).
 - `shared/claude/motion.css` — purposeful motion, gated by `prefers-reduced-motion`.
@@ -25,6 +26,7 @@
 - `shared/theme/index.test.mjs` — Node tests for the theme logic.
 
 **Modify:**
+
 - `shared/privacy/local-storage.mjs` — register the theme storage key.
 - `shared/privacy/local-storage.test.mjs` — assert the theme key is registered.
 - `design-system/index.html` — import shared layer, add header theme toggle, restructure to showcase.
@@ -36,6 +38,7 @@
 ## Task 1: Theme logic module (pure, tested)
 
 **Files:**
+
 - Create: `shared/theme/index.mjs`
 - Test: `shared/theme/index.test.mjs`
 
@@ -111,6 +114,7 @@ git commit -m "feat: add pure theme resolution logic"
 ## Task 2: Register theme key in privacy registry
 
 **Files:**
+
 - Modify: `shared/privacy/local-storage.mjs`
 - Modify: `shared/privacy/local-storage.test.mjs`
 
@@ -167,6 +171,7 @@ git commit -m "feat: register theme preference in privacy registry"
 ## Task 3: Token-pair contrast audit (proves AA)
 
 **Files:**
+
 - Create: `shared/claude/token-pairs.mjs`
 - Test: `shared/claude/token-pairs.test.mjs`
 
@@ -267,24 +272,94 @@ export const palette = {
 // Foreground/background pairs that MUST meet contrast. min 4.5 = text, min 3 = large/UI.
 export const tokenPairs = [
   // Light
-  { name: 'light body text', foreground: palette.light.ink, background: palette.light.paper, min: 4.5 },
-  { name: 'light muted text', foreground: palette.light.inkMuted, background: palette.light.paper, min: 4.5 },
-  { name: 'light accent text', foreground: palette.light.accent, background: palette.light.paper, min: 4.5 },
-  { name: 'light text on accent', foreground: palette.light.accentInk, background: palette.light.accent, min: 4.5 },
+  {
+    name: 'light body text',
+    foreground: palette.light.ink,
+    background: palette.light.paper,
+    min: 4.5
+  },
+  {
+    name: 'light muted text',
+    foreground: palette.light.inkMuted,
+    background: palette.light.paper,
+    min: 4.5
+  },
+  {
+    name: 'light accent text',
+    foreground: palette.light.accent,
+    background: palette.light.paper,
+    min: 4.5
+  },
+  {
+    name: 'light text on accent',
+    foreground: palette.light.accentInk,
+    background: palette.light.accent,
+    min: 4.5
+  },
   { name: 'light link', foreground: palette.light.teal, background: palette.light.paper, min: 4.5 },
-  { name: 'light success', foreground: palette.light.success, background: palette.light.paper, min: 4.5 },
-  { name: 'light warning', foreground: palette.light.warning, background: palette.light.paper, min: 4.5 },
-  { name: 'light danger', foreground: palette.light.danger, background: palette.light.paper, min: 4.5 },
+  {
+    name: 'light success',
+    foreground: palette.light.success,
+    background: palette.light.paper,
+    min: 4.5
+  },
+  {
+    name: 'light warning',
+    foreground: palette.light.warning,
+    background: palette.light.paper,
+    min: 4.5
+  },
+  {
+    name: 'light danger',
+    foreground: palette.light.danger,
+    background: palette.light.paper,
+    min: 4.5
+  },
   { name: 'light border', foreground: palette.light.line, background: palette.light.paper, min: 3 },
   // Dark
-  { name: 'dark body text', foreground: palette.dark.ink, background: palette.dark.paper, min: 4.5 },
-  { name: 'dark muted text', foreground: palette.dark.inkMuted, background: palette.dark.paper, min: 4.5 },
-  { name: 'dark accent text', foreground: palette.dark.accent, background: palette.dark.paper, min: 4.5 },
-  { name: 'dark text on accent', foreground: palette.dark.accentInk, background: palette.dark.accent, min: 4.5 },
+  {
+    name: 'dark body text',
+    foreground: palette.dark.ink,
+    background: palette.dark.paper,
+    min: 4.5
+  },
+  {
+    name: 'dark muted text',
+    foreground: palette.dark.inkMuted,
+    background: palette.dark.paper,
+    min: 4.5
+  },
+  {
+    name: 'dark accent text',
+    foreground: palette.dark.accent,
+    background: palette.dark.paper,
+    min: 4.5
+  },
+  {
+    name: 'dark text on accent',
+    foreground: palette.dark.accentInk,
+    background: palette.dark.accent,
+    min: 4.5
+  },
   { name: 'dark link', foreground: palette.dark.teal, background: palette.dark.paper, min: 4.5 },
-  { name: 'dark success', foreground: palette.dark.success, background: palette.dark.paper, min: 4.5 },
-  { name: 'dark warning', foreground: palette.dark.warning, background: palette.dark.paper, min: 4.5 },
-  { name: 'dark danger', foreground: palette.dark.danger, background: palette.dark.paper, min: 4.5 },
+  {
+    name: 'dark success',
+    foreground: palette.dark.success,
+    background: palette.dark.paper,
+    min: 4.5
+  },
+  {
+    name: 'dark warning',
+    foreground: palette.dark.warning,
+    background: palette.dark.paper,
+    min: 4.5
+  },
+  {
+    name: 'dark danger',
+    foreground: palette.dark.danger,
+    background: palette.dark.paper,
+    min: 4.5
+  },
   { name: 'dark border', foreground: palette.dark.line, background: palette.dark.paper, min: 3 }
 ];
 
@@ -314,6 +389,7 @@ git commit -m "feat: add WCAG token-pair contrast audit for Claude palette"
 ## Task 4: Design tokens stylesheet
 
 **Files:**
+
 - Create: `shared/claude/tokens.css`
 
 The hex values MUST match `palette` in `shared/claude/token-pairs.mjs` exactly.
@@ -434,6 +510,7 @@ git commit -m "feat: add Claude design tokens (light + dark)"
 ## Task 5: Components stylesheet
 
 **Files:**
+
 - Create: `shared/claude/components.css`
 
 - [ ] **Step 1: Write the components file**
@@ -778,6 +855,7 @@ git commit -m "feat: add Claude shared component styles"
 ## Task 6: Motion + print stylesheets
 
 **Files:**
+
 - Create: `shared/claude/motion.css`
 - Create: `shared/claude/print.css`
 
@@ -877,6 +955,7 @@ git commit -m "feat: add Claude motion and print stylesheets"
 ## Task 7: Theme DOM wiring helper (design-system page)
 
 **Files:**
+
 - Create: `design-system/src/theme.js`
 
 This is the thin DOM adapter. Core logic lives in `shared/theme/index.mjs` (Task 1).
@@ -943,6 +1022,7 @@ git commit -m "feat: add theme DOM adapter for design-system page"
 ## Task 8: Rebuild design-system page on the shared layer
 
 **Files:**
+
 - Modify: `design-system/styles.css`
 - Modify: `design-system/index.html`
 - Modify: `design-system/src/app.js`
@@ -979,17 +1059,21 @@ Replace the ENTIRE contents of `design-system/styles.css` with:
 Replace the existing `<header class="topbar">…</header>` block with:
 
 ```html
-  <a class="skip-link" href="#tool">Skip to content</a>
-  <header class="site-header">
-    <a class="brand" href="index.html">Open Access UK</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary">
-      <a href="#tool">Tokens</a>
-      <a href="#guidance">Guidance</a>
-      <a href="#contribute">Contribute</a>
-    </nav>
-    <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
-  </header>
+<a class="skip-link" href="#tool">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html">Open Access UK</a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+    Menu
+  </button>
+  <nav id="primary-nav" aria-label="Primary">
+    <a href="#tool">Tokens</a>
+    <a href="#guidance">Guidance</a>
+    <a href="#contribute">Contribute</a>
+  </nav>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+    Dark theme
+  </button>
+</header>
 ```
 
 - [ ] **Step 3: Wire the theme toggle in design-system/src/app.js**

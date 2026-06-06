@@ -28,14 +28,14 @@ motion, more depth/contrast). Add a comprehensive, **static / local-first** feat
 
 Six pages, each shipped as static HTML/CSS/JS:
 
-| Page | Path | Function |
-| --- | --- | --- |
-| Umbrella site | `open-access-uk-site/` | Landing: toolkit grid, workflows selector, open-design token copy, privacy centre, roadmap. Already dark/polished SaaS look. |
-| Letter generator | `letter-generator/` | Builds public-service letters from a form; org-specific guidance, evidence/safety notes, deadline calc, copy/download/print/email, action + handoff packs; draft saved to `localStorage`. |
-| Accessible forms | `accessible-forms/` | Gallery of GOV.UK-style accessible form patterns; filters; reviewer notes (`localStorage`); JSON export. |
-| Public service directory | `public-service-directory/` | Escalation routes by sector; evidence checklists; readiness scoring; contact log; saved action plans (`localStorage`). |
-| Legal templates | `legal-templates/` | Plain-English template library (rail delay, SAR, housing, airline…); evidence/safety/escalation notes; favourites (`localStorage`). |
-| Design system | `design-system/` | Colour tokens, contrast table, component inventory, recipes, token export, shortlist (`localStorage`). |
+| Page                     | Path                        | Function                                                                                                                                                                                  |
+| ------------------------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Umbrella site            | `open-access-uk-site/`      | Landing: toolkit grid, workflows selector, open-design token copy, privacy centre, roadmap. Already dark/polished SaaS look.                                                              |
+| Letter generator         | `letter-generator/`         | Builds public-service letters from a form; org-specific guidance, evidence/safety notes, deadline calc, copy/download/print/email, action + handoff packs; draft saved to `localStorage`. |
+| Accessible forms         | `accessible-forms/`         | Gallery of GOV.UK-style accessible form patterns; filters; reviewer notes (`localStorage`); JSON export.                                                                                  |
+| Public service directory | `public-service-directory/` | Escalation routes by sector; evidence checklists; readiness scoring; contact log; saved action plans (`localStorage`).                                                                    |
+| Legal templates          | `legal-templates/`          | Plain-English template library (rail delay, SAR, housing, airline…); evidence/safety/escalation notes; favourites (`localStorage`).                                                       |
+| Design system            | `design-system/`            | Colour tokens, contrast table, component inventory, recipes, token export, shortlist (`localStorage`).                                                                                    |
 
 **Problem being solved:** The umbrella site is polished (dark navy SaaS) but the five
 mini-apps use a plainer, **diverging** `topbar`/`hero`/`cards` style. There is no shared
