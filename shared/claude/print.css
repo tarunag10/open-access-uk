@@ -1,0 +1,36 @@
+/* shared/claude/print.css — clean print/PDF output for document views. */
+@media print {
+  .site-header,
+  .site-footer,
+  .nav-toggle,
+  .theme-toggle,
+  .hero-actions,
+  .actions,
+  .no-print {
+    display: none !important;
+  }
+  :root {
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --ink: #000000;
+    --ink-muted: #333333;
+    --line: #999999;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-size: 12pt;
+  }
+  .card,
+  .panel,
+  .preview {
+    border: 1px solid #999999;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  a::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+    color: #555555;
+  }
+}
