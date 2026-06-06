@@ -115,7 +115,9 @@ navToggle?.addEventListener('click', () => {
   <nav id="primary-nav" aria-label="Primary">
     <!-- KEEP this page's existing nav links exactly -->
   </nav>
-  <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+    Dark theme
+  </button>
 </header>
 ```
 
@@ -161,7 +163,6 @@ Create `letter-generator/src/theme.js` with the exact contents of SNIPPET A.
 Replace the ENTIRE contents of `letter-generator/styles.css` with SNIPPET E followed by these letter-generator overrides:
 
 ```css
-
 /* Letter generator: two-pane editor + letter "paper" preview. */
 #tool.grid {
   display: grid;
@@ -274,7 +275,6 @@ Create `accessible-forms/src/theme.js` with the exact contents of SNIPPET A.
 Replace the ENTIRE contents of `accessible-forms/styles.css` with SNIPPET E followed by:
 
 ```css
-
 /* Accessible forms: editorial gallery + filters. */
 .gtm-strip,
 .cards {
@@ -364,7 +364,6 @@ Create `public-service-directory/src/theme.js` with the exact contents of SNIPPE
 Replace the ENTIRE contents of `public-service-directory/styles.css` with SNIPPET E followed by:
 
 ```css
-
 /* Directory: search panel + results + readiness meter. */
 #tool.grid {
   display: grid;
@@ -466,7 +465,6 @@ Create `legal-templates/src/theme.js` with the exact contents of SNIPPET A.
 Replace the ENTIRE contents of `legal-templates/styles.css` with SNIPPET E followed by:
 
 ```css
-
 /* Legal templates: form + serif document preview. */
 #tool.grid {
   display: grid;
@@ -599,7 +597,9 @@ Create `open-access-uk-site/src/theme.js` with the exact contents of SNIPPET A.
 In `open-access-uk-site/index.html`, inside the existing `<header class="site-header">`, immediately AFTER the existing `<a class="header-cta" href="#toolkit">Explore the toolkit</a>` line, add:
 
 ```html
-<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+  Dark theme
+</button>
 ```
 
 Do NOT change the `theme-color` meta, canonical link, manifest link, any `data-tool`/`data-workflow` attribute, `aria-pressed="true"` usage, `id="copy-status"`, `id="source-safety"`, `id="privacy"`, or any GTM copy string.
@@ -609,7 +609,6 @@ Do NOT change the `theme-color` meta, canonical link, manifest link, any `data-t
 Replace the ENTIRE contents of `open-access-uk-site/styles.css` with SNIPPET E followed by the umbrella-specific layout below. (This drops the dark-navy palette; the shared tokens now drive colour. We keep the layout shapes — hero grid, toolkit grid, workflows, timeline — re-themed.)
 
 ```css
-
 /* Umbrella site: Claude re-skin of existing layout shapes. */
 .section-shell {
   width: min(var(--max), calc(100% - var(--space-6)));
