@@ -1,30 +1,7 @@
-import { initTheme } from './theme.js';
-import {
-  ISSUE_CATEGORIES,
-  CASE_STATUS,
-  EVIDENCE_TYPES,
-  JOURNEY_TOOLS,
-  createCase,
-  parseCaseList,
-  serializeCaseList,
-  parseCaseFile,
-  getStatusMeta,
-  getIssueMeta,
-  getEvidenceTypeMeta,
-  getJourneyToolMeta,
-  buildSummary,
-  buildStatusBreakdown,
-  addEvidence,
-  removeEvidence,
-  addLetter,
-  removeLetter,
-  addJourneyStep,
-  removeJourneyStep,
-  suggestJourney,
-  buildCaseMarkdown,
-  buildCaseJsonExport
-} from './builder.js';
-import { buildExportList, groupByType, buildCombinedMarkdown } from './export-hub.js';
+// ===== src/app.js =====
+// ===== src/app.js =====
+
+
 
 const STORAGE_KEY = 'open-access-uk:case-builder:cases';
 const FORM_KEY = 'open-access-uk:case-builder:form-draft';
@@ -935,3 +912,708 @@ navToggle?.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', String(open));
   primaryNav?.classList.toggle('is-open', open);
 });
+
+
+// ===== src/theme.js =====
+const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_theme_js = (() => {
+// <app>/src/theme.js
+
+function readStored() {
+  try {
+    return window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeStored(value) {
+  try {
+    window.localStorage.setItem(THEME_STORAGE_KEY, value);
+  } catch {
+    /* private mode: theme still applies for this session */
+  }
+}
+
+function apply(theme, toggle) {
+  document.documentElement.setAttribute('data-theme', theme);
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
+    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
+  }
+}
+
+function initTheme(toggleSelector = '#theme-toggle') {
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  const toggle = document.querySelector(toggleSelector);
+  let theme = resolveInitialTheme({ stored: readStored(), prefersDark });
+  apply(theme, toggle);
+
+  toggle?.addEventListener('click', () => {
+    theme = nextTheme(theme);
+    apply(theme, toggle);
+    writeStored(theme);
+  });
+}
+
+return { initTheme };
+})();
+
+// ===== ../shared/theme/index.mjs =====
+const __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_theme_index_mjs = (() => {
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+return { THEME_STORAGE_KEY, resolveInitialTheme, nextTheme };
+})();
+
+// ===== src/builder.js =====
+const __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_builder_js = (() => {
+// Case Builder - core case management logic
+// Combines letters, evidence, deadlines, and escalation into portable case files.
+
+const ISSUE_CATEGORIES = [
+  {
+    value: 'access',
+    label: 'Access or reasonable adjustment',
+    description: 'Barriers in services, employment, education, or premises.'
+  },
+  {
+    value: 'complaint',
+    label: 'Complaint or service failure',
+    description: 'Service has failed or treated you unfairly.'
+  },
+  {
+    value: 'foi',
+    label: 'Freedom of Information',
+    description: 'Request information from a public authority.'
+  },
+  {
+    value: 'sar',
+    label: 'Subject access request',
+    description: 'Request your personal data from an organisation.'
+  },
+  {
+    value: 'housing',
+    label: 'Housing or disrepair',
+    description: 'Repairs, landlord issues, council housing.'
+  },
+  {
+    value: 'consumer',
+    label: 'Consumer or financial',
+    description: 'Refunds, chargebacks, banking, utilities.'
+  },
+  {
+    value: 'travel',
+    label: 'Travel or transport',
+    description: 'Rail, airline, bus, or other transport issues.'
+  },
+  {
+    value: 'employment',
+    label: 'Employment or workplace',
+    description: 'Workplace issues, grievance, dismissal.'
+  },
+  {
+    value: 'education',
+    label: 'Education or SEND',
+    description: 'School, university, SEND, exams.'
+  },
+  {
+    value: 'health',
+    label: 'Health or social care',
+    description: 'NHS, social care, accessibility.'
+  },
+  { value: 'other', label: 'Other', description: 'Something not covered above.' }
+];
+
+const CASE_STATUS = [
+  { value: 'planning', label: 'Planning', description: 'Gathering facts and deciding next steps.' },
+  { value: 'drafting', label: 'Drafting', description: 'Writing the request or complaint.' },
+  { value: 'sent', label: 'Sent', description: 'Initial request or complaint sent.' },
+  {
+    value: 'awaiting',
+    label: 'Awaiting response',
+    description: 'Waiting for a reply within the response window.'
+  },
+  { value: 'overdue', label: 'Overdue', description: 'Response deadline has passed.' },
+  {
+    value: 'escalated',
+    label: 'Escalated',
+    description: 'Internal review or ombudsman route started.'
+  },
+  { value: 'resolved', label: 'Resolved', description: 'Issue resolved to your satisfaction.' },
+  { value: 'closed', label: 'Closed', description: 'No further action planned.' }
+];
+
+const EVIDENCE_TYPES = [
+  { value: 'document', label: 'Document' },
+  { value: 'email', label: 'Email' },
+  { value: 'letter', label: 'Letter' },
+  { value: 'photo', label: 'Photo' },
+  { value: 'screenshot', label: 'Screenshot' },
+  { value: 'call-log', label: 'Phone call log' },
+  { value: 'form', label: 'Form or application' },
+  { value: 'invoice', label: 'Invoice or receipt' },
+  { value: 'other', label: 'Other' }
+];
+
+const JOURNEY_TOOLS = [
+  {
+    id: 'letter-generator',
+    label: 'Public-Service Letter Generator',
+    url: 'https://letter-generator-psi.vercel.app/',
+    category: 'letters',
+    description: 'Draft reasonable adjustments, FOI, SAR, and complaint follow-ups.'
+  },
+  {
+    id: 'accessible-forms',
+    label: 'Accessible Public Forms',
+    url: 'https://accessible-forms-two.vercel.app/',
+    category: 'forms',
+    description: 'Audit and fix inaccessible public-service forms.'
+  },
+  {
+    id: 'public-service-directory',
+    label: 'Public Service Directory',
+    url: 'https://public-service-directory.vercel.app/',
+    category: 'directory',
+    description: 'Find escalation routes and ombudsmen.'
+  },
+  {
+    id: 'legal-templates',
+    label: 'Legal Templates UK',
+    url: 'https://legal-templates-seven.vercel.app/',
+    category: 'templates',
+    description: 'Plain-English legal templates for everyday issues.'
+  },
+  {
+    id: 'design-system',
+    label: 'Open Access Design System',
+    url: 'https://design-system-two-delta.vercel.app/',
+    category: 'design-system',
+    description: 'Accessible design tokens and component patterns.'
+  },
+  {
+    id: 'foi-tracker',
+    label: 'FOI Response Tracker',
+    url: 'https://foi-tracker.vercel.app/',
+    category: 'foi',
+    description: 'Track FOI requests, deadlines, and escalations.'
+  }
+];
+
+function generateCaseId() {
+  const stamp = Date.now().toString(36);
+  const random = Math.random().toString(36).slice(2, 7);
+  return `case-${stamp}-${random}`;
+}
+
+function createCase(data = {}) {
+  return {
+    id: data.id || generateCaseId(),
+    title: String(data.title || '').trim(),
+    description: String(data.description || '').trim(),
+    issueCategory: data.issueCategory || 'other',
+    status: data.status || 'planning',
+    organisation: String(data.organisation || '').trim(),
+    contactName: String(data.contactName || '').trim(),
+    contactDetails: String(data.contactDetails || '').trim(),
+    sentDate: data.sentDate || '',
+    responseDate: data.responseDate || '',
+    deadline: data.deadline || '',
+    notes: String(data.notes || '').trim(),
+    evidence: Array.isArray(data.evidence) ? data.evidence.map(normaliseEvidence) : [],
+    letters: Array.isArray(data.letters) ? data.letters.map(normaliseLetter) : [],
+    journey: Array.isArray(data.journey) ? data.journey.map(normaliseJourneyStep) : [],
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: data.updatedAt || new Date().toISOString()
+  };
+}
+
+function normaliseEvidence(item) {
+  if (!item) return null;
+  return {
+    id: item.id || `ev-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+    type: item.type || 'document',
+    title: String(item.title || '').trim(),
+    description: String(item.description || '').trim(),
+    date: item.date || '',
+    reference: String(item.reference || '').trim()
+  };
+}
+
+function normaliseLetter(item) {
+  if (!item) return null;
+  return {
+    id: item.id || `let-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+    type: item.type || 'custom',
+    subject: String(item.subject || '').trim(),
+    recipient: String(item.recipient || '').trim(),
+    body: String(item.body || '').trim(),
+    sentDate: item.sentDate || '',
+    reference: String(item.reference || '').trim()
+  };
+}
+
+function normaliseJourneyStep(item) {
+  if (!item) return null;
+  return {
+    id: item.id || `step-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+    tool: item.tool || 'letter-generator',
+    note: String(item.note || '').trim(),
+    status: item.status || 'pending',
+    completedDate: item.completedDate || ''
+  };
+}
+
+function cleanEvidence(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(normaliseEvidence).filter(Boolean);
+}
+
+function cleanLetters(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(normaliseLetter).filter(Boolean);
+}
+
+function cleanJourney(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(normaliseJourneyStep).filter(Boolean);
+}
+
+function parseCase(value) {
+  if (!value) return null;
+  try {
+    const parsed = JSON.parse(value);
+    return createCase(parsed);
+  } catch {
+    return null;
+  }
+}
+
+function serializeCase(c) {
+  return JSON.stringify(createCase(c));
+}
+
+function parseCaseList(value) {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((item) => createCase(item));
+  } catch {
+    return [];
+  }
+}
+
+function serializeCaseList(list) {
+  return JSON.stringify(list.map((item) => createCase(item)));
+}
+
+function getStatusMeta(status) {
+  return CASE_STATUS.find((s) => s.value === status) || CASE_STATUS[0];
+}
+
+function getIssueMeta(category) {
+  return (
+    ISSUE_CATEGORIES.find((c) => c.value === category) ||
+    ISSUE_CATEGORIES.find((c) => c.value === 'other') ||
+    ISSUE_CATEGORIES[0]
+  );
+}
+
+function getEvidenceTypeMeta(type) {
+  return EVIDENCE_TYPES.find((t) => t.value === type) || EVIDENCE_TYPES[0];
+}
+
+function getJourneyToolMeta(id) {
+  return JOURNEY_TOOLS.find((t) => t.id === id) || JOURNEY_TOOLS[0];
+}
+
+function buildSummary(cases) {
+  const total = cases.length;
+  const active = cases.filter((c) => !['resolved', 'closed'].includes(c.status)).length;
+  const overdue = cases.filter((c) => c.status === 'overdue').length;
+  const escalated = cases.filter((c) => c.status === 'escalated').length;
+  const resolved = cases.filter((c) => ['resolved', 'closed'].includes(c.status)).length;
+  return { total, active, overdue, escalated, resolved };
+}
+
+function buildStatusBreakdown(cases) {
+  const breakdown = {};
+  for (const option of CASE_STATUS) {
+    breakdown[option.value] = cases.filter((c) => c.status === option.value).length;
+  }
+  return breakdown;
+}
+
+function addEvidence(caseObj, evidence) {
+  const c = createCase(caseObj);
+  const item = normaliseEvidence(evidence);
+  if (!item) return c;
+  c.evidence.push(item);
+  c.updatedAt = new Date().toISOString();
+  return c;
+}
+
+function removeEvidence(caseObj, evidenceId) {
+  const c = createCase(caseObj);
+  c.evidence = c.evidence.filter((e) => e.id !== evidenceId);
+  c.updatedAt = new Date().toISOString();
+  return c;
+}
+
+function addLetter(caseObj, letter) {
+  const c = createCase(caseObj);
+  const item = normaliseLetter(letter);
+  if (!item) return c;
+  c.letters.push(item);
+  c.updatedAt = new Date().toISOString();
+  return c;
+}
+
+function removeLetter(caseObj, letterId) {
+  const c = createCase(caseObj);
+  c.letters = c.letters.filter((l) => l.id !== letterId);
+  c.updatedAt = new Date().toISOString();
+  return c;
+}
+
+function addJourneyStep(caseObj, step) {
+  const c = createCase(caseObj);
+  const item = normaliseJourneyStep(step);
+  if (!item) return c;
+  c.journey.push(item);
+  c.updatedAt = new Date().toISOString();
+  return c;
+}
+
+function removeJourneyStep(caseObj, stepId) {
+  const c = createCase(caseObj);
+  c.journey = c.journey.filter((s) => s.id !== stepId);
+  c.updatedAt = new Date().toISOString();
+  return c;
+}
+
+function suggestJourney(issueCategory) {
+  const journeys = {
+    access: ['letter-generator', 'public-service-directory', 'legal-templates'],
+    complaint: ['letter-generator', 'public-service-directory', 'legal-templates'],
+    foi: ['letter-generator', 'foi-tracker', 'public-service-directory'],
+    sar: ['letter-generator', 'public-service-directory'],
+    housing: ['letter-generator', 'public-service-directory', 'legal-templates'],
+    consumer: ['legal-templates', 'public-service-directory', 'letter-generator'],
+    travel: ['letter-generator', 'public-service-directory'],
+    employment: ['letter-generator', 'public-service-directory', 'legal-templates'],
+    education: ['letter-generator', 'public-service-directory'],
+    health: ['letter-generator', 'public-service-directory'],
+    other: ['letter-generator', 'public-service-directory']
+  };
+  const steps = journeys[issueCategory] || journeys.other;
+  return steps.map((tool, i) => ({
+    id: `step-${Date.now().toString(36)}-${i}`,
+    tool,
+    note: '',
+    status: 'pending',
+    completedDate: ''
+  }));
+}
+
+function buildCaseFile(c) {
+  return {
+    schema: 'open-access-uk:case:v1',
+    case: createCase(c)
+  };
+}
+
+function parseCaseFile(value) {
+  if (!value) return null;
+  try {
+    const parsed = JSON.parse(value);
+    if (parsed && parsed.schema === 'open-access-uk:case:v1' && parsed.case) {
+      return createCase(parsed.case);
+    }
+    if (parsed && parsed.id && parsed.title !== undefined) {
+      return createCase(parsed);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function buildCaseMarkdown(c) {
+  const statusMeta = getStatusMeta(c.status);
+  const issueMeta = getIssueMeta(c.issueCategory);
+  const sections = [
+    `# Case: ${c.title || 'Untitled'}`,
+    '',
+    `## Summary`,
+    `- Status: ${statusMeta.label}`,
+    `- Issue category: ${issueMeta.label}`,
+    `- Organisation: ${c.organisation || 'Not specified'}`,
+    `- Contact: ${c.contactName || 'Not specified'}`,
+    `- Created: ${new Date(c.createdAt).toLocaleDateString()}`,
+    `- Updated: ${new Date(c.updatedAt).toLocaleDateString()}`,
+    '',
+    `## Description`,
+    c.description || 'No description recorded.',
+    '',
+    `## Key dates`,
+    `- Sent: ${c.sentDate || 'Not sent yet'}`,
+    `- Response received: ${c.responseDate || 'Not received yet'}`,
+    `- Deadline: ${c.deadline || 'Not set'}`,
+    '',
+    `## Evidence (${c.evidence.length})`,
+    ...(c.evidence.length === 0
+      ? ['- No evidence recorded yet.']
+      : c.evidence.map(
+          (e) =>
+            `- [${getEvidenceTypeMeta(e.type).label}] ${e.title}${e.date ? ` (${e.date})` : ''}${e.description ? `: ${e.description}` : ''}`
+        )),
+    '',
+    `## Letters (${c.letters.length})`,
+    ...(c.letters.length === 0
+      ? ['- No letters recorded yet.']
+      : c.letters
+          .flatMap((l) => [
+            `### ${l.subject || l.type}`,
+            `- Recipient: ${l.recipient || 'Not specified'}`,
+            l.sentDate ? `- Sent: ${l.sentDate}` : '',
+            l.reference ? `- Reference: ${l.reference}` : '',
+            '',
+            l.body || '(no body recorded)',
+            ''
+          ])
+          .filter(Boolean)),
+    `## Journey (${c.journey.length} steps)`,
+    ...(c.journey.length === 0
+      ? ['- No journey steps recorded yet.']
+      : c.journey.map((s, i) => {
+          const tool = getJourneyToolMeta(s.tool);
+          const status = s.status === 'completed' ? '✓' : s.status === 'in-progress' ? '…' : '○';
+          return `${i + 1}. ${status} [${tool.label}](${tool.url})${s.note ? ` — ${s.note}` : ''}`;
+        })),
+    '',
+    `## Notes`,
+    c.notes || 'No additional notes.',
+    '',
+    '> This case file is a drafting aid, not legal advice. Verify deadlines, routes, and exemptions against current GOV.UK and specialist guidance.'
+  ];
+  return sections.filter(Boolean).join('\n');
+}
+
+function buildEvidenceManifest(c) {
+  const lines = [
+    `# Evidence manifest: ${c.title || 'Untitled'}`,
+    '',
+    `Total items: ${c.evidence.length}`,
+    '',
+    '| # | Type | Title | Date | Reference | Description |',
+    '|---|------|-------|------|-----------|-------------|'
+  ];
+  c.evidence.forEach((e, i) => {
+    const type = getEvidenceTypeMeta(e.type).label;
+    const title = (e.title || '').replace(/\|/g, '\\|');
+    const date = e.date || '';
+    const reference = (e.reference || '').replace(/\|/g, '\\|');
+    const description = (e.description || '').replace(/\|/g, '\\|');
+    lines.push(`| ${i + 1} | ${type} | ${title} | ${date} | ${reference} | ${description} |`);
+  });
+  return lines.join('\n');
+}
+
+function buildTimelineMarkdown(c) {
+  const events = [];
+  if (c.sentDate) {
+    events.push({
+      date: c.sentDate,
+      label: 'Request sent',
+      detail: `Sent to ${c.organisation || 'organisation'}`
+    });
+  }
+  for (const letter of c.letters) {
+    if (letter.sentDate) {
+      events.push({
+        date: letter.sentDate,
+        label: `Letter sent: ${letter.subject || letter.type}`,
+        detail: `To ${letter.recipient || 'recipient'}`
+      });
+    }
+  }
+  for (const step of c.journey) {
+    if (step.completedDate) {
+      const tool = getJourneyToolMeta(step.tool);
+      events.push({
+        date: step.completedDate,
+        label: `Journey step: ${tool.label}`,
+        detail: step.note || ''
+      });
+    }
+  }
+  if (c.responseDate) {
+    events.push({ date: c.responseDate, label: 'Response received', detail: '' });
+  }
+  events.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  const lines = [
+    `# Timeline: ${c.title || 'Untitled'}`,
+    '',
+    events.length === 0 ? 'No timeline events recorded.' : '',
+    ...events.map((e) => `- **${e.date}** — ${e.label}${e.detail ? `: ${e.detail}` : ''}`)
+  ].filter(Boolean);
+  return lines.join('\n');
+}
+
+function buildCaseJsonExport(c) {
+  return JSON.stringify(buildCaseFile(c), null, 2);
+}
+
+function buildHandoffPack(c) {
+  return [
+    `# Case pack: ${c.title || 'Untitled'}`,
+    '',
+    '## Summary',
+    buildCaseMarkdown(c),
+    '',
+    '## Evidence manifest',
+    buildEvidenceManifest(c),
+    '',
+    '## Timeline',
+    buildTimelineMarkdown(c),
+    '',
+    '---',
+    '',
+    '> Drafting aid only. Verify deadlines, routes, and exemptions against current GOV.UK and specialist guidance.'
+  ].join('\n');
+}
+
+return { ISSUE_CATEGORIES, CASE_STATUS, EVIDENCE_TYPES, JOURNEY_TOOLS, generateCaseId, createCase, cleanEvidence, cleanLetters, cleanJourney, parseCase, serializeCase, parseCaseList, serializeCaseList, getStatusMeta, getIssueMeta, getEvidenceTypeMeta, getJourneyToolMeta, buildSummary, buildStatusBreakdown, addEvidence, removeEvidence, addLetter, removeLetter, addJourneyStep, removeJourneyStep, suggestJourney, buildCaseFile, parseCaseFile, buildCaseMarkdown, buildEvidenceManifest, buildTimelineMarkdown, buildCaseJsonExport, buildHandoffPack };
+})();
+
+// ===== src/export-hub.js =====
+const __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_export_hub_js = (() => {
+// Export hub - produces downloadable files for a case
+
+function buildExportList(c) {
+  return [
+    {
+      id: 'case-markdown',
+      label: 'Case summary (Markdown)',
+      description: 'Single Markdown file with the case summary, letters, evidence, and journey.',
+      filename: safeFilename(c, 'case'),
+      mimeType: 'text/markdown',
+      content: buildCaseMarkdown(c)
+    },
+    {
+      id: 'evidence-manifest',
+      label: 'Evidence manifest (Markdown table)',
+      description: 'Markdown table of all evidence items with type, date, and reference.',
+      filename: safeFilename(c, 'evidence-manifest'),
+      mimeType: 'text/markdown',
+      content: buildEvidenceManifest(c)
+    },
+    {
+      id: 'timeline',
+      label: 'Timeline (Markdown)',
+      description: 'Chronological list of events across the case.',
+      filename: safeFilename(c, 'timeline'),
+      mimeType: 'text/markdown',
+      content: buildTimelineMarkdown(c)
+    },
+    {
+      id: 'handoff-pack',
+      label: 'Handoff pack (combined Markdown)',
+      description: 'All of the above in one file, ready to share with an adviser.',
+      filename: safeFilename(c, 'handoff-pack'),
+      mimeType: 'text/markdown',
+      content: buildHandoffPack(c)
+    },
+    {
+      id: 'case-json',
+      label: 'Case file (JSON, portable)',
+      description:
+        'Portable JSON case file that can be imported back into the Case Builder or another tool.',
+      filename: safeFilename(c, 'case'),
+      mimeType: 'application/json',
+      content: buildCaseJsonExport(c)
+    },
+    ...buildLetterExports(c),
+    ...buildJsonListExport(c)
+  ];
+}
+
+function buildLetterExports(c) {
+  return c.letters.map((letter, i) => ({
+    id: `letter-${letter.id || i}`,
+    label: `Letter: ${letter.subject || letter.type || 'Untitled'}`,
+    description: `Letter to ${letter.recipient || 'recipient'}${letter.sentDate ? ` (sent ${letter.sentDate})` : ''}.`,
+    filename: safeFilename(c, `letter-${i + 1}-${(letter.type || 'letter').toLowerCase()}`),
+    mimeType: 'text/plain',
+    content: letter.body || '(no body recorded)'
+  }));
+}
+
+function buildJsonListExport(c) {
+  return [
+    {
+      id: 'evidence-json',
+      label: 'Evidence list (JSON)',
+      description: 'Machine-readable list of evidence items.',
+      filename: safeFilename(c, 'evidence'),
+      mimeType: 'application/json',
+      content: JSON.stringify({ caseId: c.id, evidence: c.evidence }, null, 2)
+    }
+  ];
+}
+
+function safeFilename(c, suffix) {
+  const title = String(c.title || 'case')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 40);
+  const id = String(c.id || 'untitled').slice(0, 20);
+  return `${title || 'case'}-${id}-${suffix}.md`.replace(/\.md\.md$/, '.md');
+}
+
+function groupByType(exports) {
+  const groups = { markdown: [], json: [], text: [] };
+  for (const exp of exports) {
+    if (exp.mimeType.includes('markdown')) groups.markdown.push(exp);
+    else if (exp.mimeType.includes('json')) groups.json.push(exp);
+    else groups.text.push(exp);
+  }
+  return groups;
+}
+
+function buildCombinedMarkdown(exports) {
+  const sections = [
+    '# Combined case export',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    '',
+    'This file combines the following exports:',
+    ...exports.map((e) => `- ${e.label}`),
+    '',
+    '---',
+    ''
+  ];
+  const body = exports
+    .map((e) => [`## ${e.label}`, '', e.content, '', '---', ''].join('\n'))
+    .join('\n');
+  return sections.join('\n') + body;
+}
+
+return { buildExportList, groupByType, buildCombinedMarkdown };
+})();
+
