@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { clearKnownStorage, describeStorageRegistry, storageRegistry } from './local-storage.mjs';
 import { THEME_STORAGE_KEY } from '../theme/index.mjs';
+import { EVIDENCE_HANDOFF_KEY } from '../evidence/index.mjs';
+import { COLLECTIONS_KEY } from '../collections/index.mjs';
 
 test('lists known local storage keys with plain-English descriptions', () => {
   assert.ok(storageRegistry.length >= 6);
@@ -30,4 +32,10 @@ test('storageRegistry includes the theme preference key', () => {
   assert.ok(entry, 'theme key must be registered');
   assert.equal(entry.tool, 'suite');
   assert.equal(entry.storage, 'localStorage');
+});
+
+test('storageRegistry includes evidence handoff and collections keys', () => {
+  const keys = storageRegistry.map((i) => i.key);
+  assert.ok(keys.includes(EVIDENCE_HANDOFF_KEY), 'evidence handoff key missing');
+  assert.ok(keys.includes(COLLECTIONS_KEY), 'collections key missing');
 });

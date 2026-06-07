@@ -47,6 +47,20 @@ export const storageRegistry = [
     label: 'Theme preference',
     storage: 'localStorage',
     contains: 'Chosen light or dark theme for the suite'
+  },
+  {
+    key: 'open-access-uk:evidence-handoff',
+    tool: 'suite',
+    label: 'Evidence handoff',
+    storage: 'localStorage',
+    contains: 'Evidence checklist passed between the letter generator and directory'
+  },
+  {
+    key: 'open-access-uk:legal-templates:collections',
+    tool: 'legal-templates',
+    label: 'Template collections',
+    storage: 'localStorage',
+    contains: 'Named local groupings of favourite templates'
   }
 ];
 
