@@ -61,6 +61,41 @@ export const storageRegistry = [
     label: 'Template collections',
     storage: 'localStorage',
     contains: 'Named local groupings of favourite templates'
+  },
+  {
+    key: 'open-access-uk:foi-tracker:requests',
+    tool: 'foi-tracker',
+    label: 'FOI request tracker',
+    storage: 'localStorage',
+    contains: 'Tracked FOI requests, deadlines, response notes, and escalation notes'
+  },
+  {
+    key: 'open-access-uk:foi-tracker:form-draft',
+    tool: 'foi-tracker',
+    label: 'FOI tracker form draft',
+    storage: 'localStorage',
+    contains: 'In-progress FOI tracker form fields'
+  },
+  {
+    key: 'open-access-uk:case-builder:cases',
+    tool: 'case-builder',
+    label: 'Case builder',
+    storage: 'localStorage',
+    contains: 'Saved cases with evidence, letters, and journey steps'
+  },
+  {
+    key: 'open-access-uk:case-builder:form-draft',
+    tool: 'case-builder',
+    label: 'Case builder form draft',
+    storage: 'localStorage',
+    contains: 'In-progress case builder form fields'
+  },
+  {
+    key: 'open-access-uk:case-builder:active',
+    tool: 'case-builder',
+    label: 'Active case id',
+    storage: 'localStorage',
+    contains: 'Identifier of the most recently selected case'
   }
 ];
 

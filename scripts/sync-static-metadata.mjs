@@ -35,6 +35,18 @@ const toolCopy = {
     iconClass: 'cyan',
     icon: '⌘',
     summary: 'Use accessible components, tokens, and implementation recipes.'
+  },
+  'foi-tracker': {
+    toolKey: 'foi',
+    iconClass: 'amber',
+    icon: '◐',
+    summary: 'Track FOI requests, deadlines, and escalations across public authorities.'
+  },
+  'case-builder': {
+    toolKey: 'case',
+    iconClass: 'rose',
+    icon: '◧',
+    summary: 'Combine letters, evidence, deadlines, and journeys into one portable case file.'
   }
 };
 

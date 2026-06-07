@@ -1,0 +1,238 @@
+@import url('../shared/claude/tokens.css');
+@import url('../shared/claude/components.css');
+@import url('../shared/claude/motion.css');
+@import url('../shared/claude/print.css');
+
+/* FOI Response Tracker: two-pane editor + tracked requests + detail panel */
+#tool.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+  padding: var(--space-7) 0;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.summary-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-4);
+  text-align: left;
+}
+
+.summary-card.warning {
+  border-color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.summary-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: var(--space-1) 0 0;
+  color: var(--ink);
+}
+
+.breakdown {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.breakdown-row:last-child {
+  border-bottom: none;
+}
+
+.list-section {
+  padding: var(--space-7) 0;
+}
+
+.request-list {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.request-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-4);
+  transition: border-color 0.2s ease;
+}
+
+.request-item.active {
+  border-color: var(--accent);
+}
+
+.request-item.overdue {
+  border-color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.request-item header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.request-item h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.request-item .meta {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.request-item .deadline {
+  margin: var(--space-2) 0 var(--space-3);
+  font-weight: 500;
+}
+
+.item-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.detail-panel {
+  margin-top: var(--space-6);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-3) 0 var(--space-5);
+}
+
+.detail-grid dt {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-grid dd {
+  margin: 0 0 var(--space-2);
+  font-weight: 500;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.status-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1 1 220px;
+}
+
+.status-form label {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.status-form select {
+  margin: 0;
+  flex: 1;
+}
+
+.body-text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  border-left: 3px solid var(--line);
+  padding-left: var(--space-3);
+  color: var(--ink);
+}
+
+.empty-state {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.gtm-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-6) 0;
+}
+
+.gtm-strip article {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-5);
+}
+
+.gtm-strip span {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.product-panel,
+.mini-window {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper-2);
+  padding: var(--space-5);
+}
+
+@media (max-width: 860px) {
+  #tool.grid {
+    grid-template-columns: 1fr;
+  }
+}

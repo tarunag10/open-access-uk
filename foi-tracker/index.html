@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FOI Response Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Requests</a>
+        <a href="#guidance">Guidance</a>
+        <a href="#contribute">Contribute</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>FOI Response Tracker</h1>
+          <p>
+            Track Freedom of Information requests across UK public authorities. See deadlines,
+            escalate overdue requests, and export your case data. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Add a request</a>
+            <a class="button secondary" href="https://github.com/tarunag10/foi-tracker"
+              >View GitHub</a
+            >
+          </div>
+        </div>
+        <div class="product-panel" aria-label="FOI tracker product preview">
+          <div class="mini-window">
+            <span>20 working day deadline</span>
+            <strong>Overdue · escalated · closed</strong>
+            <i></i><i></i><i></i>
+            <b>Internal review and ICO complaint drafts</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="FOI tracker feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Track locally</h2>
+          <p>
+            Keep a private log of FOI requests by authority, subject, and sent date. Nothing leaves
+            your browser.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Spot overdue</h2>
+          <p>See working-day deadlines, mid-window reminders, and overdue flags in one panel.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Escalate safely</h2>
+          <p>
+            Generate internal review and ICO complaint letters from the same data, ready to copy or
+            download.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="FOI request form">
+        <form id="request-form" class="panel" aria-describedby="status">
+          <h2>Add or update an FOI request</h2>
+          <label for="authority">Authority name</label>
+          <input
+            id="authority"
+            name="authority"
+            placeholder="e.g. Department for Education"
+            required
+          />
+
+          <label for="authorityType">Authority type</label>
+          <select id="authorityType" name="authorityType"></select>
+
+          <label for="subject">Subject of the request</label>
+          <input id="subject" name="subject" placeholder="e.g. SEND tribunal waiting times" />
+
+          <label for="requestText">Original request text</label>
+          <textarea
+            id="requestText"
+            name="requestText"
+            rows="4"
+            placeholder="Under the Freedom of Information Act 2000, please provide..."
+          ></textarea>
+
+          <label for="sentDate">Date sent</label>
+          <input id="sentDate" name="sentDate" type="date" />
+
+          <label for="status">Current status</label>
+          <select id="status" name="status"></select>
+
+          <label for="reference">Authority reference</label>
+          <input id="reference" name="reference" placeholder="e.g. DFE-2026-FOI-1234" />
+
+          <label for="responseNotes">Response notes</label>
+          <textarea
+            id="responseNotes"
+            name="responseNotes"
+            rows="3"
+            placeholder="What has the authority said so far?"
+          ></textarea>
+
+          <label for="escalationNotes">Escalation notes</label>
+          <textarea
+            id="escalationNotes"
+            name="escalationNotes"
+            rows="3"
+            placeholder="Steps taken, dates, contacts."
+          ></textarea>
+
+          <label for="name">Your name (for letters)</label>
+          <input id="name" name="name" placeholder="A. Citizen" />
+
+          <label for="contact">Your contact (for letters)</label>
+          <input id="contact" name="contact" placeholder="email at a.citizen@example.com" />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save request</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Tracker summary"></section>
+          <section class="panel" aria-label="Status breakdown">
+            <h3>Status breakdown</h3>
+            <div id="status-breakdown" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked requests">
+        <h2>Tracked requests</h2>
+        <div id="request-list" class="request-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected request detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>FOI basics</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>20 working days</h3>
+            <p>
+              Public authorities normally have 20 working days to respond. Working days exclude
+              weekends and bank holidays.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Request in writing</h3>
+            <p>
+              Send by email or letter. Include your name, an address for the reply, and a clear
+              description of the information you want.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Internal review first</h3>
+            <p>
+              If the deadline passes or you are unhappy with the response, ask the authority for an
+              internal review before complaining to the ICO.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Plain-English safety note</h3>
+            <p>
+              This is a tracking aid, not legal advice. Verify deadlines, exemptions, and routes
+              against the current GOV.UK and ICO guidance.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="contribute" class="footer-band">
+        <h2>Contribute</h2>
+        <p>
+          Useful improvements include more authority-type guidance, tested escalation letters,
+          calendar reminder formats, and accessibility fixes. Keep the project static and avoid
+          collecting personal data.
+        </p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="LICENSE">MIT License</a>
+      </nav>
+      <p>Open-source, privacy-first, and local to your browser.</p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
