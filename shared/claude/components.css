@@ -1,0 +1,325 @@
+/* shared/claude/components.css — reusable Claude components. Uses tokens.css vars. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+}
+
+main {
+  width: min(var(--max), calc(100% - var(--space-6)));
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.08;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: var(--step-4);
+}
+h2 {
+  font-size: var(--step-3);
+}
+h3 {
+  font-size: var(--step-1);
+}
+
+a {
+  color: var(--teal);
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 30;
+  transform: translateY(-150%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Header + nav */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  width: min(var(--max), calc(100% - var(--space-6)));
+  margin: 0 auto;
+  padding: var(--space-4) 0;
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step-1);
+  color: var(--ink);
+  text-decoration: none;
+  margin-right: auto;
+}
+.site-header nav {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+.site-header nav a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  font-size: var(--step--1);
+}
+.site-header nav a:hover {
+  color: var(--ink);
+}
+.nav-toggle {
+  display: none;
+}
+.theme-toggle {
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Buttons */
+.button,
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+  box-shadow: var(--shadow-sm);
+}
+.button:hover,
+button:hover {
+  box-shadow: var(--shadow-md);
+}
+.button.secondary,
+button.secondary {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.button.ghost,
+button.ghost {
+  background: transparent;
+  color: var(--accent);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Cards + panels */
+.card,
+.panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+.card h3 {
+  margin-top: 0;
+}
+.card p {
+  color: var(--ink-muted);
+}
+
+/* Form controls */
+label {
+  display: block;
+  font-weight: 600;
+  margin: var(--space-4) 0 var(--space-2);
+}
+input,
+select,
+textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+textarea {
+  min-height: 140px;
+}
+
+/* Hero */
+.hero {
+  display: grid;
+  gap: var(--space-7);
+  padding: var(--space-8) 0;
+}
+.hero h1 {
+  margin: 0 0 var(--space-4);
+}
+.hero p {
+  font-size: var(--step-1);
+  color: var(--ink-muted);
+  max-width: 60ch;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+/* Tags + table */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-3);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  text-align: left;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Code / token window */
+.code-window {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper-2);
+  padding: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  overflow: auto;
+}
+
+/* Status toast / live region */
+.toast {
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* Meter / readiness ring base */
+.meter {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  overflow: hidden;
+}
+.meter > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+/* Footer */
+.site-footer {
+  margin-top: var(--space-9);
+  padding: var(--space-7) 0;
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+}
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+.site-footer a {
+  color: var(--ink-muted);
+}
+
+@media (max-width: 720px) {
+  .nav-toggle {
+    display: inline-flex;
+    min-height: 44px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .site-header nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+  .site-header nav.is-open {
+    display: flex;
+  }
+}

@@ -221,5 +221,37 @@ export const sourceRecords = [
     "review_due": "2026-09-05",
     "reviewer": "tarunag10",
     "notes": "Used for benefits evidence upload patterns and escalation. Not legal advice."
+  },
+  {
+    "id": "ico-foi-complaint",
+    "name": "ICO complaint to a public authority guidance",
+    "publisher": "Information Commissioner's Office",
+    "url": "https://ico.org.uk/make-a-complaint/your-information-rights-complaint/",
+    "jurisdiction": "UK",
+    "licence": "to-be-confirmed",
+    "used_by": [
+      "foi-tracker"
+    ],
+    "risk_level": "high",
+    "last_checked": "2026-06-02",
+    "review_due": "2026-09-02",
+    "reviewer": "tarunag10",
+    "notes": "Used for FOI complaint route and ICO escalation timing."
+  },
+  {
+    "id": "govuk-foi-time-limits",
+    "name": "GOV.UK freedom of information request time limits",
+    "publisher": "GOV.UK",
+    "url": "https://www.gov.uk/make-a-freedom-of-information-request/time-limits-for-responding",
+    "jurisdiction": "UK",
+    "licence": "to-be-confirmed",
+    "used_by": [
+      "foi-tracker"
+    ],
+    "risk_level": "high",
+    "last_checked": "2026-06-02",
+    "review_due": "2026-09-02",
+    "reviewer": "tarunag10",
+    "notes": "Used for FOI 20 working day deadline context and exception handling."
   }
 ];

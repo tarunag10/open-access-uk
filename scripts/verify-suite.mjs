@@ -11,6 +11,8 @@ const repos = [
   'public-service-directory',
   'legal-templates',
   'design-system',
+  'foi-tracker',
+  'case-builder',
   'contributor-tools/maintainer-helper'
 ].filter((entry) => existsSync(join(root, entry, 'package.json')));
 

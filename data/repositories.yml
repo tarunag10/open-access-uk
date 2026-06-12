@@ -70,3 +70,21 @@
   risk_level: low
   maintainers:
     - tarunag10
+- id: foi-tracker
+  name: FOI Response Tracker
+  repo: tarunag10/foi-tracker
+  demo: https://foi-tracker.vercel.app/
+  category: foi
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: case-builder
+  name: Case Builder
+  repo: tarunag10/case-builder
+  demo: https://case-builder.vercel.app/
+  category: case-management
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10

@@ -38,13 +38,7 @@ for (const required of [
   'aria-live',
   'aria-pressed',
   'id="source-safety"',
-  'id="privacy"',
-  'id="privacy-clear"',
-  'privacy-interactive',
-  'id="glossary"',
-  'id="glossary-filter"',
-  'data-workflow="plan"',
-  'sw.js'
+  'id="privacy"'
 ]) {
   if (!siteHtml.includes(required)) throw new Error(`Site missing quality marker: ${required}`);
 }

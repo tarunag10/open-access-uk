@@ -110,3 +110,51 @@
   risk_level: high
   source_needs: govuk-benefits-appeals
   mvp: New route for mandatory reconsideration and tribunal appeals with evidence checklist and current note.
+- id: foi-response-tracker
+  name: FOI response tracker
+  tool: foi-tracker
+  status: shipped
+  priority: high
+  risk_level: high
+  source_needs: govuk-foi-request
+  mvp: Local tracker for FOI requests across public authorities with 20-working-day deadline, overdue detection, internal review and ICO complaint letters, calendar reminders, and CSV/JSON export.
+- id: case-builder
+  name: Case builder
+  tool: case-builder
+  status: shipped
+  priority: high
+  risk_level: medium
+  source_needs: internal
+  mvp: Browser-only case management combining letters, evidence, deadlines, and journey planning with portable case files, export hub, and import from other tools.
+- id: case-builder-export-hub
+  name: Case builder export hub
+  tool: case-builder
+  status: shipped
+  priority: medium
+  risk_level: low
+  source_needs: internal
+  mvp: Export hub producing Markdown case summary, evidence manifest, timeline, combined handoff pack, portable JSON case file, and individual letter files.
+- id: case-builder-journey-planner
+  name: Case builder journey planner
+  tool: case-builder
+  status: shipped
+  priority: medium
+  risk_level: low
+  source_needs: internal
+  mvp: Journey planner that chains Open Access UK tools by issue category, with suggested steps, status tracking, and links to each tool.
+- id: foi-tracker-calendar-reminders
+  name: FOI tracker calendar reminders
+  tool: foi-tracker
+  status: shipped
+  priority: medium
+  risk_level: low
+  source_needs: internal
+  mvp: RFC 5545 ICS calendar event generation for mid-window (14 working days) and deadline (20 working days) reminders.
+- id: foi-tracker-escalation-letters
+  name: FOI tracker escalation letters
+  tool: foi-tracker
+  status: shipped
+  priority: high
+  risk_level: high
+  source_needs: govuk-foi-request
+  mvp: Internal review letter (to the authority) and ICO complaint letter generated from the same tracked request data.

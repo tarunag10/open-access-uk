@@ -7,6 +7,8 @@ const knownTools = new Set([
   'public-service-directory',
   'legal-templates',
   'design-system',
+  'foi-tracker',
+  'case-builder',
   'maintainer-helper'
 ]);
 const required = [

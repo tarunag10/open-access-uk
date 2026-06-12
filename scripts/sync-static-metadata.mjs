@@ -41,6 +41,18 @@ const toolCopy = {
     iconClass: 'amber',
     icon: '⧉',
     summary: 'Compose local case files and combined packs from the rest of the suite.'
+  },
+  'foi-tracker': {
+    toolKey: 'foi',
+    iconClass: 'amber',
+    icon: '◐',
+    summary: 'Track FOI requests, deadlines, and escalations across public authorities.'
+  },
+  'case-builder': {
+    toolKey: 'case',
+    iconClass: 'rose',
+    icon: '◧',
+    summary: 'Combine letters, evidence, deadlines, and journeys into one portable case file.'
   }
 };
 
