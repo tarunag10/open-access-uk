@@ -166,6 +166,41 @@ export const storageRegistry = [
     label: 'Email import draft',
     storage: 'localStorage',
     contains: 'Email content parsed for case builder import'
+  },
+  {
+    key: 'open-access-uk:immigration-complaints:complaints',
+    tool: 'immigration-complaints',
+    label: 'Immigration complaints',
+    storage: 'localStorage',
+    contains: 'Immigration complaint letters and escalation records'
+  },
+  {
+    key: 'open-access-uk:professional-complaints:complaints',
+    tool: 'professional-complaints',
+    label: 'Professional complaints',
+    storage: 'localStorage',
+    contains: 'Regulated professional complaint letters'
+  },
+  {
+    key: 'open-access-uk:fee-calculator:calculations',
+    tool: 'fee-calculator',
+    label: 'Fee calculations',
+    storage: 'localStorage',
+    contains: 'Court and tribunal fee calculations and history'
+  },
+  {
+    key: 'open-access-uk:accessible-formats-request:requests',
+    tool: 'accessible-formats-request',
+    label: 'Accessible format requests',
+    storage: 'localStorage',
+    contains: 'Accessible format request letters and records'
+  },
+  {
+    key: 'open-access-uk:ombudsman-outcomes:lookups',
+    tool: 'ombudsman-outcomes',
+    label: 'Ombudsman outcome lookups',
+    storage: 'localStorage',
+    contains: 'Ombudsman outcome statistics and lookup history'
   }
 ];
 

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Immigration Complaint Tool</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Complaints</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Immigration Complaint Tool</h1>
+          <p>
+            Complain about Home Office visa delays, BRP issues, and immigration matters.
+            Generate complaint letters, track escalation routes, and build your document checklist.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Start a complaint</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Immigration complaint tool preview">
+          <div class="mini-window">
+            <span>20 working day response</span>
+            <strong>Home Office &middot; ICIBI &middot; Ombudsman</strong>
+            <i></i><i></i><i></i>
+            <b>Generate complaint letters and track escalation routes</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Immigration complaint tool feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Complaint generator</h2>
+          <p>
+            Generate a formal complaint letter to the Home Office from your details,
+            ready to copy or download. Includes all required fields.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Escalation routes</h2>
+          <p>
+            Know when to escalate from Home Office to ICIBI to Parliamentary Ombudsman.
+            Deadlines and contact details tracked for you.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Document checklist</h2>
+          <p>
+            Get a tailored checklist of required documents for your complaint type.
+            Never miss a supporting document again.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Immigration complaint form">
+        <form id="complaint-form" class="panel" aria-describedby="form-status">
+          <h2>Add an immigration complaint</h2>
+
+          <label for="complaintType">Complaint type</label>
+          <select id="complaintType" name="complaintType">
+            <option value="visa-delay">Visa Processing Delay</option>
+            <option value="brp-issue">Biometric Residence Permit Issue</option>
+            <option value="sponsorship-complaint">Sponsorship Complaint</option>
+            <option value="right-to-rent">Right to Rent Dispute</option>
+            <option value="asylum-support">Asylum Support Complaint</option>
+            <option value="immigration-detention">Immigration Detention Complaint</option>
+          </select>
+
+          <label for="complainantName">Complainant name</label>
+          <input
+            id="complainantName"
+            name="complainantName"
+            placeholder="e.g. Jane Smith"
+            required
+          />
+
+          <label for="complainantAddress">Complainant address</label>
+          <textarea
+            id="complainantAddress"
+            name="complainantAddress"
+            rows="2"
+            placeholder="Full postal address"
+          ></textarea>
+
+          <label for="applicationReference">Application reference</label>
+          <input
+            id="applicationReference"
+            name="applicationReference"
+            placeholder="e.g. GWF123456789"
+          />
+
+          <label for="dateSubmitted">Date submitted</label>
+          <input id="dateSubmitted" name="dateSubmitted" type="date" />
+
+          <label for="description">Description of issue</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="Describe the issue in detail..."
+          ></textarea>
+
+          <label for="desiredOutcome">Desired outcome</label>
+          <textarea
+            id="desiredOutcome"
+            name="desiredOutcome"
+            rows="3"
+            placeholder="What resolution are you seeking?"
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save complaint</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Complaint summary"></section>
+          <section class="panel" aria-label="Type breakdown">
+            <h3>Complaint breakdown</h3>
+            <div id="type-breakdown" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked complaints">
+        <h2>Tracked complaints</h2>
+        <div id="complaint-list" class="complaint-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected complaint detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>Home Office complaint process</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Home Office complaint</h3>
+            <p>
+              Submit a written complaint to the Home Office relevant department. They must
+              acknowledge within 5 working days and provide a full response within 20 working days.
+            </p>
+          </article>
+          <article class="card">
+            <h3>ICIBI escalation</h3>
+            <p>
+              If the Home Office response is unsatisfactory, you can escalate to the Independent
+              Chief Inspector of Borders and Immigration (ICIBI) for an independent investigation.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Parliamentary Ombudsman</h3>
+            <p>
+              If still unresolved, complain to the Parliamentary and Health Service Ombudsman
+              within 6 months of the ICIBI or final Home Office response.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a tracking aid, not legal advice. Verify deadlines, routes, and rights
+              against the current Home Office and ICIBI guidance.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gov.uk/government/organisations/uk-visas-and-immigration" rel="noopener noreferrer">Home Office</a>
+        <a href="https://www.gov.uk/government/organisations/independent-chief-inspector-of-borders-and-immigration" rel="noopener noreferrer">ICIBI</a>
+        <a href="https://www.ombudsman.org.uk/" rel="noopener noreferrer">Parliamentary Ombudsman</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: Home Office and ICIBI guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

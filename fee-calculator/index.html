@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Court and Tribunal Fee Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#history">History</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Court and Tribunal Fee Calculator</h1>
+          <p>
+            Calculate fees for county court, employment tribunal, family court, immigration
+            tribunal, and property tribunal claims. Check Help with Fees eligibility. Everything
+            runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Calculate a fee</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Fee calculator preview">
+          <div class="mini-window">
+            <span>Fee estimate in seconds</span>
+            <strong>County court · Employment tribunal · Family court</strong>
+            <i></i><i></i><i></i>
+            <b>Calculate court and tribunal fees instantly</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Fee calculator feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Fee calculator</h2>
+          <p>
+            Select a court or tribunal category, enter your claim amount, and get an instant
+            fee estimate based on HMCTS fee schedules.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Help with fees</h2>
+          <p>
+            Check whether you qualify for Help with Fees based on your income, savings, and
+            benefits status. Links to the EX160 remission form.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Exemption checker</h2>
+          <p>
+            See if you qualify for a fee exemption. Domestic violence victims, asylum seekers,
+            and benefits recipients may be exempt.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Fee calculator form">
+        <form id="fee-form" class="panel" aria-describedby="form-status">
+          <h2>Calculate court or tribunal fee</h2>
+          <label for="category">Court / Tribunal category</label>
+          <select id="category" name="category">
+            <option value="county-court">County Court</option>
+            <option value="employment-tribunal">Employment Tribunal</option>
+            <option value="family-court">Family Court</option>
+            <option value="immigration-tribunal">Immigration Tribunal</option>
+            <option value="property-tribunal">Property Tribunal</option>
+          </select>
+
+          <label for="claimAmount">Claim amount (£)</label>
+          <input
+            id="claimAmount"
+            name="claimAmount"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="e.g. 5000"
+            required
+          />
+
+          <label for="applicantType">Applicant type</label>
+          <select id="applicantType" name="applicantType">
+            <option value="individual">Individual</option>
+            <option value="organisation">Organisation</option>
+          </select>
+
+          <label for="benefitsStatus">Receiving qualifying benefits?</label>
+          <select id="benefitsStatus" name="benefitsStatus">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+
+          <label for="monthlyIncome">Monthly income (£)</label>
+          <input
+            id="monthlyIncome"
+            name="monthlyIncome"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="e.g. 2000"
+          />
+
+          <label for="savingsAmount">Total savings (£)</label>
+          <input
+            id="savingsAmount"
+            name="savingsAmount"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="e.g. 5000"
+          />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Calculate fee</button>
+            <button id="clearForm" type="button" class="secondary">Clear</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="result" class="panel" aria-label="Fee estimate result">
+            <h3>Fee estimate</h3>
+            <div id="fee-result" class="fee-result">
+              <p class="empty-state">Enter a claim amount and click Calculate to see the fee estimate.</p>
+            </div>
+          </section>
+          <section id="history" class="panel" aria-label="Calculation history">
+            <h3>Recent calculations</h3>
+            <div id="calc-list" class="calc-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>Court and tribunal fees</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>How fees work</h3>
+            <p>
+              HMCTS sets fixed fees for different court and tribunal claims. The fee depends on
+              the type of claim and the amount you are claiming. Fees must be paid when you
+              issue or start proceedings.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Help with fees</h3>
+            <p>
+              If you are on a low income or receiving qualifying benefits, you may not have to
+              pay court fees. Apply using form EX160 before or at the time of filing.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Exemptions</h3>
+            <p>
+              Some people are automatically exempt from fees, including asylum seekers,
+              victims of domestic violence, and those receiving certain benefits.
+            </p>
+          </article>
+          <article class="card">
+            <h3>No-fee employment tribunal</h3>
+            <p>
+              Employment tribunal claims have been fee-free since 2017 following the Supreme
+              Court ruling in R (UNISON) v Lord Chancellor. No fee is required to bring or
+              respond to an employment tribunal claim.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is an estimate tool, not legal advice. Verify fees against the current
+              HMCTS fee schedules and seek professional advice for complex cases.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gov.uk/court-fees" rel="noopener noreferrer">HMCTS fees</a>
+        <a href="https://www.gov.uk/get-help-with-court-fees" rel="noopener noreferrer">Help with fees</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: HMCTS fee schedules and GOV.UK guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

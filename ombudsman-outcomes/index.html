@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ombudsman Outcomes Database</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#history">History</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Ombudsman Outcomes Database</h1>
+          <p>
+            See anonymized outcome data from UK ombudsmen. Look up compensation ranges, decision
+            timescales, and typical outcomes across 11 different ombudsman services. Everything runs
+            in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Look up outcomes</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Ombudsman outcomes preview">
+          <div class="mini-window">
+            <span>11 ombudsmen</span>
+            <strong>Outcomes · Compensation · Timescales</strong>
+            <i></i><i></i><i></i>
+            <b>Browse anonymized decision data from UK ombudsman services</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Ombudsman outcomes feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Outcome lookup</h2>
+          <p>
+            Select an ombudsman and issue type to see typical decision patterns, upheld rates, and
+            what happens most often in similar cases.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Compensation ranges</h2>
+          <p>
+            See typical compensation amounts, minimum and maximum awards, and category breakdowns
+            for each ombudsman service.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Decision timescales</h2>
+          <p>
+            Know how long decisions take. Average, median, and 90th percentile timescales help you
+            plan next steps and manage expectations.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Ombudsman outcome lookup">
+        <form id="lookup-form" class="panel" aria-describedby="form-status">
+          <h2>Look up ombudsman outcomes</h2>
+          <label for="ombudsman">Select ombudsman</label>
+          <select id="ombudsman" name="ombudsman" required>
+            <option value="">Choose an ombudsman...</option>
+          </select>
+
+          <label for="issueType">Issue type</label>
+          <select id="issueType" name="issueType" required>
+            <option value="">Choose an issue type...</option>
+          </select>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Look up outcomes</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <button id="clearAll" type="button" class="secondary">Clear history</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Outcome summary"></section>
+          <section id="results" class="panel" aria-label="Outcome results" hidden>
+            <h3 id="results-heading">Results</h3>
+            <div id="results-content"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="history" class="list-section" aria-label="Recent lookups">
+        <h2>Recent lookups</h2>
+        <div id="lookup-list" class="lookup-list"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>How ombudsmen work</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Independent investigation</h3>
+            <p>
+              Ombudsmen are independent bodies that investigate complaints about organisations. They
+              can make binding decisions and recommend compensation or action.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Free service</h3>
+            <p>
+              Most ombudsman services are free to use. You must usually complain to the organisation
+              first before escalating to the ombudsman.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Time limits</h3>
+            <p>
+              Each ombudsman has time limits for complaints. Some allow 6 months, others up to 12
+              months. Check the specific ombudsman's guidance for deadlines.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is an informational tool, not legal advice. Verify routes, deadlines, and rights
+              against the current ombudsman guidance and legal requirements.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.ombudsman.org.uk/" rel="noopener noreferrer">PHSO</a>
+        <a href="https://www.financial-ombudsman.org.uk/" rel="noopener noreferrer">FOS</a>
+        <a href="https://www.housing-ombudsman.org.uk/" rel="noopener noreferrer">Housing</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: Annual reports from UK ombudsman services.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

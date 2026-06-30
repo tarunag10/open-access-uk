@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Professional Complaints Router</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Complaints</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Professional Complaints Router</h1>
+          <p>
+            Complain about doctors, solicitors, accountants, and other regulated professionals.
+            Find the right regulator, generate a complaint letter, and track fitness-to-practise processes.
+            Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Add a complaint</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Professional complaints router preview">
+          <div class="mini-window">
+            <span>GMC · SRA · LeO · ACCA</span>
+            <strong>8 regulators tracked</strong>
+            <i></i><i></i><i></i>
+            <b>Route complaints to the right regulator</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Professional complaints router feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Regulator finder</h2>
+          <p>
+            Select from 8 UK regulators: GMC, SRA, Legal Ombudsman, ACCA, RICS, NMC, GPhC, and BPS.
+            Each with specific deadlines and processes.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Complaint generator</h2>
+          <p>
+            Generate a formal complaint letter tailored to the chosen regulator, with all required
+            details pre-filled from your complaint data.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Fitness-to-practise guide</h2>
+          <p>
+            See the fitness-to-practise process for each regulator, from initial assessment through
+            investigation to tribunal hearing and sanctions.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Professional complaint form">
+        <form id="complaint-form" class="panel" aria-describedby="form-status">
+          <h2>Add or update a professional complaint</h2>
+
+          <label for="complainantName">Your name (complainant)</label>
+          <input
+            id="complainantName"
+            name="complainantName"
+            placeholder="e.g. Jane Doe"
+            required
+          />
+
+          <label for="regulator">Regulator</label>
+          <select id="regulator" name="regulator">
+            <option value="GMC">General Medical Council (GMC) — Doctors</option>
+            <option value="SRA">Solicitors Regulation Authority (SRA) — Solicitors</option>
+            <option value="LeO">Legal Ombudsman (LeO) — Legal Services</option>
+            <option value="ACCA">Association of Chartered Certified Accountants (ACCA) — Accountants</option>
+            <option value="RICS">Royal Institution of Chartered Surveyors (RICS) — Surveyors</option>
+            <option value="NMC">Nursing and Midwifery Council (NMC) — Nurses and Midwives</option>
+            <option value="GPhC">General Pharmaceutical Council (GPhC) — Pharmacists</option>
+            <option value="BPS">British Psychological Society (BPS) — Psychologists</option>
+          </select>
+
+          <label for="professionalName">Professional's name</label>
+          <input
+            id="professionalName"
+            name="professionalName"
+            placeholder="e.g. Dr John Smith"
+            required
+          />
+
+          <label for="practiceName">Practice / firm name</label>
+          <input
+            id="practiceName"
+            name="practiceName"
+            placeholder="e.g. City Medical Practice"
+          />
+
+          <label for="practiceAddress">Practice / firm address</label>
+          <input
+            id="practiceAddress"
+            name="practiceAddress"
+            placeholder="e.g. 45 Harley Street, London, W1G 8BT"
+          />
+
+          <label for="complaintType">Complaint category</label>
+          <select id="complaintType" name="complaintType">
+            <option value="">Select category</option>
+            <option value="conduct">Conduct</option>
+            <option value="performance">Performance</option>
+            <option value="health">Health</option>
+            <option value="dishonesty">Dishonesty</option>
+          </select>
+
+          <label for="descriptionOfConcern">Description of concern</label>
+          <textarea
+            id="descriptionOfConcern"
+            name="descriptionOfConcern"
+            rows="4"
+            placeholder="Brief description of the complaint..."
+          ></textarea>
+
+          <label for="desiredOutcome">Desired outcome</label>
+          <textarea
+            id="desiredOutcome"
+            name="desiredOutcome"
+            rows="3"
+            placeholder="What outcome are you seeking?"
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save complaint</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Complaint summary"></section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked complaints">
+        <h2>Tracked complaints</h2>
+        <div id="complaint-list" class="complaint-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected complaint detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>How to complain to each regulator</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>GMC (Doctors)</h3>
+            <p>
+              No statutory time limit but prompt action is recommended. The GMC investigates through
+              fitness-to-practise proceedings including initial assessment, investigation, MPTS
+              hearing, and sanctions up to erasure.
+            </p>
+          </article>
+          <article class="card">
+            <h3>SRA (Solicitors)</h3>
+            <p>
+              Within 6 years of the issue. The SRA investigates and may refer to the Solicitors
+              Disciplinary Tribunal (SDT) which can impose sanctions from rebuke to striking off.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Legal Ombudsman</h3>
+            <p>
+              Within 6 months of the final response from the service provider. The Legal Ombudsman
+              investigates service complaints including delays, poor communication, and billing issues.
+            </p>
+          </article>
+          <article class="card">
+            <h3>ACCA / RICS / BPS</h3>
+            <p>
+              Within 5-6 years depending on regulator. Each has its own disciplinary process
+              including preliminary assessment, investigation, committee hearing, and sanctions.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a routing and tracking aid, not legal advice. Verify deadlines, routes, and
+              rights against the current regulator guidance before acting.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gmc-uk.org" rel="noopener noreferrer">GMC</a>
+        <a href="https://www.sra.org.uk" rel="noopener noreferrer">SRA</a>
+        <a href="https://www.legalombudsman.org.uk" rel="noopener noreferrer">Legal Ombudsman</a>
+        <a href="https://www.accaglobal.com" rel="noopener noreferrer">ACCA</a>
+        <a href="https://www.rics.org" rel="noopener noreferrer">RICS</a>
+        <a href="https://www.nmc.org.uk" rel="noopener noreferrer">NMC</a>
+        <a href="https://www.pharmacyregulation.org" rel="noopener noreferrer">GPhC</a>
+        <a href="https://www.bps.org.uk" rel="noopener noreferrer">BPS</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Verify deadlines against current regulator guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

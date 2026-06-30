@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Accessible Formats Request Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#requests">Requests</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Accessible Formats Request Generator</h1>
+          <p>
+            Request braille, large print, audio, and other accessible formats from public
+            authorities under the Equality Act 2010. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Generate a request</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Accessible formats request preview">
+          <div class="mini-window">
+            <span>Equality Act 2010</span>
+            <strong>Braille · Large Print · Audio · Easy Read</strong>
+            <i></i><i></i><i></i>
+            <b>Request accessible formats from any public authority</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Accessible formats request feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Format selector</h2>
+          <p>
+            Choose from braille, large print, audio, easy read, BSL, Welsh, email, or telephone
+            formats with full supplier details.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Equality Act rights</h2>
+          <p>
+            Understand your right to reasonable adjustments under the Equality Act 2010.
+            Know what you can request and when.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Supplier routes</h2>
+          <p>
+            Get direct contact details for RNIB, Mencap, RNID, and other specialist suppliers
+            who produce accessible formats.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Accessible formats request form">
+        <form id="request-form" class="panel" aria-describedby="form-status">
+          <h2>Generate an accessible formats request</h2>
+
+          <label for="requestorName">Your name</label>
+          <input
+            id="requestorName"
+            name="requestorName"
+            placeholder="e.g. Jane Smith"
+            required
+          />
+
+          <label for="requestorAddress">Your address</label>
+          <textarea
+            id="requestorAddress"
+            name="requestorAddress"
+            rows="2"
+            placeholder="123 High Street, London, SW1A 1AA"
+            required
+          ></textarea>
+
+          <label for="organisationName">Organisation name</label>
+          <input
+            id="organisationName"
+            name="organisationName"
+            placeholder="e.g. Manchester City Council"
+            required
+          />
+
+          <label for="organisationType">Organisation type</label>
+          <select id="organisationType" name="organisationType">
+            <option value="council">Local Authority / Council</option>
+            <option value="nhs">NHS Organisation</option>
+            <option value="government">Government Department</option>
+            <option value="school">School / Academy</option>
+            <option value="university">University</option>
+            <option value="other">Other Public Authority</option>
+          </select>
+
+          <label for="format">Format needed</label>
+          <select id="format" name="format">
+            <option value="braille">Braille</option>
+            <option value="large-print">Large Print</option>
+            <option value="audio">Audio Format</option>
+            <option value="easy-read">Easy Read</option>
+            <option value="email">Email</option>
+            <option value="telephone">Telephone</option>
+            <option value="bsl">British Sign Language</option>
+            <option value="welsh">Welsh Language</option>
+          </select>
+
+          <label for="documents">Documents to convert</label>
+          <textarea
+            id="documents"
+            name="documents"
+            rows="3"
+            placeholder="e.g. Council tax bill, Housing application form, Annual report 2026"
+            required
+          ></textarea>
+
+          <label for="deadline">Deadline</label>
+          <input id="deadline" name="deadline" type="date" />
+
+          <label for="reason">Reason for request</label>
+          <textarea
+            id="reason"
+            name="reason"
+            rows="3"
+            placeholder="e.g. I am blind and require braille to read correspondence"
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Generate request</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="output" class="panel" aria-label="Generated request output">
+            <h3>Generated request</h3>
+            <div id="output-content" class="empty-state">
+              Fill in the form and click "Generate request" to create your letter.
+            </div>
+          </section>
+          <section class="panel" aria-label="Format requirements">
+            <h3>Format requirements</h3>
+            <div id="format-requirements" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="requests" class="list-section" aria-label="Saved requests">
+        <h2>Saved requests</h2>
+        <div id="request-list" class="complaint-list"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>Equality Act 2010 and accessible formats</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Equality Act 2010</h3>
+            <p>
+              Under the Equality Act 2010, public authorities must make reasonable adjustments
+              to ensure disabled people are not placed at a substantial disadvantage. This includes
+              providing information in accessible formats.
+            </p>
+          </article>
+          <article class="card">
+            <h3>How to request</h3>
+            <p>
+              Contact the organisation directly and request the format you need. You do not need
+              to provide medical evidence. Specify the format, the documents you need, and a
+              reasonable deadline.
+            </p>
+          </article>
+          <article class="card">
+            <h3>RNIB and Mencap routes</h3>
+            <p>
+              For specialist formats like braille, large print, and audio, contact RNIB. For easy
+              read formats, contact Mencap. For BSL, contact RNID.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a request generator, not legal advice. Verify your rights and the organisation's
+              obligations against the current Equality Act 2010 guidance.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.rnib.org.uk/" rel="noopener noreferrer">RNIB</a>
+        <a href="https://www.mencap.org.uk/" rel="noopener noreferrer">Mencap</a>
+        <a href="https://rnid.org.uk/" rel="noopener noreferrer">RNID</a>
+        <a href="https://www.legislation.gov.uk/ukpga/2010/15/contents" rel="noopener noreferrer">Equality Act 2010</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: Equality Act 2010, RNIB, Mencap, RNID guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

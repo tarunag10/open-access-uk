@@ -26,13 +26,22 @@
 - Email-to-Case Parser — integrated into case builder for extracting reference numbers, deadlines, and authority info from emails.
 - Shared engines: batch-foi, cascade, evidence-upload, email-parser modules with 98+ tests.
 
+## Shipped (Phase 4 UK Market Expansion)
+
+- Immigration Complaint Tool — complain about Home Office visa delays, BRP issues, and immigration matters with ICIBI escalation.
+- Professional Complaints Router — complain about doctors (GMC), solicitors (SRA), accountants, and other regulated professionals.
+- Court and Tribunal Fee Calculator — calculate county court, employment tribunal, and immigration tribunal fees with help-with-fees eligibility.
+- Accessible Formats Request Generator — request braille, large print, audio, and Easy Read formats under Equality Act 2010.
+- Ombudsman Outcomes Database — anonymized outcome data, compensation ranges, and decision timescales for 11 UK ombudsmen.
+- Shared engines: immigration, professional-complaints, fees-calculator, accessible-formats, ombudsman-outcomes modules with 152+ tests.
+
 ## Now
 
 - Keep the public toolkit static, privacy-first, and accessible.
 - Strengthen governance, support, security, and contribution routes.
 - Add CI and quality gates for the root suite.
 - Improve metadata, security headers, SEO, and source provenance.
-- Phase 4: Immigration Complaint Tool, Regulated Professional Complaints Router, Court and Tribunal Fees Calculator, Accessible Formats Request Specialist, Ombudsman Outcomes Database.
+- Phase 5: Local Authority Performance Lookup, Community Contribution Platform, Advanced Search and Filtering.
 
 ## Later
 
