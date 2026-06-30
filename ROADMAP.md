@@ -9,13 +9,22 @@
 - Right to Repair Tracker — integrated into case builder for social housing repair deadlines and Housing Ombudsman escalation.
 - Shared engines: complaints, appeals, parking, send-appeals, repairs modules with 105+ tests.
 
+## Shipped (Phase 2 UK Market Expansion)
+
+- Employment Tribunal Case Builder — ET1 claim builder for unfair dismissal, discrimination, and unpaid wages with ACAS conciliation tracker and remedy calculator.
+- Eviction Notice Validator — validate Section 21 and Section 8 eviction notices, check deposit protection, generate challenge letters.
+- Pre-Action Protocol Generator — integrated into letter generator for housing disrepair, debt, personal injury, and professional negligence letter of claim.
+- UC Sanctions Challenge — challenge Universal Credit sanctions, generate MR requests, check hardship payment eligibility.
+- Welsh Language Integration — EN/CY language toggle, UI translations, Welsh authorities directory.
+- Shared engines: employment, eviction, protocols, uc-sanctions, welsh modules with 145+ tests.
+
 ## Now
 
 - Keep the public toolkit static, privacy-first, and accessible.
 - Strengthen governance, support, security, and contribution routes.
 - Add CI and quality gates for the root suite.
 - Improve metadata, security headers, SEO, and source provenance.
-- Phase 2 UK Market Expansion: Employment Tribunal Case Builder, Section 21/8 Notice Validator, Pre-Action Protocol Generator, Universal Credit Sanctions Challenge, Welsh Language Integration.
+- Phase 3: Multi-Authority FOI Batch Tool, Deadline Cascade Visualizer, Evidence Upload Readiness Checker, Email-to-Case Parser.
 
 ## Next
 
@@ -23,7 +32,7 @@
 - Add source freshness validation for high-risk content.
 - Improve mobile navigation and workflow accessibility on the homepage.
 - Expand public-service templates and escalation data with clear provenance.
-- Phase 3: Multi-Authority FOI Batch Tool, Deadline Cascade Visualizer, Evidence Upload Readiness Checker, Email-to-Case Parser.
+- Phase 4: Immigration Complaint Tool, Regulated Professional Complaints Router, Court and Tribunal Fees Calculator, Accessible Formats Request Specialist, Ombudsman Outcomes Database.
 
 ## Later
 

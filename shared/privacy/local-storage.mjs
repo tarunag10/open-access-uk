@@ -131,6 +131,13 @@ export const storageRegistry = [
     label: 'Repair case draft',
     storage: 'localStorage',
     contains: 'Draft housing repair case fields'
+  },
+  {
+    key: 'open-access-uk:language-preference',
+    tool: 'suite',
+    label: 'Language preference',
+    storage: 'localStorage',
+    contains: 'Chosen English or Welsh language for the suite'
   }
 ];
 

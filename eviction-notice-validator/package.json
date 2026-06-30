@@ -1,0 +1,5 @@
+{
+  "name": "eviction-notice-validator",
+  "private": true,
+  "type": "module"
+}

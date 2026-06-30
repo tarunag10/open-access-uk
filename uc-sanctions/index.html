@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UC Sanctions Challenge</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Challenges</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>UC Sanctions Challenge</h1>
+          <p>
+            Challenge Universal Credit sanctions and request hardship payments. Generate mandatory
+            reconsideration requests and hardship payment applications. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Start a challenge</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="UC sanctions challenge preview">
+          <div class="mini-window">
+            <span>1 month MR deadline</span>
+            <strong>Higher-level · Standard · Lower-level</strong>
+            <i></i><i></i><i></i>
+            <b>Challenge sanctions and request hardship payments</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="UC sanctions challenge feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Sanction checker</h2>
+          <p>
+            Check your sanction type, deduction rates, and deadlines. Understand what you are
+            facing before you challenge.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>MR generator</h2>
+          <p>
+            Generate a mandatory reconsideration request from your details, good reasons, and
+            grounds for challenge. Ready to send to DWP.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Hardship payments</h2>
+          <p>
+            Check eligibility and generate a hardship payment request if you cannot meet your
+            basic needs due to the sanction.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="UC sanctions challenge form">
+        <form id="challenge-form" class="panel" aria-describedby="form-status">
+          <h2>Add a UC sanctions challenge</h2>
+          <label for="sanctionType">Sanction type</label>
+          <select id="sanctionType" name="sanctionType">
+            <option value="higher-level">Higher-Level Sanction (100% deduction, up to 26 weeks)</option>
+            <option value="standard" selected>Standard Sanction (20% deduction, up to 4 weeks)</option>
+            <option value="lower-level">Lower-Level Sanction (missed appointment deduction)</option>
+          </select>
+
+          <label for="claimantName">Claimant name</label>
+          <input
+            id="claimantName"
+            name="claimantName"
+            placeholder="e.g. Jane Doe"
+            required
+          />
+
+          <label for="nino">National Insurance number (optional)</label>
+          <input
+            id="nino"
+            name="nino"
+            placeholder="e.g. QQ 12 34 56 C"
+          />
+
+          <label for="decisionDate">Date of sanction decision</label>
+          <input id="decisionDate" name="decisionDate" type="date" />
+
+          <label for="reasonForSanction">Reason for sanction (as stated by DWP)</label>
+          <textarea
+            id="reasonForSanction"
+            name="reasonForSanction"
+            rows="3"
+            placeholder="What reason did DWP give for imposing the sanction?"
+          ></textarea>
+
+          <label for="groundsForChallenge">Grounds for challenge</label>
+          <textarea
+            id="groundsForChallenge"
+            name="groundsForChallenge"
+            rows="3"
+            placeholder="Why do you believe the sanction is wrong?"
+          ></textarea>
+
+          <label for="goodReasons">Good reasons for non-compliance</label>
+          <textarea
+            id="goodReasons"
+            name="goodReasons"
+            rows="3"
+            placeholder="Any good reasons you had for not complying (hospital, caring, transport, etc.)"
+          ></textarea>
+
+          <label for="hardshipReason">Reason for hardship payment (if applicable)</label>
+          <textarea
+            id="hardshipReason"
+            name="hardshipReason"
+            rows="3"
+            placeholder="Describe how the sanction means you cannot meet your basic needs (rent, food, heating)"
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save challenge</button>
+            <button id="generateMr" type="button" class="secondary">Generate MR request</button>
+            <button id="generateHardship" type="button" class="secondary">Generate hardship request</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Challenge summary"></section>
+          <section class="panel" aria-label="Output">
+            <h3>Generated output</h3>
+            <pre id="output-window" class="code-window">Generate an MR request or hardship payment request to see output here.</pre>
+            <div class="output-actions">
+              <button id="copyOutput" type="button" class="secondary">Copy</button>
+              <button id="downloadOutput" type="button" class="secondary">Download</button>
+              <button id="printOutput" type="button" class="secondary">Print</button>
+            </div>
+          </section>
+          <section class="panel" aria-label="Good reasons library">
+            <h3>Good reasons library</h3>
+            <div id="good-reasons-list" class="good-reasons"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked challenges">
+        <h2>Tracked challenges</h2>
+        <div id="challenge-list" class="complaint-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected challenge detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>UC sanctions process</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Sanction types</h3>
+            <p>
+              Higher-level: 100% standard allowance deduction for up to 26 weeks. Standard: 20%
+              deduction for up to 4 weeks. Lower-level: deduction equivalent to missed appointment.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Mandatory Reconsideration</h3>
+            <p>
+              You have 1 month from the date of the sanction decision to request a Mandatory
+              Reconsideration. This is the first step before appealing to an independent tribunal.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Good reasons</h3>
+            <p>
+              Hospital appointments, caring responsibilities, transport failure, mental health
+              episodes, and interviews running late are all recognised good reasons for
+              non-compliance.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Hardship payments</h3>
+            <p>
+              If you are a UC claimant with an active sanction and cannot meet your basic needs
+              (rent, food, heating), you may be eligible for an advance hardship payment.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a challenge-building aid, not legal advice. Verify deadlines, routes, and
+              rights against the current DWP and GOV.UK guidance.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gov.uk/universal-credit/sanctions" rel="noopener noreferrer">GOV.UK sanctions</a>
+        <a href="https://www.legislation.gov.uk/ukpga/2012/5/contents" rel="noopener noreferrer">Welfare Reform Act 2012</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: Welfare Reform Act 2012 and DWP guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

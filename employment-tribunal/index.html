@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Employment Tribunal Case Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Claims</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Employment Tribunal Case Builder</h1>
+          <p>
+            Build ET1 claims for unfair dismissal, discrimination, and unpaid wages.
+            Track ACAS conciliation and calculate potential remedies. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Build a claim</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Employment tribunal case builder preview">
+          <div class="mini-window">
+            <span>3-month time limit</span>
+            <strong>ET1 · ACAS · Remedy calculator</strong>
+            <i></i><i></i><i></i>
+            <b>Build and track employment tribunal claims</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Employment tribunal feature highlights">
+        <article>
+          <span>01</span>
+          <h2>ET1 form builder</h2>
+          <p>
+            Generate ET1 claim text from your case details. Includes claimant information,
+            employer details, grounds, and remedy calculations.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>ACAS conciliation tracker</h2>
+          <p>
+            Track ACAS early conciliation status and deadlines. Know when your 3-month
+            time limit expires and when to submit your ET1.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Remedy calculator</h2>
+          <p>
+            Calculate basic and compensatory awards for unfair dismissal. Input weekly pay,
+            age, and years of service to estimate your potential remedy.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Employment tribunal claim form">
+        <form id="claim-form" class="panel" aria-describedby="form-status">
+          <h2>Build an employment tribunal claim</h2>
+          <label for="claimType">Claim type</label>
+          <select id="claimType" name="claimType">
+            <option value="unfair-dismissal">Unfair Dismissal</option>
+            <option value="discrimination">Discrimination</option>
+            <option value="wages">Unpaid Wages</option>
+            <option value="breach-of-contract">Breach of Contract</option>
+            <option value="redundancy">Redundancy</option>
+          </select>
+
+          <label for="claimantName">Claimant name</label>
+          <input
+            id="claimantName"
+            name="claimantName"
+            placeholder="e.g. Jane Smith"
+            required
+          />
+
+          <label for="employerName">Employer name</label>
+          <input
+            id="employerName"
+            name="employerName"
+            placeholder="e.g. Acme Corp Ltd"
+            required
+          />
+
+          <label for="employerAddress">Employer address</label>
+          <textarea
+            id="employerAddress"
+            name="employerAddress"
+            rows="2"
+            placeholder="Full employer address..."
+          ></textarea>
+
+          <label for="employmentStartDate">Employment start date</label>
+          <input id="employmentStartDate" name="employmentStartDate" type="date" />
+
+          <label for="employmentEndDate">Employment end date</label>
+          <input id="employmentEndDate" name="employmentEndDate" type="date" />
+
+          <label for="dismissalDate">Dismissal date</label>
+          <input id="dismissalDate" name="dismissalDate" type="date" />
+
+          <label for="weeklyPay">Weekly pay (£)</label>
+          <input
+            id="weeklyPay"
+            name="weeklyPay"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="e.g. 450.00"
+          />
+
+          <label for="grounds">Grounds</label>
+          <textarea
+            id="grounds"
+            name="grounds"
+            rows="4"
+            placeholder="Describe the grounds for your claim..."
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save claim</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Claim summary"></section>
+          <section class="panel" aria-label="Deadline tracker">
+            <h3>Key deadlines</h3>
+            <div id="deadline-tracker" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Saved claims">
+        <h2>Saved claims</h2>
+        <div id="claim-list" class="claim-list"></div>
+      </section>
+
+      <section id="detail-panel" class="panel detail-panel" hidden aria-label="Selected claim detail">
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>Employment tribunal process</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>ACAS early conciliation</h3>
+            <p>
+              Before submitting an ET1, you must contact ACAS for early conciliation. This
+              is free and can help resolve your dispute without a tribunal hearing.
+            </p>
+          </article>
+          <article class="card">
+            <h3>ET1 claim form</h3>
+            <p>
+              If conciliation fails, you can submit an ET1 claim form to the employment tribunal.
+              You have 3 months from the date of dismissal (or act complained of) to submit.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Time limits</h3>
+            <p>
+              Most claims must be submitted within 3 months. Some claims like breach of contract
+              and redundancy have a 6-month limit. Always check the specific time limit for your claim type.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a case building aid, not legal advice. Verify deadlines, routes, and rights
+              against the current employment tribunal guidance and seek professional legal advice if needed.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gov.uk/courts-tribunals/employment-tribunal" rel="noopener noreferrer">GOV.UK Employment Tribunal</a>
+        <a href="https://www.acas.org.uk/early-conciliation" rel="noopener noreferrer">ACAS Early Conciliation</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: GOV.UK employment tribunal and ACAS guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eviction Notice Validator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#results">Results</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Eviction Notice Validator</h1>
+          <p>
+            Check if a Section 21 or Section 8 eviction notice is valid under UK law.
+            Verify notice periods, deposit protection, required documents, and more.
+            Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Validate a notice</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Eviction notice validator preview">
+          <div class="mini-window">
+            <span>62-day notice period</span>
+            <strong>Section 21 · Section 8 · Deposit check</strong>
+            <i></i><i></i><i></i>
+            <b>Validate eviction notices against UK housing law</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Eviction notice validator feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Notice validation</h2>
+          <p>
+            Check if your Section 21 or Section 8 notice meets all legal requirements.
+            Verify notice periods, prescribed forms, and service methods.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Deposit protection check</h2>
+          <p>
+            Verify your deposit was protected within 30 days and prescribed information
+            was served. An unprotected deposit can invalidate a Section 21 notice.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Court timeline</h2>
+          <p>
+            See the expected court timeline from notice expiry through possession hearing
+            to bailiff enforcement. Know what to expect at each stage.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Eviction notice validation form">
+        <form id="validation-form" class="panel" aria-describedby="form-status">
+          <h2>Validate an eviction notice</h2>
+          <label for="noticeType">Notice type</label>
+          <select id="noticeType" name="noticeType">
+            <option value="section21">Section 21 (No-Fault Eviction)</option>
+            <option value="section8-ground8">Section 8 - Ground 8 (Mandatory)</option>
+            <option value="section8-ground10">Section 8 - Ground 10</option>
+            <option value="section8-ground11">Section 8 - Ground 11</option>
+            <option value="section8-ground12">Section 8 - Ground 12</option>
+            <option value="section8-ground14">Section 8 - Ground 14</option>
+          </select>
+
+          <label for="tenantName">Tenant name</label>
+          <input
+            id="tenantName"
+            name="tenantName"
+            placeholder="e.g. Jane Smith"
+            required
+          />
+
+          <label for="landlordName">Landlord name</label>
+          <input
+            id="landlordName"
+            name="landlordName"
+            placeholder="e.g. Acme Properties Ltd"
+            required
+          />
+
+          <label for="propertyAddress">Property address</label>
+          <input
+            id="propertyAddress"
+            name="propertyAddress"
+            placeholder="e.g. 123 Main Street, London, SW1A 1AA"
+            required
+          />
+
+          <label for="noticeDate">Notice date</label>
+          <input id="noticeDate" name="noticeDate" type="date" />
+
+          <label for="noticeServedDate">Date notice served</label>
+          <input id="noticeServedDate" name="noticeServedDate" type="date" />
+
+          <label for="tenancyStartDate">Tenancy start date</label>
+          <input id="tenancyStartDate" name="tenancyStartDate" type="date" />
+
+          <div id="section21-options">
+            <fieldset>
+              <legend>Section 21 Requirements</legend>
+              <label class="checkbox-label">
+                <input type="checkbox" name="prescribedForm" value="true" />
+                Prescribed form (Form 6A) served
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="depositProtected" value="true" />
+                Deposit protected in government-approved scheme
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="epcProvided" value="true" />
+                Energy Performance Certificate (EPC) provided
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="gasSafetyCertificate" value="true" />
+                Gas safety certificate provided
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="hmoLicense" value="true" />
+                HMO licence (if applicable)
+              </label>
+            </fieldset>
+          </div>
+
+          <div id="section8-options" hidden>
+            <label for="rentArrearsMonths">Months of rent arrears (Ground 8/10)</label>
+            <input id="rentArrearsMonths" name="rentArrearsMonths" type="number" min="0" step="0.5" placeholder="e.g. 3" />
+
+            <label for="serviceMethod">How was notice served?</label>
+            <select id="serviceMethod" name="serviceMethod">
+              <option value="">Select...</option>
+              <option value="personal">In person (personal service)</option>
+              <option value="first-class">First class post</option>
+              <option value="second-class">Second class post</option>
+            </select>
+
+            <label for="breachDescription">Breach description (Ground 12)</label>
+            <textarea id="breachDescription" name="breachDescription" rows="3" placeholder="Describe the breach of tenancy obligation..."></textarea>
+
+            <label for="nuisanceDescription">Nuisance / ASB description (Ground 14)</label>
+            <textarea id="nuisanceDescription" name="nuisanceDescription" rows="3" placeholder="Describe the nuisance or anti-social behaviour..."></textarea>
+          </div>
+
+          <label for="depositAmount">Deposit amount (£)</label>
+          <input id="depositAmount" name="depositAmount" type="number" min="0" step="0.01" placeholder="e.g. 1200.00" />
+
+          <label for="depositScheme">Deposit protection scheme</label>
+          <select id="depositScheme" name="depositScheme">
+            <option value="">Select...</option>
+            <option value="dps">Deposit Protection Service (DPS)</option>
+            <option value="mydeposits">mydeposits</option>
+            <option value="tenancy-deposit-scheme">Tenancy Deposit Scheme (TDS)</option>
+          </select>
+
+          <label for="groundsDetails">Grounds details / additional notes</label>
+          <textarea
+            id="groundsDetails"
+            name="groundsDetails"
+            rows="4"
+            placeholder="Any additional details about the grounds for eviction..."
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Validate notice</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Validation summary"></section>
+          <section class="panel" aria-label="Court timeline">
+            <h3>Court timeline</h3>
+            <div id="court-timeline" class="timeline-info"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="results" class="list-section" aria-label="Validation results">
+        <h2>Validated notices</h2>
+        <div id="result-list" class="complaint-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Validation result detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>How to challenge invalid notices</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Challenge a Section 21 notice</h3>
+            <p>
+              A Section 21 notice can be challenged if the landlord has not used the prescribed form (Form 6A),
+              has not provided the EPC or gas safety certificate, or has not protected the deposit within 30 days.
+              Write to the landlord listing the defects.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Deposit protection rules</h3>
+            <p>
+              Your deposit must be protected in a government-approved scheme within 30 days of receiving it.
+              The landlord must also serve prescribed information. Failure to do so can invalidate a Section 21 notice
+              and you may be awarded 1-3x the deposit amount in compensation.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Court process</h3>
+            <p>
+              If the landlord proceeds to court, you will receive a possession hearing date. You can defend the claim
+              if the notice is invalid. Seek free legal advice from Shelter, Citizens Advice, or a housing solicitor.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is an educational tool, not legal advice. Verify all information against current UK housing law.
+              Consult a qualified housing solicitor or contact Shelter for free housing advice.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.shelter.org.uk/" rel="noopener noreferrer">Shelter</a>
+        <a href="https://www.legislation.gov.uk/ukpga/1988/50" rel="noopener noreferrer">Housing Act 1988</a>
+        <a href="https://www.gov.uk/eviction" rel="noopener noreferrer">GOV.UK - Eviction</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: Housing Act 1988, Shelter, and GOV.UK guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
