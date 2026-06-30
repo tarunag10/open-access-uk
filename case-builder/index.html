@@ -168,6 +168,33 @@
         </div>
       </section>
 
+      <section id="email-import" class="grid" aria-label="Import from email">
+        <form id="email-import-form" class="panel" aria-describedby="email-status-msg">
+          <h2>Import from Email</h2>
+          <p class="meta">
+            Paste an email to automatically extract references, deadlines, authority, and next steps
+            into a new case.
+          </p>
+          <label for="emailText">Email content</label>
+          <textarea
+            id="emailText"
+            name="emailText"
+            rows="8"
+            placeholder="Paste the full email text here (headers, body, signature)..."
+          ></textarea>
+          <div class="actions" aria-label="Email import actions">
+            <button type="submit">Import as case</button>
+          </div>
+          <p id="email-status-msg" role="status" aria-live="polite"></p>
+        </form>
+        <div class="panel">
+          <h3>Extracted Information</h3>
+          <div id="email-preview">
+            <p class="empty-state">Paste an email above to see extracted information.</p>
+          </div>
+        </div>
+      </section>
+
       <section id="cases" class="list-section" aria-label="Cases">
         <h2>Cases</h2>
         <div id="case-list" class="case-list"></div>

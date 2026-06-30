@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multi-Authority FOI Batch Tool</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Batches</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Multi-Authority FOI Batch Tool</h1>
+          <p>
+            Send identical FOI requests to multiple public authorities and track responses.
+            Generate cover letters, compare deadlines, and export results. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Create a batch</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="FOI batch tool preview">
+          <div class="mini-window">
+            <span>20 working day FOI deadline</span>
+            <strong>Batch requests &middot; Cover letters &middot; CSV export</strong>
+            <i></i><i></i><i></i>
+            <b>Send identical FOI requests to multiple authorities at once</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="FOI batch tool feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Batch creation</h2>
+          <p>
+            Compose one FOI request and add multiple authorities. Select by type — council,
+            NHS trust, police, university — or enter custom names.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Deadline tracking</h2>
+          <p>
+            The FOI Act 2000 requires a response within 20 working days. Track per-authority
+            deadlines and see which responses are overdue.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Response comparison</h2>
+          <p>
+            Compare responses across authorities. Export a CSV summary, generate cover letters,
+            and download per-authority tracking data.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="FOI batch form">
+        <form id="batch-form" class="panel" aria-describedby="form-status">
+          <h2>Create an FOI batch request</h2>
+          <label for="subject">Subject</label>
+          <input
+            id="subject"
+            name="subject"
+            placeholder="e.g. Spending data for park maintenance"
+            required
+          />
+
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="Brief description of the information requested..."
+          ></textarea>
+
+          <label for="authorityType">Authority type</label>
+          <select id="authorityType" name="authorityType">
+            <option value="council">Local Council</option>
+            <option value="nhs-trust">NHS Trust</option>
+            <option value="police">Police Force</option>
+            <option value="university">University</option>
+            <option value="government-department">Government Department</option>
+            <option value="police-fire-authority">Police and Fire Authority</option>
+          </select>
+
+          <label for="customAuthority">Add authority (name)</label>
+          <div class="add-authority-row">
+            <input
+              id="customAuthority"
+              name="customAuthority"
+              placeholder="e.g. Westminster City Council"
+            />
+            <button id="addAuthority" type="button" class="secondary">Add</button>
+          </div>
+
+          <div id="authority-list" class="authority-list" aria-label="Selected authorities"></div>
+
+          <label for="sentDate">Date sent</label>
+          <input id="sentDate" name="sentDate" type="date" />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Create batch</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Batch summary"></section>
+          <section class="panel" aria-label="Batch overview">
+            <h3>Batch overview</h3>
+            <div id="batch-overview" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked batches">
+        <h2>Tracked batches</h2>
+        <div id="batch-list" class="complaint-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected batch detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>FOI Act 2000 guidance</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>20 working days</h3>
+            <p>
+              Public authorities must respond to FOI requests within 20 working days from the
+              date of receipt. The clock starts when the request reaches the correct authority.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Batch request tips</h3>
+            <p>
+              When sending the same request to multiple authorities, tailor the subject line
+              slightly if needed to reference local context. Each authority counts its own 20-day
+              deadline independently.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Exemptions</h3>
+            <p>
+              Authorities may apply exemptions under the FOI Act (sections 21–44). If a request
+              is refused, you have the right to request an internal review and then complain to
+              the ICO.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a tracking aid, not legal advice. Verify deadlines, routes, and rights
+              against the current FOIA 2000 and ICO guidance.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/foi/" rel="noopener noreferrer">ICO FOI guidance</a>
+        <a href="https://www.legislation.gov.uk/ukpga/2000/36/contents" rel="noopener noreferrer">FOIA 2000</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: FOIA 2000 and ICO guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

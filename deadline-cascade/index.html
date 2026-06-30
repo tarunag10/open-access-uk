@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Deadline Cascade Visualizer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Cascades</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Deadline Cascade Visualizer</h1>
+          <p>
+            See multi-step deadlines as a timeline with status indicators. Pick a process
+            template, set a start date, and watch every deadline cascade into view.
+            Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Build a cascade</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Deadline cascade preview">
+          <div class="mini-window">
+            <span>Step-by-step deadline tracking</span>
+            <strong>FOI · NHS · Housing · Benefits</strong>
+            <i></i><i></i><i></i>
+            <b>Visualize every deadline in one cascade view</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Deadline cascade feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Process templates</h2>
+          <p>
+            Pre-built templates for FOI Complaint, NHS Complaint, Housing Repair, and Benefits
+            Appeal. Each template maps the correct deadline sequence.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Timeline view</h2>
+          <p>
+            Every step rendered as a visual timeline with completed, current, upcoming, and
+            overdue indicators. See exactly where you stand at a glance.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Calendar export</h2>
+          <p>
+            Export your cascade to an ICS file. Import into Google Calendar, Outlook, or Apple
+            Calendar so you never miss a deadline.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Cascade builder">
+        <form id="cascade-form" class="panel" aria-describedby="form-status">
+          <h2>Build a deadline cascade</h2>
+          <label for="template">Process template</label>
+          <select id="template" name="template">
+            <option value="foi-complaint">FOI Complaint</option>
+            <option value="nhs-complaint">NHS Complaint</option>
+            <option value="housing-repair">Housing Repair</option>
+            <option value="benefits-appeal">Benefits Appeal</option>
+          </select>
+
+          <label for="startDate">Start date</label>
+          <input id="startDate" name="startDate" type="date" required />
+
+          <label for="cascadeName">Name (optional)</label>
+          <input
+            id="cascadeName"
+            name="cascadeName"
+            placeholder="e.g. My FOI request to Council"
+          />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Build cascade</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportIcs" type="button" class="secondary">Export ICS</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Cascade summary"></section>
+          <section id="timeline-panel" class="panel" aria-label="Cascade timeline">
+            <h3>Timeline</h3>
+            <div id="cascade-timeline"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Saved cascades">
+        <h2>Saved cascades</h2>
+        <div id="cascade-list" class="cascade-list"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>How to use the cascade view</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Pick a template</h3>
+            <p>
+              Choose a process template that matches your situation. Each template has
+              pre-configured steps with the correct working day and calendar day offsets.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Set your start date</h3>
+            <p>
+              Enter the date you submitted your request or complaint. The tool calculates
+              every subsequent deadline from this date, accounting for working days where
+              required.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Read the timeline</h3>
+            <p>
+              Green steps are completed. Orange is your current step. Grey are upcoming.
+              Red means overdue. The progress bar shows overall completion.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a tracking aid, not legal advice. Verify deadlines, routes, and rights
+              against the current legislation and guidance for your process.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.legislation.gov.uk/ukpga/2000/36/contents" rel="noopener noreferrer">FOIA 2000</a>
+        <a href="https://www.nhs.uk/using-the-nhs/about-the-nhs/how-to-make-a-complaint/" rel="noopener noreferrer">NHS complaints</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: FOIA 2000, NHS England, Housing Ombudsman, and DWP guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

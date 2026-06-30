@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Evidence Upload Readiness Checker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#manifest">Manifest</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Evidence Upload Readiness Checker</h1>
+          <p>
+            Check your evidence files meet tribunal requirements before uploading.
+            Format validation, redaction checklist, and metadata stripping — all in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Check a file</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Evidence checker preview">
+          <div class="mini-window">
+            <span>PDF</span>
+            <strong>Format · Size · Redaction · Metadata</strong>
+            <i></i><i></i><i></i>
+            <b>Validate evidence files against tribunal rules</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Evidence checker feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Format validation</h2>
+          <p>
+            Check your file format is accepted by the tribunal. PDF-only or PDF and DOCX rules
+            applied per tribunal type.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Redaction checklist</h2>
+          <p>
+            Remember to check off NI numbers, bank details, medical record numbers, and
+            children's names before uploading.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Metadata stripping</h2>
+          <p>
+            Strip GPS coordinates, device info, and author names from files before
+            disclosure to protect your privacy.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Evidence check form">
+        <form id="check-form" class="panel" aria-describedby="form-status">
+          <h2>Check an evidence file</h2>
+
+          <label for="tribunalType">Tribunal type</label>
+          <select id="tribunalType" name="tribunalType">
+            <option value="SSCS">Social Security and Child Support Tribunal</option>
+            <option value="FTT">First-tier Tribunal (Tax)</option>
+            <option value="countyCourt">County Court</option>
+            <option value="employment">Employment Tribunal</option>
+            <option value="housing">Housing Tribunal</option>
+          </select>
+
+          <label for="fileName">File name</label>
+          <input
+            id="fileName"
+            name="fileName"
+            placeholder="e.g. medical-evidence.pdf"
+            required
+          />
+
+          <label for="fileSize">File size (MB)</label>
+          <input
+            id="fileSize"
+            name="fileSize"
+            type="number"
+            min="0"
+            step="0.1"
+            placeholder="e.g. 2.5"
+            required
+          />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Check file</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="result-panel" class="panel" hidden aria-label="Compliance result">
+            <h3>Compliance check result</h3>
+            <div id="result-content"></div>
+          </section>
+          <section id="checklist-panel" class="panel" aria-label="Redaction and metadata checklists">
+            <h3>Redaction checklist</h3>
+            <div id="checklist-content"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="manifest" class="list-section" aria-label="Evidence manifest">
+        <h2>Evidence manifest</h2>
+        <div id="manifest-content" class="manifest-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>Tribunal-specific requirements</h2>
+        <div class="cards">
+          <article id="guidance-panel" class="card">
+            <div id="guidance-content"></div>
+          </article>
+          <article class="card">
+            <h3>File size limits</h3>
+            <p>
+              Each tribunal has a maximum file size. SSCS: 10MB, County Court: 20MB,
+              Employment and FTT: 25MB, Housing: 15MB.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Accepted formats</h3>
+            <p>
+              Most tribunals require PDF. FTT and Employment also accept DOCX.
+              Always check tribunal-specific guidance.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a checking tool, not legal advice. Verify requirements against the
+              current HMCTS guidance for your specific tribunal.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gov.uk/courts-tribunals" rel="noopener noreferrer">HMCTS</a>
+        <a href="https://www.gov.uk/courts-tribunals/tribunal-procedure-committees" rel="noopener noreferrer">Tribunal Procedure</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: HMCTS tribunal guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

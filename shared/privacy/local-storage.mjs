@@ -138,6 +138,34 @@ export const storageRegistry = [
     label: 'Language preference',
     storage: 'localStorage',
     contains: 'Chosen English or Welsh language for the suite'
+  },
+  {
+    key: 'open-access-uk:batch-foi:batches',
+    tool: 'batch-foi',
+    label: 'Batch FOI requests',
+    storage: 'localStorage',
+    contains: 'Batch FOI requests with multiple authorities and response tracking'
+  },
+  {
+    key: 'open-access-uk:deadline-cascade:cascades',
+    tool: 'deadline-cascade',
+    label: 'Deadline cascades',
+    storage: 'localStorage',
+    contains: 'Multi-step deadline timelines and cascade progress'
+  },
+  {
+    key: 'open-access-uk:evidence-checker:checks',
+    tool: 'evidence-checker',
+    label: 'Evidence upload checks',
+    storage: 'localStorage',
+    contains: 'Evidence file compliance checks and manifests'
+  },
+  {
+    key: 'open-access-uk:case-builder:email-import',
+    tool: 'case-builder',
+    label: 'Email import draft',
+    storage: 'localStorage',
+    contains: 'Email content parsed for case builder import'
   }
 ];
 

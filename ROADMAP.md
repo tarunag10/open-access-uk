@@ -18,20 +18,20 @@
 - Welsh Language Integration — EN/CY language toggle, UI translations, Welsh authorities directory.
 - Shared engines: employment, eviction, protocols, uc-sanctions, welsh modules with 145+ tests.
 
+## Shipped (Phase 3 UK Market Expansion)
+
+- Multi-Authority FOI Batch Tool — send identical FOI to multiple councils/NHS trusts with per-authority deadline tracking and CSV export.
+- Deadline Cascade Visualizer — see multi-step processes as timelines (FOI, NHS, housing, benefits, parking) with status indicators and ICS export.
+- Evidence Upload Readiness Checker — validate evidence files against tribunal requirements (size, format, redaction).
+- Email-to-Case Parser — integrated into case builder for extracting reference numbers, deadlines, and authority info from emails.
+- Shared engines: batch-foi, cascade, evidence-upload, email-parser modules with 98+ tests.
+
 ## Now
 
 - Keep the public toolkit static, privacy-first, and accessible.
 - Strengthen governance, support, security, and contribution routes.
 - Add CI and quality gates for the root suite.
 - Improve metadata, security headers, SEO, and source provenance.
-- Phase 3: Multi-Authority FOI Batch Tool, Deadline Cascade Visualizer, Evidence Upload Readiness Checker, Email-to-Case Parser.
-
-## Next
-
-- Add end-to-end and automated accessibility tests.
-- Add source freshness validation for high-risk content.
-- Improve mobile navigation and workflow accessibility on the homepage.
-- Expand public-service templates and escalation data with clear provenance.
 - Phase 4: Immigration Complaint Tool, Regulated Professional Complaints Router, Court and Tribunal Fees Calculator, Accessible Formats Request Specialist, Ombudsman Outcomes Database.
 
 ## Later

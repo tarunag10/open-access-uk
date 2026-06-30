@@ -3,6 +3,8 @@
 // ===== src/app.js =====
 // ===== src/app.js =====
 // ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
 // ===== src/theme.js =====
 const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_theme_js = (() => {
 // <app>/src/theme.js
@@ -1760,6 +1762,288 @@ document.querySelector('#case-form')?.addEventListener('submit', (event) => {
 
 restoreRepairDraft();
 
+// ===== Email Import Extension =====
+const EMAIL_DRAFT_KEY = 'open-access-uk:case-builder:email-import';
+
+function loadEmailDraft() {
+  try {
+    const raw = localStorage.getItem(EMAIL_DRAFT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveEmailDraft(data) {
+  try {
+    localStorage.setItem(EMAIL_DRAFT_KEY, JSON.stringify(data));
+  } catch {
+    /* ignore */
+  }
+}
+
+function clearEmailDraft() {
+  try {
+    localStorage.removeItem(EMAIL_DRAFT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function handleEmailImport(event) {
+  event.preventDefault();
+  const form = document.querySelector('#email-import-form');
+  const emailText = form.elements.namedItem('emailText')?.value?.trim();
+  if (!emailText) {
+    document.querySelector('#status-msg').textContent = 'Paste email content to import.';
+    return;
+  }
+
+  const keyInfo = extractKeyInformationLocal(emailText);
+  const authorityInfo = parseAuthorityInfoLocal(emailText);
+  const title = keyInfo.references.length > 0
+    ? `Email correspondence — ${keyInfo.references[0]}`
+    : keyInfo.authority
+      ? `Email correspondence with ${keyInfo.authority}`
+      : 'Imported email correspondence';
+
+  const deadline = resolveDeadlineLocal(keyInfo.deadlines);
+  const description = formatParsedEmailLocal(keyInfo);
+
+  const cases = loadAll();
+  const now = new Date().toISOString();
+  const c = createCase({
+    title,
+    description,
+    issueCategory: 'other',
+    status: 'planning',
+    organisation: keyInfo.authority || authorityInfo.name || '',
+    contactName: '',
+    contactDetails: authorityInfo.emails.length > 0 ? authorityInfo.emails[0] : '',
+    sentDate: '',
+    responseDate: '',
+    deadline,
+    notes: `Imported from email.\nReferences: ${keyInfo.references.join(', ') || 'None found'}\nNext steps: ${keyInfo.nextSteps.join('; ') || 'None found'}`,
+    evidence: keyInfo.references.length > 0 ? [{
+      type: 'email',
+      title: 'Email correspondence',
+      description: `References found: ${keyInfo.references.join(', ')}`,
+      date: ''
+    }] : [],
+    letters: [],
+    journey: [],
+    createdAt: now,
+    updatedAt: now
+  });
+
+  cases.push(c);
+  saveAll(cases);
+  form.reset();
+  clearEmailDraft();
+  setActive(c.id);
+  document.querySelector('#status-msg').textContent = `Email imported as case: ${c.title}`;
+  renderAll();
+  renderEmailPreview('');
+}
+
+// Local parsers bridging from shared email-parser
+function extractKeyInformationLocal(emailText) {
+  if (!emailText) return { references: [], deadlines: [], authority: '', nextSteps: [], dates: [] };
+  const refs = new Set();
+  const refPatterns = [
+    /\bREF\/[\d\/]{4,}\b/gi,
+    /\bcase\s*(?:no|number|#)\s*[:=]?\s*[A-Z0-9][\w\-\/]{4,30}\b/gi,
+    /\b(?:your\s+)?reference\s*[:=]\s*[A-Z0-9][\w\-\/]{4,30}\b/gi
+  ];
+  for (const pattern of refPatterns) {
+    let match;
+    while ((match = pattern.exec(emailText)) !== null) {
+      refs.add(match[0].trim());
+    }
+  }
+  const deadlines = [];
+  const dlPatterns = [
+    /(?:within|by|before|deadline[:\s]*)\s*(\d{1,2})\s*(working\s*days?)/gi,
+    /(?:by|before|deadline[:\s]*)\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/gi,
+    /(?:by|before|deadline[:\s]*)\s*(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})/gi
+  ];
+  for (const pattern of dlPatterns) {
+    let match;
+    while ((match = pattern.exec(emailText)) !== null) {
+      if (match[2] && /working\s*days?/i.test(match[2])) {
+        deadlines.push({ type: 'working_days', days: parseInt(match[1], 10), raw: match[0] });
+      } else {
+        const dateStr = match[1] || match[2] || match[0].replace(/^(?:by|before|deadline[:\s]*)/i, '').trim();
+        deadlines.push({ type: 'date', date: dateStr, raw: match[0] });
+      }
+    }
+  }
+  const sigSeps = ['--', '---', 'Kind regards', 'Best regards', 'Regards', 'Yours sincerely', 'Yours faithfully'];
+  let sigStart = emailText.length;
+  for (const sep of sigSeps) {
+    const idx = emailText.indexOf(sep);
+    if (idx !== -1 && idx < sigStart) sigStart = idx;
+  }
+  const signature = sigStart < emailText.length ? emailText.slice(sigStart) : emailText;
+  const emailRegex = /[\w.+-]+@[\w-]+\.[\w.-]+/g;
+  const emails = [];
+  let eMatch;
+  while ((eMatch = emailRegex.exec(signature)) !== null) emails.push(eMatch[0]);
+  const phoneRegex = /(?:tel(?:ephone)?|phone|mobile|fax)[:\s]*(\+?[\d\s\-()]{7,20})/gi;
+  const phones = [];
+  let pMatch;
+  while ((pMatch = phoneRegex.exec(signature)) !== null) phones.push(pMatch[1].trim());
+  const sigLines = signature.split('\n').map((l) => l.trim()).filter(Boolean);
+  let authority = '';
+  for (const line of sigLines) {
+    if (/[\w.+-]+@[\w-]+\.[\w.-]+/.test(line)) continue;
+    if (/phone|tel|fax|mobile|email/i.test(line)) continue;
+    if (/kind|best|regards|sincerely|faithfully/i.test(line)) continue;
+    if (/^[A-Z][\w\s&']{2,60}$/.test(line) && line.length > 3) {
+      authority = line;
+      break;
+    }
+  }
+  const nextSteps = [];
+  const stepPatterns = [
+    /(?:please|kindly)\s+(.{10,80})/gi,
+    /(?:you (?:should|must|need to|are required to))\s+(.{10,80})/gi,
+    /(?:next steps?[:\s]+)(.{10,80})/gi
+  ];
+  for (const pattern of stepPatterns) {
+    let match;
+    while ((match = pattern.exec(emailText)) !== null) nextSteps.push(match[0].trim());
+  }
+  const dates = [];
+  const dateEventPattern = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s*[-–:]\s*(.+)/g;
+  let dMatch;
+  while ((dMatch = dateEventPattern.exec(emailText)) !== null) {
+    dates.push({ date: dMatch[1], event: dMatch[2].trim() });
+  }
+  return { references: [...refs], deadlines, authority, nextSteps, dates };
+}
+
+function parseAuthorityInfoLocal(text) {
+  if (!text) return { name: '', emails: [], phones: [] };
+  const sigSeps = ['--', '---', 'Kind regards', 'Best regards', 'Regards', 'Yours sincerely', 'Yours faithfully'];
+  let sigStart = text.length;
+  for (const sep of sigSeps) {
+    const idx = text.indexOf(sep);
+    if (idx !== -1 && idx < sigStart) sigStart = idx;
+  }
+  const signature = sigStart < text.length ? text.slice(sigStart) : text;
+  const emails = [];
+  let eMatch;
+  const eRegex = /[\w.+-]+@[\w-]+\.[\w.-]+/g;
+  while ((eMatch = eRegex.exec(signature)) !== null) emails.push(eMatch[0]);
+  const phones = [];
+  let pMatch;
+  const pRegex = /(?:tel(?:ephone)?|phone|mobile|fax)[:\s]*(\+?[\d\s\-()]{7,20})/gi;
+  while ((pMatch = pRegex.exec(signature)) !== null) phones.push(pMatch[1].trim());
+  const lines = signature.split('\n').map((l) => l.trim()).filter(Boolean);
+  let name = '';
+  for (const line of lines) {
+    if (/[\w.+-]+@[\w-]+\.[\w.-]+/.test(line)) continue;
+    if (/phone|tel|fax|mobile|email/i.test(line)) continue;
+    if (/kind|best|regards|sincerely|faithfully/i.test(line)) continue;
+    if (/^[A-Z][\w\s&']{2,60}$/.test(line) && line.length > 3) {
+      name = line;
+      break;
+    }
+  }
+  return { name, emails, phones };
+}
+
+function resolveDeadlineLocal(deadlines) {
+  if (!deadlines || deadlines.length === 0) return '';
+  const dateDeadline = deadlines.find((d) => d.type === 'date' && d.date);
+  if (dateDeadline) return dateDeadline.date;
+  const workingDays = deadlines.find((d) => d.type === 'working_days' && d.days);
+  if (workingDays) {
+    const d = new Date();
+    d.setDate(d.getDate() + Math.ceil(workingDays.days * 1.4));
+    return d.toISOString().slice(0, 10);
+  }
+  return '';
+}
+
+function formatParsedEmailLocal(keyInfo) {
+  const lines = [];
+  if (keyInfo.references.length) lines.push(`References: ${keyInfo.references.join(', ')}`);
+  if (keyInfo.deadlines.length) {
+    const dl = keyInfo.deadlines.map((d) => d.type === 'working_days' ? `${d.days} working days` : d.date);
+    lines.push(`Deadlines: ${dl.join(', ')}`);
+  }
+  if (keyInfo.authority) lines.push(`Authority: ${keyInfo.authority}`);
+  if (keyInfo.nextSteps.length) {
+    lines.push('Next Steps:');
+    for (const step of keyInfo.nextSteps) lines.push(`  - ${step}`);
+  }
+  if (keyInfo.dates.length) {
+    lines.push('Timeline:');
+    for (const entry of keyInfo.dates) lines.push(`  ${entry.date}: ${entry.event}`);
+  }
+  return lines.join('\n');
+}
+
+function renderEmailPreview(emailText) {
+  const preview = document.querySelector('#email-preview');
+  if (!preview) return;
+  if (!emailText || !emailText.trim()) {
+    preview.innerHTML = '<p class="empty-state">Paste an email above to see extracted information.</p>';
+    return;
+  }
+  const keyInfo = extractKeyInformationLocal(emailText);
+  const sections = [];
+  if (keyInfo.references.length > 0) {
+    sections.push(`<dt>References</dt><dd>${keyInfo.references.join(', ')}</dd>`);
+  }
+  if (keyInfo.deadlines.length > 0) {
+    const dl = keyInfo.deadlines.map((d) => d.type === 'working_days' ? `${d.days} working days` : d.date).join(', ');
+    sections.push(`<dt>Deadlines</dt><dd>${dl}</dd>`);
+  }
+  if (keyInfo.authority) {
+    sections.push(`<dt>Authority</dt><dd>${keyInfo.authority}</dd>`);
+  }
+  if (keyInfo.nextSteps.length > 0) {
+    const steps = keyInfo.nextSteps.map((s) => `<li>${escapeHtmlLocal(s)}</li>`).join('');
+    sections.push(`<dt>Next steps</dt><dd><ul>${steps}</ul></dd>`);
+  }
+  if (keyInfo.dates.length > 0) {
+    const dates = keyInfo.dates.map((d) => `<li><strong>${escapeHtmlLocal(d.date)}</strong> — ${escapeHtmlLocal(d.event)}</li>`).join('');
+    sections.push(`<dt>Timeline</dt><dd><ul>${dates}</ul></dd>`);
+  }
+  if (sections.length === 0) {
+    preview.innerHTML = '<p class="empty-state">No key information extracted. Try a more detailed email.</p>';
+    return;
+  }
+  const confidence = keyInfo.references.length * 30 + (keyInfo.authority ? 25 : 0) + keyInfo.deadlines.length * 20 + keyInfo.nextSteps.length * 15 + keyInfo.dates.length * 10;
+  preview.innerHTML = `<div class="email-confidence">Confidence: ${Math.min(confidence, 100)}%</div><dl>${sections.join('')}</dl>`;
+}
+
+function escapeHtmlLocal(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function restoreEmailDraft() {
+  const draft = loadEmailDraft();
+  if (!draft) return;
+  const field = document.querySelector('#email-import-form')?.elements?.namedItem('emailText');
+  if (field && draft.emailText) field.value = draft.emailText;
+}
+
+function saveEmailDraftOnChange() {
+  const field = document.querySelector('#email-import-form')?.elements?.namedItem('emailText');
+  if (field) {
+    saveEmailDraft({ emailText: field.value });
+    renderEmailPreview(field.value);
+  }
+}
+
+document.querySelector('#email-import-form')?.addEventListener('submit', handleEmailImport);
+document.querySelector('#email-import-form')?.elements?.namedItem('emailText')?.addEventListener('input', saveEmailDraftOnChange);
+restoreEmailDraft();
+
 const navToggle = document.querySelector('.nav-toggle');
 const primaryNav = document.querySelector('#primary-nav');
 navToggle?.addEventListener('click', () => {
@@ -1767,5 +2051,7 @@ navToggle?.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', String(open));
   primaryNav?.classList.toggle('is-open', open);
 });
+
+
 
 
