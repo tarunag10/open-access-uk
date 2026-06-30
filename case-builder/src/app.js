@@ -1,6 +1,8 @@
 // ===== src/app.js =====
 // ===== src/app.js =====
 // ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
 // ===== src/theme.js =====
 const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_theme_js = (() => {
 // <app>/src/theme.js
@@ -1625,6 +1627,139 @@ if (activeStored) activeId = activeStored;
 renderAll();
 initTheme('#theme-toggle');
 
+// ===== Housing Repairs Extension =====
+const REPAIR_DRAFT_KEY = 'open-access-uk:case-builder:repair-draft';
+
+function loadRepairDraft() {
+  try {
+    const raw = localStorage.getItem(REPAIR_DRAFT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveRepairDraft(data) {
+  try {
+    localStorage.setItem(REPAIR_DRAFT_KEY, JSON.stringify(data));
+  } catch {
+    /* ignore */
+  }
+}
+
+function restoreRepairDraft() {
+  const draft = loadRepairDraft();
+  if (!draft) return;
+  const form = document.querySelector('#case-form');
+  for (const [name, value] of Object.entries(draft)) {
+    const field = form.elements.namedItem(name);
+    if (field && value) field.value = value;
+  }
+}
+
+function clearRepairDraft() {
+  try {
+    localStorage.removeItem(REPAIR_DRAFT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function handleAddRepairCase(event) {
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(document.querySelector('#case-form')).entries());
+  if (!data.title?.trim()) {
+    document.querySelector('#status-msg').textContent = 'Add a title for the repair case.';
+    return;
+  }
+  if (!data.propertyAddress?.trim()) {
+    document.querySelector('#status-msg').textContent = 'Add the property address.';
+    return;
+  }
+  if (!data.landlordName?.trim()) {
+    document.querySelector('#status-msg').textContent = 'Add the landlord or housing association name.';
+    return;
+  }
+  if (!data.reportedDate) {
+    document.querySelector('#status-msg').textContent = 'Add the date the repair was reported.';
+    return;
+  }
+  const cases = loadAll();
+  const now = new Date().toISOString();
+  const repairRecord = (() => {
+    const ref = `RPR-${Date.now().toString(36).toUpperCase()}`;
+    const cat = { emergency: 24, urgent: 5 * 8, routine: 28 * 24 };
+    const deadlineDate = new Date(data.reportedDate);
+    deadlineDate.setTime(deadlineDate.getTime() + (cat[data.repairCategory] || cat.routine) * 60 * 60 * 1000);
+    return {
+      referenceNumber: ref,
+      propertyAddress: data.propertyAddress,
+      landlordName: data.landlordName,
+      category: data.repairCategory || 'routine',
+      description: data.description || '',
+      reportedDate: data.reportedDate,
+      status: 'reported',
+      createdAt: now
+    };
+  })();
+  const categoryLabels = { emergency: 'Emergency Repair', urgent: 'Urgent Repair', routine: 'Routine Repair' };
+  const c = createCase({
+    title: `${categoryLabels[repairRecord.category] || 'Repair'}: ${data.title}`,
+    description: data.description,
+    issueCategory: 'housing',
+    status: 'sent',
+    organisation: data.landlordName,
+    contactName: data.contactName || '',
+    contactDetails: data.contactDetails || '',
+    sentDate: data.reportedDate,
+    deadline: (() => {
+      const d = new Date(data.reportedDate);
+      const hours = { emergency: 24, urgent: 40, routine: 672 };
+      d.setTime(d.getTime() + (hours[repairRecord.category] || hours.routine) * 60 * 60 * 1000);
+      return d.toISOString().slice(0, 10);
+    })(),
+    notes: `Repair ref: ${repairRecord.referenceNumber}\nProperty: ${data.propertyAddress}\nLandlord: ${data.landlordName}\nCategory: ${repairRecord.category}`,
+    evidence: [],
+    letters: [],
+    journey: suggestJourney('housing'),
+    createdAt: now,
+    updatedAt: now
+  });
+  cases.push(c);
+  saveAll(cases);
+  document.querySelector('#case-form').reset();
+  populateSelect(
+    document.querySelector('#issueCategory'),
+    Object.entries(ISSUE_CATEGORIES),
+    (c) => c.label
+  );
+  populateSelect(document.querySelector('#status'), Object.entries(CASE_STATUS), (s) => s.label);
+  clearRepairDraft();
+  setActive(c.id);
+  document.querySelector('#status-msg').textContent = `Repair case created: ${c.title}`;
+  renderAll();
+}
+
+const caseTypeSelect = document.querySelector('#caseType');
+const repairFields = document.querySelector('#repair-fields');
+
+caseTypeSelect?.addEventListener('change', () => {
+  const isRepair = caseTypeSelect.value === 'repair';
+  repairFields.hidden = !isRepair;
+  if (isRepair) {
+    document.querySelector('#issueCategory').value = 'housing';
+  }
+});
+
+document.querySelector('#case-form')?.addEventListener('submit', (event) => {
+  if (caseTypeSelect?.value === 'repair') {
+    event.preventDefault();
+    handleAddRepairCase(event);
+  }
+});
+
+restoreRepairDraft();
+
 const navToggle = document.querySelector('.nav-toggle');
 const primaryNav = document.querySelector('#primary-nav');
 navToggle?.addEventListener('click', () => {
@@ -1632,3 +1767,5 @@ navToggle?.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', String(open));
   primaryNav?.classList.toggle('is-open', open);
 });
+
+

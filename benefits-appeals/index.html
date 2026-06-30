@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Benefits Appeals Helper</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Appeals</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Benefits Appeals Helper</h1>
+          <p>
+            Generate mandatory reconsideration requests and tribunal appeals for PIP, Universal Credit,
+            and ESA. Track deadlines and build your case. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Start an appeal</a>
+            <a class="button secondary" href="https://github.com/tarunag10/open-access-uk"
+              >View GitHub</a
+            >
+          </div>
+        </div>
+        <div class="product-panel" aria-label="Benefits appeals product preview">
+          <div class="mini-window">
+            <span>1 month MR deadline</span>
+            <strong>MR refused · tribunal ready · tracked</strong>
+            <i></i><i></i><i></i>
+            <b>Letter generation and deadline tracking</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="Benefits appeals feature highlights">
+        <article>
+          <span>01</span>
+          <h2>MR generator</h2>
+          <p>
+            Generate mandatory reconsideration request letters for PIP, UC, and ESA decisions with
+            correct formatting and content.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Tribunal appeals</h2>
+          <p>
+            Create SSCS1 tribunal appeal forms once MR is refused, with grounds and supporting
+            statements.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Deadline tracking</h2>
+          <p>
+            Track MR and tribunal deadlines, get reminders, and never miss a critical filing date.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="Benefits appeals form">
+        <form id="appeal-form" class="panel" aria-describedby="status">
+          <h2>Generate an appeal document</h2>
+
+          <label for="benefitType">Benefit type</label>
+          <select id="benefitType" name="benefitType">
+            <option value="pip">Personal Independence Payment (PIP)</option>
+            <option value="uc">Universal Credit (UC)</option>
+            <option value="esa">Employment and Support Allowance (ESA)</option>
+          </select>
+
+          <label for="decisionDate">Date of decision</label>
+          <input id="decisionDate" name="decisionDate" type="date" required />
+
+          <label for="nationalInsurance">National Insurance number</label>
+          <input
+            id="nationalInsurance"
+            name="nationalInsurance"
+            placeholder="e.g. AB 12 34 56 C"
+          />
+
+          <label for="grounds">Grounds of appeal</label>
+          <textarea
+            id="grounds"
+            name="grounds"
+            rows="6"
+            placeholder="Explain why you disagree with the decision. Include how your condition affects your daily life..."
+          ></textarea>
+
+          <label for="mrReference">MR reference (if applicable)</label>
+          <input id="mrReference" name="mrReference" placeholder="e.g. MR/2026/PIP/12345" />
+
+          <label for="mrDecisionDate">Date of MR decision (if applicable)</label>
+          <input id="mrDecisionDate" name="mrDecisionDate" type="date" />
+
+          <label for="appealName">Your name (for letters)</label>
+          <input id="appealName" name="appealName" placeholder="A. Citizen" />
+
+          <label for="appealContact">Your contact (for letters)</label>
+          <input id="appealContact" name="appealContact" placeholder="email at a.citizen@example.com" />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Generate letter</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Appeals summary"></section>
+          <section class="panel" aria-label="Letter preview">
+            <h3>Generated letter</h3>
+            <pre id="letter-preview" class="letter-preview"></pre>
+            <div class="letter-actions" id="letter-actions" hidden>
+              <button id="copyLetter" type="button" class="secondary">Copy</button>
+              <button id="downloadLetter" type="button" class="secondary">Download</button>
+              <button id="printLetter" type="button" class="secondary">Print</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked appeals">
+        <h2>Tracked appeals</h2>
+        <div id="appeal-list" class="request-list"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>Appeals guidance</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Mandatory reconsideration</h3>
+            <p>
+              You must request a mandatory reconsideration (MR) within 1 month of the decision date.
+              DWP will review the decision and issue an MR notice.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Tribunal appeal</h3>
+            <p>
+              If MR is refused, you have 1 month from the MR notice date to appeal to the First-tier
+              Tribunal (Social Entitlement Chamber) using form SSCS1.
+            </p>
+          </article>
+          <article class="card">
+            <h3>PIP descriptors</h3>
+            <p>
+              PIP is scored on daily living and mobility descriptors. Points determine whether you
+              qualify for the standard or enhanced rate of the daily living and/or mobility component.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a drafting aid, not legal advice. Verify deadlines and processes against
+              current GOV.UK guidance. For independent advice, contact Citizens Advice or CPAG.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="LICENSE">MIT License</a>
+      </nav>
+      <p>Open-source, privacy-first, and local to your browser.</p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

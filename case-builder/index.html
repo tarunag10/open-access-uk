@@ -73,6 +73,27 @@
       <section id="tool" class="grid" aria-label="Case form">
         <form id="case-form" class="panel" aria-describedby="status-msg">
           <h2>Create a case</h2>
+          <label for="caseType">Case type</label>
+          <select id="caseType" name="caseType">
+            <option value="general">General case</option>
+            <option value="repair">Housing repairs</option>
+          </select>
+
+          <div id="repair-fields" hidden>
+            <label for="propertyAddress">Property address</label>
+            <input id="propertyAddress" name="propertyAddress" placeholder="e.g. 123 High Street, London, SW1A 1AA" />
+            <label for="landlordName">Landlord or housing association</label>
+            <input id="landlordName" name="landlordName" placeholder="e.g. City Council Housing" />
+            <label for="repairCategory">Repair category</label>
+            <select id="repairCategory" name="repairCategory">
+              <option value="emergency">Emergency (24h)</option>
+              <option value="urgent">Urgent (5 working days)</option>
+              <option value="routine">Routine (28 calendar days)</option>
+            </select>
+            <label for="reportedDate">Date reported</label>
+            <input id="reportedDate" name="reportedDate" type="date" />
+          </div>
+
           <label for="title">Case title</label>
           <input id="title" name="title" placeholder="e.g. SEND tribunal waiting times" required />
 

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NHS Complaints Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Complaints</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>NHS Complaints Tracker</h1>
+          <p>
+            Track complaints through GP, hospital, or NHS trust. Follow PALS, formal complaint,
+            and PHSO escalation routes. Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Add a complaint</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="NHS complaints tracker preview">
+          <div class="mini-window">
+            <span>25 working day response</span>
+            <strong>PALS · Formal · PHSO escalation</strong>
+            <i></i><i></i><i></i>
+            <b>Track every stage of the NHS complaints process</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="NHS complaints tracker feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Track stages</h2>
+          <p>
+            Follow your complaint from PALS informal resolution through formal complaint to
+            PHSO escalation. See where you are at every step.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Deadline alerts</h2>
+          <p>
+            Know when acknowledgements and responses are due. 25 working day response deadlines
+            and 12-month PHSO windows tracked automatically.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Escalation letters</h2>
+          <p>
+            Generate formal complaint and PHSO escalation letters from your complaint data,
+            ready to copy or download.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="NHS complaint form">
+        <form id="complaint-form" class="panel" aria-describedby="form-status">
+          <h2>Add or update an NHS complaint</h2>
+          <label for="organisationType">NHS Organisation type</label>
+          <select id="organisationType" name="organisationType">
+            <option value="gp">GP Practice</option>
+            <option value="hospital">Hospital</option>
+            <option value="trust">NHS Trust</option>
+            <option value="ccg">Clinical Commissioning Group</option>
+          </select>
+
+          <label for="organisationName">Organisation name</label>
+          <input
+            id="organisationName"
+            name="organisationName"
+            placeholder="e.g. Manchester Royal Infirmary"
+            required
+          />
+
+          <label for="stage">Complaint stage</label>
+          <select id="stage" name="stage">
+            <option value="pals">PALS (Patient Advice and Liaison Service)</option>
+            <option value="formal">Formal Complaint</option>
+            <option value="phso">Parliamentary and Health Service Ombudsman</option>
+          </select>
+
+          <label for="sentDate">Date sent</label>
+          <input id="sentDate" name="sentDate" type="date" />
+
+          <label for="reference">Reference number</label>
+          <input
+            id="reference"
+            name="reference"
+            placeholder="e.g. PALS-2026-001234"
+          />
+
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="Brief description of the complaint..."
+          ></textarea>
+
+          <label for="outcome">Outcome / Response</label>
+          <textarea
+            id="outcome"
+            name="outcome"
+            rows="3"
+            placeholder="What has the organisation said so far?"
+          ></textarea>
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save complaint</button>
+            <button id="loadSample" type="button" class="secondary">Load sample</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Tracker summary"></section>
+          <section class="panel" aria-label="Stage breakdown">
+            <h3>Stage breakdown</h3>
+            <div id="stage-breakdown" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked complaints">
+        <h2>Tracked complaints</h2>
+        <div id="complaint-list" class="complaint-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected complaint detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>NHS complaints process</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>PALS first</h3>
+            <p>
+              Most hospitals have a Patient Advice and Liaison Service (PALS). PALS can usually
+              resolve concerns informally within 25 working days.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Formal complaint</h3>
+            <p>
+              If PALS cannot resolve your concern, you can make a formal written complaint to the
+              trust. They must acknowledge within 3 working days and respond within 25 working days.
+            </p>
+          </article>
+          <article class="card">
+            <h3>PHSO escalation</h3>
+            <p>
+              If you are not satisfied with the trust's response, you can complain to the
+              Parliamentary and Health Service Ombudsman within 12 months.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a tracking aid, not legal advice. Verify deadlines, routes, and rights
+              against the current NHS England and PHSO guidance.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.nhs.uk/using-the-nhs/about-the-nhs/how-to-make-a-complaint/" rel="noopener noreferrer">NHS England complaints</a>
+        <a href="https://www.ombudsman.org.uk/" rel="noopener noreferrer">PHSO</a>
+      </nav>
+      <p>
+        Open-source, privacy-first, and local to your browser. Not legal advice.
+        Source: NHS England and PHSO guidance.
+      </p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

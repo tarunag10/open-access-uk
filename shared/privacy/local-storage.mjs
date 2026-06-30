@@ -96,6 +96,41 @@ export const storageRegistry = [
     label: 'Active case id',
     storage: 'localStorage',
     contains: 'Identifier of the most recently selected case'
+  },
+  {
+    key: 'open-access-uk:nhs-complaints-tracker:complaints',
+    tool: 'nhs-complaints-tracker',
+    label: 'NHS complaints',
+    storage: 'localStorage',
+    contains: 'Tracked NHS complaints with stages, deadlines, and outcomes'
+  },
+  {
+    key: 'open-access-uk:benefits-appeals:appeals',
+    tool: 'benefits-appeals',
+    label: 'Benefits appeals',
+    storage: 'localStorage',
+    contains: 'Tracked benefits appeals with MR and tribunal deadlines'
+  },
+  {
+    key: 'open-access-uk:send-helper:appeals',
+    tool: 'send-helper',
+    label: 'SEND appeals',
+    storage: 'localStorage',
+    contains: 'Tracked school exclusion and SEND tribunal appeals'
+  },
+  {
+    key: 'open-access-uk:letter-generator:parking-draft',
+    tool: 'letter-generator',
+    label: 'Parking appeal draft',
+    storage: 'localStorage',
+    contains: 'Draft parking appeal letter fields'
+  },
+  {
+    key: 'open-access-uk:case-builder:repair-draft',
+    tool: 'case-builder',
+    label: 'Repair case draft',
+    storage: 'localStorage',
+    contains: 'Draft housing repair case fields'
   }
 ];
 

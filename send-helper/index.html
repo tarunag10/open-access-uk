@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>School SEND Helper</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">Open Access UK</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        Menu
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <a href="#tool">Tool</a>
+        <a href="#list">Appeals</a>
+        <a href="#guidance">Guidance</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
+        Dark theme
+      </button>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <h1>School SEND Helper</h1>
+          <p>
+            Challenge school exclusions, request SEND tribunal applications, and dispute EHCP decisions.
+            Everything runs in your browser.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#tool">Start an appeal</a>
+          </div>
+        </div>
+        <div class="product-panel" aria-label="SEND helper product preview">
+          <div class="mini-window">
+            <span>Exclusion Review · IRP · SEND Tribunal · EHCP Dispute · Mediation</span>
+            <strong>Generate letters · Check deadlines · Track evidence</strong>
+            <i></i><i></i><i></i>
+            <b>Exclusion, tribunal, and EHCP dispute tools</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="gtm-strip" aria-label="SEND helper feature highlights">
+        <article>
+          <span>01</span>
+          <h2>Exclusion reviews</h2>
+          <p>
+            Generate governor review requests and Independent Review Panel applications for fixed-term
+            and permanent exclusions.
+          </p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>SEND tribunal</h2>
+          <p>
+            Draft SEND tribunal applications for EHCP appeals, disability discrimination claims, and
+            related matters.
+          </p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>EHCP disputes</h2>
+          <p>
+            Generate mediation requests and EHCP dispute letters to challenge assessments,
+            provisions, or decisions by Local Authorities.
+          </p>
+        </article>
+      </section>
+
+      <section id="tool" class="grid" aria-label="SEND appeal form">
+        <form id="appeal-form" class="panel" aria-describedby="status">
+          <h2>Create or update an appeal</h2>
+          <label for="appealType">Appeal type</label>
+          <select id="appealType" name="appealType"></select>
+
+          <label for="childName">Child's name</label>
+          <input
+            id="childName"
+            name="childName"
+            placeholder="e.g. Alex Smith"
+            required
+          />
+
+          <label for="schoolName">School name</label>
+          <input
+            id="schoolName"
+            name="schoolName"
+            placeholder="e.g. Riverside Primary Academy"
+          />
+
+          <label for="laName">Local Authority name</label>
+          <input
+            id="laName"
+            name="laName"
+            placeholder="e.g. Manchester City Council"
+          />
+
+          <label for="decisionDate">Date of exclusion / EHCP decision</label>
+          <input id="decisionDate" name="decisionDate" type="date" />
+
+          <label for="exclusionType">Exclusion type</label>
+          <select id="exclusionType" name="exclusionType">
+            <option value="fixed-term">Fixed-term</option>
+            <option value="permanent">Permanent</option>
+            <option value="n/a">Not applicable</option>
+          </select>
+
+          <label for="grounds">Grounds for appeal</label>
+          <textarea
+            id="grounds"
+            name="grounds"
+            rows="4"
+            placeholder="Describe why you are challenging the exclusion or EHCP decision..."
+          ></textarea>
+
+          <label for="notes">Additional notes</label>
+          <textarea
+            id="notes"
+            name="notes"
+            rows="3"
+            placeholder="Any other information relevant to this appeal..."
+          ></textarea>
+
+          <label for="parentName">Your name (for letters)</label>
+          <input id="parentName" name="parentName" placeholder="A. Parent" />
+
+          <label for="contact">Your contact (for letters)</label>
+          <input id="contact" name="contact" placeholder="email or phone" />
+
+          <div class="actions" aria-label="Form actions">
+            <button type="submit">Save appeal</button>
+            <button id="exportCsv" type="button" class="secondary">Export CSV</button>
+            <button id="exportJson" type="button" class="secondary">Export JSON</button>
+            <label class="button secondary" for="importJson">Import JSON</label>
+            <input id="importJson" type="file" accept="application/json" hidden />
+            <button id="clearAll" type="button" class="secondary">Clear all</button>
+          </div>
+          <p id="status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div>
+          <section id="summary" class="summary-grid" aria-label="Appeal summary"></section>
+          <section class="panel" aria-label="Type breakdown">
+            <h3>Type breakdown</h3>
+            <div id="type-breakdown" class="breakdown"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="list" class="list-section" aria-label="Tracked appeals">
+        <h2>Tracked appeals</h2>
+        <div id="appeal-list" class="request-list"></div>
+      </section>
+
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected appeal detail"
+      >
+        <div id="detail-content"></div>
+      </section>
+
+      <section id="guidance" class="footer-band">
+        <h2>SEND basics</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Exclusion process</h3>
+            <p>
+              Schools can exclude for fixed periods or permanently. Governors must review exclusions
+              within 15 school days. A permanent exclusion triggers an automatic Independent Review
+              Panel (IRP) hearing.
+            </p>
+          </article>
+          <article class="card">
+            <h3>SEND tribunal</h3>
+            <p>
+              You can appeal to the First-tier Tribunal (SEND) about EHCP decisions, refusal to
+              assess, or contents of an EHCP. You generally have 2 months from the mediation
+              certificate or LA decision.
+            </p>
+          </article>
+          <article class="card">
+            <h3>EHCP rights</h3>
+            <p>
+              Parents and young people have the right to request an EHCP assessment, appeal EHCP
+              contents, and challenge LA decisions through mediation or tribunal.
+            </p>
+          </article>
+          <article class="card warning">
+            <h3>Not legal advice</h3>
+            <p>
+              This is a drafting and tracking aid, not legal advice. Verify deadlines and routes
+              against the current GOV.UK guidance and consider seeking independent legal advice.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="index.html">Open Access UK</a>
+        <a href="#tool">Tool</a>
+        <a href="https://www.gov.uk/government/publications/send-code-of-practice-2015"
+          >SEND Tribunal guidance</a
+        >
+        <a href="https://www.gov.uk/school-exclusions">GOV.UK exclusions</a>
+        <a href="LICENSE">MIT License</a>
+      </nav>
+      <p>Not legal advice. Open-source, privacy-first, and local to your browser.</p>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
