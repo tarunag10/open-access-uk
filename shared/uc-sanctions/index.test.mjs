@@ -13,20 +13,29 @@ import {
   parseUCSanctions
 } from './index.mjs';
 
-test('getSanctionTypes returns higher-level, standard, lower-level', () => {
+test('getSanctionTypes returns higher-level, medium-level, standard, lower-level', () => {
   const types = getSanctionTypes();
-  assert.equal(types.length, 3);
+  assert.equal(types.length, 4);
   const ids = types.map((t) => t.id);
   assert.ok(ids.includes('higher-level'));
+  assert.ok(ids.includes('medium-level'));
   assert.ok(ids.includes('standard'));
   assert.ok(ids.includes('lower-level'));
 });
 
-test('getSanctionDeductionRates higher-level: 100% standard allowance (max 6 months)', () => {
+test('getSanctionDeductionRates higher-level: 100% standard allowance (max 26 weeks, 91-day fixed period)', () => {
   const rate = getSanctionDeductionRates('higher-level');
   assert.equal(rate.deductionRate, 1.0);
   assert.equal(rate.maxWeeks, 26);
+  assert.equal(rate.deductionDurationDays, 91);
   assert.equal(rate.name, 'Higher-Level Sanction');
+});
+
+test('getSanctionDeductionRates medium-level: 40% (up to 13 weeks)', () => {
+  const rate = getSanctionDeductionRates('medium-level');
+  assert.equal(rate.deductionRate, 0.4);
+  assert.equal(rate.maxWeeks, 13);
+  assert.equal(rate.name, 'Medium-Level Sanction');
 });
 
 test('getSanctionDeductionRates standard: 20% (up to 4 weeks)', () => {

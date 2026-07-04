@@ -4,7 +4,8 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "build": "echo 'Static site — no build step required'"
   },
   "license": "MIT"
 }

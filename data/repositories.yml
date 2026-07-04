@@ -88,3 +88,129 @@
   risk_level: medium
   maintainers:
     - tarunag10
+- id: uc-sanctions
+  name: UC Sanctions Challenge
+  repo: tarunag10/uc-sanctions
+  demo: https://uc-sanctions.vercel.app/
+  category: benefits
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: immigration-complaints
+  name: Immigration Complaint Tool
+  repo: tarunag10/immigration-complaints
+  demo: https://immigration-complaints.vercel.app/
+  category: complaints
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: benefits-appeals
+  name: Benefits Appeals Helper
+  repo: tarunag10/benefits-appeals
+  demo: https://benefits-appeals.vercel.app/
+  category: benefits
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: eviction-notice-validator
+  name: Eviction Notice Validator
+  repo: tarunag10/eviction-notice-validator
+  demo: https://eviction-notice-validator.vercel.app/
+  category: housing
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: send-helper
+  name: School SEND Helper
+  repo: tarunag10/send-helper
+  demo: https://send-helper.vercel.app/
+  category: education
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: batch-foi
+  name: Multi-Authority FOI Batch Tool
+  repo: tarunag10/batch-foi
+  demo: https://batch-foi.vercel.app/
+  category: foi
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10
+- id: deadline-cascade
+  name: Deadline Cascade Visualizer
+  repo: tarunag10/deadline-cascade
+  demo: https://deadline-cascade.vercel.app/
+  category: tools
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10
+- id: fee-calculator
+  name: Court and Tribunal Fee Calculator
+  repo: tarunag10/fee-calculator
+  demo: https://fee-calculator.vercel.app/
+  category: tools
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10
+- id: evidence-checker
+  name: Evidence Upload Readiness Checker
+  repo: tarunag10/evidence-checker
+  demo: https://evidence-checker.vercel.app/
+  category: tools
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10
+- id: nhs-complaints-tracker
+  name: NHS Complaints Tracker
+  repo: tarunag10/nhs-complaints-tracker
+  demo: https://nhs-complaints-tracker.vercel.app/
+  category: complaints
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: ombudsman-outcomes
+  name: Ombudsman Outcomes Database
+  repo: tarunag10/ombudsman-outcomes
+  demo: https://ombudsman-outcomes.vercel.app/
+  category: tools
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10
+- id: professional-complaints
+  name: Professional Complaints Router
+  repo: tarunag10/professional-complaints
+  demo: https://professional-complaints.vercel.app/
+  category: complaints
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: employment-tribunal
+  name: Employment Tribunal Case Builder
+  repo: tarunag10/employment-tribunal
+  demo: https://employment-tribunal.vercel.app/
+  category: employment
+  status: usable
+  risk_level: high
+  maintainers:
+    - tarunag10
+- id: accessible-formats-request
+  name: Accessible Formats Request Generator
+  repo: tarunag10/accessible-formats-request
+  demo: https://accessible-formats-request.vercel.app/
+  category: forms
+  status: usable
+  risk_level: medium
+  maintainers:
+    - tarunag10

@@ -1,9 +1,10 @@
 import { addWorkingDays } from '../deadlines/index.mjs';
 
 const SANCTION_TYPES = [
-  { id: 'higher-level', name: 'Higher-Level Sanction', deductionRate: 1.0, maxWeeks: 26, description: 'Serious failure to comply (not attending interview, not taking steps to seek work)', source: 'welfare-reform-act-2012' },
-  { id: 'standard', name: 'Standard Sanction', deductionRate: 0.2, maxWeeks: 4, description: 'Failure to comply with claimant commitment', source: 'welfare-reform-act-2012' },
-  { id: 'lower-level', name: 'Lower-Level Sanction', deductionRate: 0, deductionAmount: 'equivalent-to-missed-appointment', description: 'Failure to attend mandatory appointment without good reason', source: 'welfare-reform-act-2012' }
+  { id: 'higher-level', name: 'Higher-Level Sanction', deductionRate: 1.0, maxWeeks: 26, deductionDurationDays: 91, description: 'Serious failure to comply — 91-day fixed period for first failure, 182 days for repeat failures within 365 days. Deduction continues until compliance or end of fixed period.', source: 'welfare-reform-act-2012' },
+  { id: 'medium-level', name: 'Medium-Level Sanction', deductionRate: 0.4, maxWeeks: 13, description: 'Medium-level failure — 14-day open period, deduction continues until compliance. Applies to failures such as not taking up an employment placement.', source: 'welfare-reform-act-2012' },
+  { id: 'standard', name: 'Standard Sanction', deductionRate: 0.2, maxWeeks: 4, description: 'Failure to comply with claimant commitment — 7-day open period, deduction continues until compliance.', source: 'welfare-reform-act-2012' },
+  { id: 'lower-level', name: 'Lower-Level Sanction', deductionRate: 0, deductionAmount: 'equivalent-to-missed-appointment', description: 'Failure to attend mandatory appointment without good reason — deduction equal to the missed appointment amount.', source: 'welfare-reform-act-2012' }
 ];
 
 const GOOD_REASONS = [

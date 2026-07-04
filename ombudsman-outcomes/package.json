@@ -1,5 +1,11 @@
 {
   "name": "ombudsman-outcomes",
-  "private": true,
-  "type": "module"
+  "private": false,
+  "type": "module",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "build": "echo 'Static site — no build step required'"
+  }
 }

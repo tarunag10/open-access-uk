@@ -246,8 +246,8 @@ function renderSummary(records) {
 
   const cards = [
     { label: 'Total validated', value: total, tone: 'default' },
-    { label: 'Valid', value: valid, tone: 'success' },
-    { label: 'Invalid', value: invalid, tone: 'danger' },
+    { label: 'All checks passed', value: valid, tone: 'success' },
+    { label: 'Issues found', value: invalid, tone: 'danger' },
     { label: 'Issues found', value: issues, tone: 'warning' }
   ];
 
@@ -310,7 +310,7 @@ function renderList(records) {
     item.innerHTML = `
       <header>
         <h3>${escapeHtml(record.tenantName || 'Untitled')}</h3>
-        <span class="status-pill ${statusClass}">${isValid ? 'Valid' : record.result?.errors?.length > 0 ? 'Invalid' : 'Pending'}</span>
+        <span class="status-pill ${statusClass}">${isValid ? 'All checks passed' : record.result?.errors?.length > 0 ? 'Issues found' : 'Pending'}</span>
       </header>
       <p class="meta">${escapeHtml(noticeName)} — ${escapeHtml(record.landlordName || 'No landlord')} — ${record.noticeServedDate || 'No date'}</p>
       <div class="item-actions">
@@ -352,7 +352,7 @@ function renderDetail(record) {
   title.textContent = record.tenantName || 'Untitled notice';
   const status = document.createElement('span');
   status.className = `status-pill ${isValid ? 'valid' : 'invalid'}`;
-  status.textContent = isValid ? 'Valid' : 'Invalid';
+  status.textContent = isValid ? 'All checks passed' : 'Issues found';
   header.append(title, status);
 
   const grid = document.createElement('dl');
@@ -378,7 +378,7 @@ function renderDetail(record) {
 
   const issuesSection = document.createElement('section');
   const issuesHeading = document.createElement('h3');
-  issuesHeading.textContent = isValid ? 'Validation passed' : 'Issues found';
+  issuesHeading.textContent = isValid ? 'Checklist complete' : 'Issues found';
   issuesSection.append(issuesHeading);
   const issueList = document.createElement('ul');
   issueList.className = `issue-list${isValid ? ' valid' : ''}`;
@@ -593,8 +593,8 @@ function handleValidate(event) {
   updateNoticeType();
   const issueCount = result.errors?.length || 0;
   statusEl.textContent = result.valid
-    ? `Notice is valid. ${issueCount === 0 ? 'No issues found.' : ''}`
-    : `Notice has ${issueCount} issue(s). Review the details below.`;
+    ? `All checks passed. ${issueCount === 0 ? 'No issues found.' : ''}`
+    : `${issueCount} item(s) need attention. Review the details below.`;
   renderAll();
 }
 

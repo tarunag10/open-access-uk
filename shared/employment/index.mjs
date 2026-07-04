@@ -1,7 +1,7 @@
-import { addWorkingDays } from '../deadlines/index.mjs';
+import { calculateETDeadline } from '../deadlines/index.mjs';
 
 const CLAIM_TYPES = [
-  { id: 'unfair-dismissal', name: 'Unfair Dismissal', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Dismissal without fair reason or fair procedure' },
+  { id: 'unfair-dismissal', name: 'Unfair Dismissal', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Dismissal without fair reason or fair procedure. Deadline: 3 months less one day from effective date of termination. Early conciliation pauses the clock.' },
   { id: 'discrimination', name: 'Discrimination', deadlineMonths: 3, source: 'equality-act-2010', description: 'Direct/indirect discrimination, harassment, victimisation' },
   { id: 'wages', name: 'Unpaid Wages', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Wrongful deduction from wages' },
   { id: 'breach-of-contract', name: 'Breach of Contract', deadlineMonths: 6, source: 'common-law', description: 'Breach of employment contract terms' },
@@ -28,23 +28,17 @@ function toLocalDateString(date) {
   return [y, String(m + 1).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 
-function addMonths(value, months) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  date.setUTCMonth(date.getUTCMonth() + months);
-  return toLocalDateString(date);
-}
-
 export function getClaimTypes() {
   return [...CLAIM_TYPES];
 }
 
-export function getACASDeadline(dismissalDate) {
-  const date = parseLocalDate(dismissalDate);
-  if (!date) return null;
-  date.setUTCMonth(date.getUTCMonth() + 3);
-  date.setUTCDate(date.getUTCDate() - 1);
-  return toLocalDateString(date);
+/**
+ * Calculate ET claim deadline: 3 months less one day from effective date of termination,
+ * with optional early conciliation clock-stop. Since 1 Dec 2025, early conciliation
+ * may last up to 12 weeks and pauses the statutory time limit.
+ */
+export function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
+  return calculateETDeadline(dismissalDate, earlyConciliationDays);
 }
 
 export function getET1Deadline(acasCertDate) {

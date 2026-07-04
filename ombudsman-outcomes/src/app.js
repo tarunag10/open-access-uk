@@ -223,6 +223,7 @@ function renderOutcomeResults(ombudsmanId, issueType) {
   if (!details) return '';
 
   const sections = [];
+  sections.push('<div class="uncited-warning" role="note">These statistics are illustrative examples based on typical ombudsman caseloads and may not reflect current published data. Always verify against the relevant ombudsman\'s latest annual report before relying on any figures.</div>');
 
   if (stats) {
     sections.push(`<h4>Overall statistics</h4>`);

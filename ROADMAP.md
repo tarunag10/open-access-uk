@@ -45,8 +45,6 @@
 
 ## Later
 
-- Phase 4: Immigration Complaint Tool, Regulated Professional Complaints Router, Court and Tribunal Fees Calculator, Accessible Formats Request Specialist, Ombudsman Outcomes Database.
-- Phase 5: Local Authority Performance Lookup, Community Contribution Platform, Advanced Search and Filtering.
 - Evaluate shared metadata and design-token registries.
 - Add release automation.
 - Add optional privacy-preserving analytics only if reviewed and off by default.
