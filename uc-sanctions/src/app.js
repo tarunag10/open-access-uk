@@ -1,58 +1,13 @@
-// ===== src/app.js =====
-// UC Sanctions Challenge — bundled app (all shared modules inlined)
+// uc-sanctions/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs uc-sanctions
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+// ===== ../../shared/uc-sanctions/index.mjs =====
 
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/deadlines/index.mjs =====
-function parseLocalDate(value) {
-  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
-function toLocalDateString(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('-');
-}
-
-function isWorkingDay(date) {
-  const day = date.getDay();
-  return day !== 0 && day !== 6;
-}
-
-function addWorkingDays(value, days) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  let remaining = Number(days);
-  const result = new Date(date);
-  while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result)) remaining -= 1;
-  }
-  return toLocalDateString(result);
-}
-
-// ===== ../shared/uc-sanctions/index.mjs =====
 const SANCTION_TYPES = [
-  { id: 'higher-level', name: 'Higher-Level Sanction', deductionRate: 1.0, maxWeeks: 26, description: 'Serious failure to comply (not attending interview, not taking steps to seek work)', source: 'welfare-reform-act-2012' },
-  { id: 'standard', name: 'Standard Sanction', deductionRate: 0.2, maxWeeks: 4, description: 'Failure to comply with claimant commitment', source: 'welfare-reform-act-2012' },
-  { id: 'lower-level', name: 'Lower-Level Sanction', deductionRate: 0, deductionAmount: 'equivalent-to-missed-appointment', description: 'Failure to attend mandatory appointment without good reason', source: 'welfare-reform-act-2012' }
+  { id: 'higher-level', name: 'Higher-Level Sanction', deductionRate: 1.0, maxWeeks: 26, deductionDurationDays: 91, description: 'Serious failure to comply — 91-day fixed period for first failure, 182 days for repeat failures within 365 days. Deduction continues until compliance or end of fixed period.', source: 'welfare-reform-act-2012' },
+  { id: 'medium-level', name: 'Medium-Level Sanction', deductionRate: 0.4, maxWeeks: 13, description: 'Medium-level failure — 14-day open period, deduction continues until compliance. Applies to failures such as not taking up an employment placement.', source: 'welfare-reform-act-2012' },
+  { id: 'standard', name: 'Standard Sanction', deductionRate: 0.2, maxWeeks: 4, description: 'Failure to comply with claimant commitment — 7-day open period, deduction continues until compliance.', source: 'welfare-reform-act-2012' },
+  { id: 'lower-level', name: 'Lower-Level Sanction', deductionRate: 0, deductionAmount: 'equivalent-to-missed-appointment', description: 'Failure to attend mandatory appointment without good reason — deduction equal to the missed appointment amount.', source: 'welfare-reform-act-2012' }
 ];
 
 const GOOD_REASONS = [
@@ -178,11 +133,37 @@ function parseUCSanctions(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  if (typeof document !== 'undefined') {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function createChallengeRecord(data) {
@@ -214,7 +195,7 @@ function createChallengeRecord(data) {
 
 function renderChallengeCard(challenge) {
   const sanction = getSanctionDeductionRates(challenge.sanctionType);
-  const statusCls = challenge.status === 'submitted' ? ' status-submitted' : '';
+  const statusCls = challenge.status === 'submitted' ? 'status-submitted' : '';
 
   return `
     <header>
@@ -230,6 +211,7 @@ function renderChallengeCard(challenge) {
 }
 
 function renderChallenges(challenges, container) {
+  if (typeof document === 'undefined') return;
   container.replaceChildren();
   if (challenges.length === 0) {
     const empty = document.createElement('p');
@@ -246,6 +228,24 @@ function renderChallenges(challenges, container) {
     container.append(item);
   }
 }
+
+export {
+  getSanctionTypes,
+  getSanctionDeductionRates,
+  getMandatoryReconsiderationDeadline,
+  getTribunalDeadline,
+  generateMRText,
+  getGoodReasonsLibrary,
+  getHardshipPaymentEligibility,
+  generateHardshipPaymentRequest,
+  serializeUCSanctions,
+  parseUCSanctions,
+  escapeHtml,
+  createChallengeRecord,
+  renderChallengeCard,
+  renderChallenges
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

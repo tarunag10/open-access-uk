@@ -1,63 +1,17 @@
-// ===== src/app.js =====
-// Employment Tribunal Case Builder — bundled app (all shared modules inlined)
+// employment-tribunal/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs employment-tribunal
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+// ===== ../../shared/employment/index.mjs =====
 
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/deadlines/index.mjs =====
-function parseLocalDate(value) {
-  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
-function toLocalDateString(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('-');
-}
-
-function isWorkingDay(date) {
-  const day = date.getDay();
-  return day !== 0 && day !== 6;
-}
-
-function addWorkingDays(value, days) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  let remaining = Number(days);
-  const result = new Date(date);
-  while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result)) remaining -= 1;
-  }
-  return toLocalDateString(result);
-}
-
-// ===== ../shared/employment/index.mjs =====
 const CLAIM_TYPES = [
-  { id: 'unfair-dismissal', name: 'Unfair Dismissal', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Dismissal without fair reason or fair procedure' },
+  { id: 'unfair-dismissal', name: 'Unfair Dismissal', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Dismissal without fair reason or fair procedure. Deadline: 3 months less one day from effective date of termination. Early conciliation pauses the clock.' },
   { id: 'discrimination', name: 'Discrimination', deadlineMonths: 3, source: 'equality-act-2010', description: 'Direct/indirect discrimination, harassment, victimisation' },
   { id: 'wages', name: 'Unpaid Wages', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Wrongful deduction from wages' },
   { id: 'breach-of-contract', name: 'Breach of Contract', deadlineMonths: 6, source: 'common-law', description: 'Breach of employment contract terms' },
   { id: 'redundancy', name: 'Redundancy', deadlineMonths: 6, source: 'employment-rights-act-1996', description: 'Redundancy pay, consultation, or selection disputes' }
 ];
 
-function empParseLocalDate(value) {
+function parseLocalDate(value) {
   const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return null;
   const [, year, month, day] = match.map(Number);
@@ -69,7 +23,7 @@ function empParseLocalDate(value) {
   return date;
 }
 
-function empToLocalDateString(date) {
+function toLocalDateString(date) {
   if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
   const y = date.getUTCFullYear();
   const m = date.getUTCMonth();
@@ -77,30 +31,24 @@ function empToLocalDateString(date) {
   return [y, String(m + 1).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 
-function empAddMonths(value, months) {
-  const date = empParseLocalDate(value);
-  if (!date) return null;
-  date.setUTCMonth(date.getUTCMonth() + months);
-  return empToLocalDateString(date);
-}
-
 function getClaimTypes() {
   return [...CLAIM_TYPES];
 }
 
-function getACASDeadline(dismissalDate) {
-  const date = empParseLocalDate(dismissalDate);
-  if (!date) return null;
-  date.setUTCMonth(date.getUTCMonth() + 3);
-  date.setUTCDate(date.getUTCDate() - 1);
-  return empToLocalDateString(date);
+/**
+ * Calculate ET claim deadline: 3 months less one day from effective date of termination,
+ * with optional early conciliation clock-stop. Since 1 Dec 2025, early conciliation
+ * may last up to 12 weeks and pauses the statutory time limit.
+ */
+function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
+  return calculateETDeadline(dismissalDate, earlyConciliationDays);
 }
 
 function getET1Deadline(acasCertDate) {
-  const date = empParseLocalDate(acasCertDate);
+  const date = parseLocalDate(acasCertDate);
   if (!date) return null;
   date.setUTCDate(date.getUTCDate() + 42);
-  return empToLocalDateString(date);
+  return toLocalDateString(date);
 }
 
 function getRemedyCalculator(data) {
@@ -182,7 +130,25 @@ function parseEmployment(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 function escapeHtml(str) {
   if (typeof document !== 'undefined') {
     const div = document.createElement('div');
@@ -198,7 +164,8 @@ function escapeHtml(str) {
 }
 
 function renderClaimCard(claim) {
-  const claimType = CLAIM_TYPES.find((c) => c.id === claim.claimType);
+  const claimTypes = getClaimTypes();
+  const claimType = claimTypes.find((c) => c.id === claim.claimType);
   const typeName = claimType ? claimType.name : claim.claimType || 'Unknown';
 
   const acasDeadline = getACASDeadline(claim.dismissalDate);
@@ -259,6 +226,23 @@ function renderTimeline(claim) {
   html += '</ol>';
   return html;
 }
+
+export {
+  getClaimTypes,
+  getACASDeadline,
+  getET1Deadline,
+  getRemedyCalculator,
+  generateET1Text,
+  generateACASText,
+  getChronologyTemplate,
+  serializeEmployment,
+  parseEmployment,
+  escapeHtml,
+  renderClaimCard,
+  renderClaims,
+  renderTimeline
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

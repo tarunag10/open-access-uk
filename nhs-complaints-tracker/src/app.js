@@ -1,54 +1,8 @@
-// ===== src/app.js =====
-// NHS Complaints Tracker — bundled app (all shared modules inlined)
+// nhs-complaints-tracker/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs nhs-complaints-tracker
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+// ===== ../../shared/complaints/index.mjs =====
 
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/deadlines/index.mjs =====
-function parseLocalDate(value) {
-  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
-function toLocalDateString(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('-');
-}
-
-function isWorkingDay(date) {
-  const day = date.getDay();
-  return day !== 0 && day !== 6;
-}
-
-function addWorkingDays(value, days) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  let remaining = Number(days);
-  const result = new Date(date);
-  while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result)) remaining -= 1;
-  }
-  return toLocalDateString(result);
-}
-
-// ===== ../shared/complaints/index.mjs =====
 const NHS_STAGES = [
   {
     id: 'pals',
@@ -75,7 +29,9 @@ const NHS_STAGES = [
   }
 ];
 
-const VALID_STAGES = NHS_STAGES.map((s) => s.id);
+function generateId() {
+  return 'cmp-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+}
 
 function addMonths(value, months) {
   const parts = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -87,9 +43,7 @@ function addMonths(value, months) {
   return [y, String(m).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 
-function generateComplaintId() {
-  return 'cmp-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
-}
+const VALID_STAGES = NHS_STAGES.map((s) => s.id);
 
 function createComplaintRecord(data) {
   if (!data || !data.patientName) {
@@ -100,7 +54,7 @@ function createComplaintRecord(data) {
     throw new Error(`Invalid stage "${stage}". Must be one of: ${VALID_STAGES.join(', ')}`);
   }
   return {
-    id: generateComplaintId(),
+    id: generateId(),
     createdAt: new Date().toISOString(),
     status: 'open',
     patientName: data.patientName,
@@ -184,7 +138,25 @@ function parseComplaints(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 const ORGANISATION_TYPES = [
   { value: 'gp', label: 'GP Practice' },
   { value: 'hospital', label: 'Hospital' },
@@ -192,24 +164,40 @@ const ORGANISATION_TYPES = [
   { value: 'ccg', label: 'Clinical Commissioning Group' }
 ];
 
-function trackerIsWorkingDay(date) {
+function isWorkingDay(date) {
   const day = date.getDay();
   return day !== 0 && day !== 6;
 }
 
-function trackerAddWorkingDaysLocal(date, days) {
+function addWorkingDaysLocal(date, days) {
   const result = new Date(date);
   let remaining = days;
   while (remaining > 0) {
     result.setDate(result.getDate() + 1);
-    if (trackerIsWorkingDay(result)) remaining -= 1;
+    if (isWorkingDay(result)) remaining -= 1;
   }
   result.setHours(0, 0, 0, 0);
   return result;
 }
 
+function parseLocalDate(value) {
+  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
+}
+
+function toLocalDateString(date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0')
+  ].join('-');
+}
+
 function calculateDaysRemaining(sentDate, stageId, today = new Date()) {
-  const stage = NHS_STAGES.find((s) => s.id === stageId);
+  const stage = getComplaintStages().find((s) => s.id === stageId);
   if (!stage || !sentDate) return null;
 
   const deadlineInfo = getDeadlineForStage(stageId, sentDate);
@@ -234,14 +222,8 @@ function filterByStage(complaints, stageId) {
   return complaints.filter((c) => c.stage === stageId);
 }
 
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 function renderTimeline(complaint) {
-  const stages = NHS_STAGES;
+  const stages = getComplaintStages();
   const currentIdx = stages.findIndex((s) => s.id === complaint.stage);
 
   let html = '<ol class="timeline" aria-label="Complaint stages">';
@@ -260,7 +242,7 @@ function renderTimeline(complaint) {
 }
 
 function renderComplaintCard(complaint) {
-  const stage = NHS_STAGES.find((s) => s.id === complaint.stage);
+  const stage = getComplaintStages().find((s) => s.id === complaint.stage);
   const days = calculateDaysRemaining(complaint.sentDate, complaint.stage);
 
   let deadlineText = 'Add a sent date to see the deadline.';
@@ -317,6 +299,38 @@ function renderComplaints(complaints, container) {
     container.append(item);
   }
 }
+
+function escapeHtml(str) {
+  if (typeof document !== 'undefined') {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export {
+  ORGANISATION_TYPES,
+  calculateDaysRemaining,
+  filterByStage,
+  renderTimeline,
+  renderComplaintCard,
+  renderComplaints,
+  escapeHtml,
+  createComplaintRecord,
+  getComplaintStages,
+  getNextStage,
+  getDeadlineForStage,
+  generateComplaintSummary,
+  serializeComplaints,
+  parseComplaints
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

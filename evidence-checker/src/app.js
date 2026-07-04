@@ -1,20 +1,7 @@
-// ===== src/app.js =====
-// Evidence Upload Readiness Checker — bundled app (all shared modules inlined)
+// evidence-checker/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs evidence-checker
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
-
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/evidence-upload/index.mjs =====
+// ===== ../../shared/evidence-upload/index.mjs =====
 const EVIDENCE_UPLOAD_KEY = 'open-access-uk:evidence-upload';
 
 const TRIBUNAL_FORMATS = {
@@ -131,7 +118,25 @@ function parseEvidenceUpload(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 const TRIBUNAL_OPTIONS = [
   { value: 'SSCS', label: 'Social Security and Child Support Tribunal' },
   { value: 'FTT', label: 'First-tier Tribunal (Tax)' },
@@ -209,7 +214,7 @@ function renderEvidenceManifest(files) {
   for (const item of manifest.items) {
     html += `<tr><td>${escapeHtml(item.filename)}</td><td>${escapeHtml(item.description || '-')}</td><td>${formatBytes(item.size)}</td></tr>`;
   }
-  html += '</tbody></table>';
+  html += `</tbody></table>`;
   html += `<p class="manifest-total"><strong>Total size:</strong> ${formatBytes(manifest.totalSize)}</p>`;
   return html;
 }
@@ -231,6 +236,27 @@ function formatBytes(bytes) {
   const kb = bytes / 1024;
   return kb.toFixed(1) + ' KB';
 }
+
+export {
+  TRIBUNAL_OPTIONS,
+  escapeHtml,
+  renderComplianceResult,
+  renderRedactionChecklist,
+  renderMetadataChecklist,
+  renderEvidenceManifest,
+  renderTribunalGuidance,
+  formatBytes,
+  getTribunalFormats,
+  getAcceptedFormats,
+  getRedactionChecklist,
+  getMetadataStrippingChecklist,
+  validateFileForUpload,
+  checkFileCompliance,
+  generateEvidenceManifest,
+  serializeEvidenceUpload,
+  parseEvidenceUpload
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

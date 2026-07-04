@@ -27,3 +27,5 @@ jobs:
         run: node scripts/verify-suite.mjs
       - name: Check bundle divergence
         run: node scripts/bundle-tool.mjs --all --check
+      - name: Validate storage keys
+        run: node scripts/validate-storage-keys.mjs

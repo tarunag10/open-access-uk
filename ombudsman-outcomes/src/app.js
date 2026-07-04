@@ -1,20 +1,7 @@
-// ===== src/app.js =====
-// Ombudsman Outcomes Database — bundled app (all shared modules inlined)
+// ombudsman-outcomes/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs ombudsman-outcomes
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
-
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/ombudsman-outcomes/index.mjs (inlined) =====
+// ===== ../../shared/ombudsman-outcomes/index.mjs =====
 const OMBUDSMEN = [
   { id: 'PHSO', name: 'Parliamentary and Health Service Ombudsman', sectors: ['NHS', 'UK Government'], source: 'phso-annual-report', website: 'https://www.ombudsman.org.uk' },
   { id: 'housing', name: 'Housing Ombudsman', sectors: ['Social Housing'], source: 'housing-ombudsman-report', website: 'https://www.housing-ombudsman.org.uk' },
@@ -156,25 +143,52 @@ function parseOmbudsmanOutcomes(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
-const ISSUE_TYPES = [
-  { value: 'complaint-handling', label: 'Complaint handling' },
-  { value: 'clinical-negligence', label: 'Clinical negligence' },
-  { value: 'disrepair', label: 'Disrepair' },
-  { value: 'product-sale', label: 'Product sale' },
-  { value: 'insurance-claim', label: 'Insurance claim' },
-  { value: 'delay-repay', label: 'Delay Repay' },
-  { value: 'service-failure', label: 'Service failure' },
-  { value: 'maladministration', label: 'Maladministration' },
-  { value: 'billing', label: 'Billing' },
-  { value: 'metering', label: 'Metering' },
-  { value: 'service', label: 'Service' },
-  { value: 'conduct', label: 'Conduct' }
-];
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
+function getIssueTypes(ombudsmanId) {
+  const ombudsman = getOmbudsmanDetails(ombudsmanId);
+  if (!ombudsman) return [];
+  const stats = getOutcomeStatistics(ombudsmanId);
+  if (!stats) return [];
+  return [
+    { value: 'complaint-handling', label: 'Complaint handling' },
+    { value: 'clinical-negligence', label: 'Clinical negligence' },
+    { value: 'disrepair', label: 'Disrepair' },
+    { value: 'product-sale', label: 'Product sale' },
+    { value: 'insurance-claim', label: 'Insurance claim' },
+    { value: 'delay-repay', label: 'Delay Repay' },
+    { value: 'service-failure', label: 'Service failure' },
+    { value: 'maladministration', label: 'Maladministration' },
+    { value: 'billing', label: 'Billing' },
+    { value: 'metering', label: 'Metering' },
+    { value: 'service', label: 'Service' },
+    { value: 'conduct', label: 'Conduct' }
+  ];
+}
 
 function getAvailableIssueTypes(ombudsmanId) {
+  const ombudsman = getOmbudsmanDetails(ombudsmanId);
+  if (!ombudsman) return [];
+  const allTypes = getIssueTypes(ombudsmanId);
   const results = [];
-  for (const t of ISSUE_TYPES) {
+  for (const t of allTypes) {
     const outcomes = getTypicalOutcomes(ombudsmanId, t.value);
     if (outcomes && outcomes.outcomes.length > 0) {
       results.push(t);
@@ -223,7 +237,6 @@ function renderOutcomeResults(ombudsmanId, issueType) {
   if (!details) return '';
 
   const sections = [];
-  sections.push('<div class="uncited-warning" role="note">These statistics are illustrative examples based on typical ombudsman caseloads and may not reflect current published data. Always verify against the relevant ombudsman\'s latest annual report before relying on any figures.</div>');
 
   if (stats) {
     sections.push(`<h4>Overall statistics</h4>`);
@@ -265,6 +278,39 @@ function renderOutcomeResults(ombudsmanId, issueType) {
 
   return sections.join('');
 }
+
+function escapeHtml(str) {
+  if (typeof document !== 'undefined') {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export {
+  getOmbudsmen,
+  getOmbudsmanDetails,
+  getOutcomeStatistics,
+  getTypicalOutcomes,
+  getCompensationRanges,
+  getDecisionTimescales,
+  serializeOmbudsmanOutcomes,
+  parseOmbudsmanOutcomes,
+  getIssueTypes,
+  getAvailableIssueTypes,
+  formatCurrency,
+  formatNumber,
+  renderOmbudsmanSummary,
+  renderOutcomeResults,
+  escapeHtml
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

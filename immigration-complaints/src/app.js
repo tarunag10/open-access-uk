@@ -1,54 +1,8 @@
-// ===== src/app.js =====
-// Immigration Complaint Tool — bundled app (all shared modules inlined)
+// immigration-complaints/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs immigration-complaints
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+// ===== ../../shared/immigration/index.mjs =====
 
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/deadlines/index.mjs =====
-function parseLocalDate(value) {
-  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
-function toLocalDateString(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('-');
-}
-
-function isWorkingDay(date) {
-  const day = date.getDay();
-  return day !== 0 && day !== 6;
-}
-
-function addWorkingDays(value, days) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  let remaining = Number(days);
-  const result = new Date(date);
-  while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result)) remaining -= 1;
-  }
-  return toLocalDateString(result);
-}
-
-// ===== ../shared/immigration/index.mjs (inlined) =====
 const COMPLAINT_TYPES = [
   { id: 'visa-delay', name: 'Visa Processing Delay', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Delay in processing visa applications' },
   { id: 'brp-issue', name: 'Biometric Residence Permit Issue', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Issues with BRP card (incorrect details, not received, damaged)' },
@@ -115,7 +69,7 @@ const HOME_OFFICE_CONTACTS = {
   'immigration-detention': { email: 'irc@homeoffice.gov.uk', phone: '0808 801 0800', post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ' }
 };
 
-function immigrationTypeById(id) {
+function typeById(id) {
   return COMPLAINT_TYPES.find((t) => t.id === id) || null;
 }
 
@@ -124,7 +78,7 @@ function getComplaintTypes() {
 }
 
 function getComplaintDeadlines(typeId, startDate) {
-  const type = immigrationTypeById(typeId);
+  const type = typeById(typeId);
   if (!type || !startDate) return null;
   const deadlineDate = addWorkingDays(startDate, type.deadlineWorkingDays);
   return {
@@ -140,14 +94,14 @@ function getComplaintDeadlines(typeId, startDate) {
 function generateComplaintText(data) {
   if (!data || !data.complainantName) throw new Error('complainantName is required');
   if (!data.type) throw new Error('type is required');
-  const type = immigrationTypeById(data.type);
+  const type = typeById(data.type);
   const typeName = type ? type.name : data.type;
   const lines = [
     'COMPLAINT TO THE HOME OFFICE',
     '',
     `Date: ${new Date().toISOString().slice(0, 10)}`,
     '',
-    'To: Home Office Complaints',
+    `To: Home Office Complaints`,
     '',
     `I am writing to make a formal complaint regarding: ${typeName}.`,
     '',
@@ -171,7 +125,7 @@ function generateComplaintText(data) {
 }
 
 function getEscalationRoute(typeId) {
-  const type = immigrationTypeById(typeId);
+  const type = typeById(typeId);
   if (!type) return null;
   return [...ESCALATION_ROUTE];
 }
@@ -229,7 +183,27 @@ function parseImmigration(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
+const COMPLAINT_TYPES = getComplaintTypes();
+
 function typeById(id) {
   return COMPLAINT_TYPES.find((t) => t.id === id) || null;
 }
@@ -252,9 +226,17 @@ function filterByType(complaints, typeId) {
 }
 
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  if (typeof document !== 'undefined') {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function renderComplaintCard(complaint) {
@@ -315,6 +297,26 @@ function renderComplaints(complaints, container) {
     container.append(item);
   }
 }
+
+export {
+  COMPLAINT_TYPES,
+  typeById,
+  calculateDaysRemaining,
+  filterByType,
+  renderComplaintCard,
+  renderComplaints,
+  escapeHtml,
+  getComplaintTypes,
+  getComplaintDeadlines,
+  generateComplaintText,
+  getEscalationRoute,
+  getRequiredDocuments,
+  generateICIBIText,
+  getHomeOfficeContactInfo,
+  serializeImmigration,
+  parseImmigration
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

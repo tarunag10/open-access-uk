@@ -1,78 +1,8 @@
-// ===== src/app.js =====
-// Deadline Cascade Visualizer — bundled app
+// deadline-cascade/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs deadline-cascade
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+// ===== ../../shared/cascade/index.mjs =====
 
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/deadlines/index.mjs =====
-function parseLocalDate(value) {
-  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
-function toLocalDateString(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('-');
-}
-
-function isWorkingDay(date) {
-  const day = date.getDay();
-  return day !== 0 && day !== 6;
-}
-
-function addWorkingDays(value, days) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  let remaining = Number(days);
-  const result = new Date(date);
-  while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result)) remaining -= 1;
-  }
-  return toLocalDateString(result);
-}
-
-function formatDateForDisplay(dateStr) {
-  const date = parseLocalDate(dateStr);
-  if (!date) return dateStr;
-  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function buildICS(title, dateStr, description) {
-  const date = parseLocalDate(dateStr);
-  if (!date) return null;
-  const dtStr = [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('');
-  return [
-    'BEGIN:VEVENT',
-    `DTSTART;VALUE=DATE:${dtStr}`,
-    `DTEND;VALUE=DATE:${dtStr}`,
-    `SUMMARY:${title}`,
-    `DESCRIPTION:${(description || '').replace(/\n/g, '\\n')}`,
-    'END:VEVENT'
-  ].join('\r\n');
-}
-
-// ===== ../shared/cascade/index.mjs =====
 const CASCADE_TEMPLATES = [
   {
     id: 'foi-complaint',
@@ -127,6 +57,19 @@ const CASCADE_TEMPLATES = [
       { name: 'Tribunal Hearing', offsetDays: 180, workingDays: false, description: 'Tribunal hearing typically scheduled within 6 months' }
     ],
     source: 'dwp-appeals-guidance'
+  },
+  {
+    id: 'parking-appeal',
+    name: 'Parking Appeal',
+    description: 'Track parking PCN through internal review and tribunal stages',
+    steps: [
+      { name: 'PCN Received', offsetDays: 0, workingDays: false, description: 'Receive Penalty Charge Notice' },
+      { name: 'Discount Period', offsetDays: 14, workingDays: false, description: 'Pay within 14 days for 50% discount' },
+      { name: 'Formal Appeal', offsetDays: 28, workingDays: false, description: 'Submit formal appeal to council within 28 days' },
+      { name: 'Appeal Response', offsetDays: 56, workingDays: false, description: 'Council should respond within 56 days' },
+      { name: 'Tribunal Appeal', offsetDays: 112, workingDays: false, description: 'Appeal to Parking and Traffic Tribunal within 28 days of rejection' }
+    ],
+    source: 'traffic-management-act-2004'
   }
 ];
 
@@ -144,7 +87,7 @@ function buildCascade(templateId, startDate) {
   const date = parseLocalDate(startDate);
   if (!date) throw new Error('Invalid start date');
   const template = getTemplate(templateId);
-
+  
   return template.steps.map((step, index) => {
     let deadline;
     if (index === 0) {
@@ -156,7 +99,7 @@ function buildCascade(templateId, startDate) {
       result.setUTCDate(result.getUTCDate() + step.offsetDays);
       deadline = toLocalDateString(result);
     }
-
+    
     return {
       name: step.name,
       deadline,
@@ -171,7 +114,7 @@ function getStepStatus(step, currentDate) {
   const current = parseLocalDate(currentDate);
   const deadline = parseLocalDate(step.deadline);
   if (!current || !deadline) return 'unknown';
-
+  
   if (current > deadline) return 'overdue';
   if (current.getTime() === deadline.getTime()) return 'completed';
   return 'current';
@@ -181,35 +124,35 @@ function calculateCascadeProgress(cascade, currentDate) {
   if (!cascade || cascade.length === 0) return 0;
   const current = parseLocalDate(currentDate);
   if (!current) return 0;
-
+  
   let completed = 0;
   for (const step of cascade) {
     const deadline = parseLocalDate(step.deadline);
     if (deadline && current >= deadline) completed++;
   }
-
+  
   return Math.round((completed / cascade.length) * 100);
 }
 
 function exportCascadeICS(cascade) {
   if (!cascade || cascade.length === 0) return '';
-
+  
   const events = [];
   for (const step of cascade) {
     const event = buildICS(step.name, step.deadline, step.description);
     if (event) {
       const lines = event.split('\r\n');
       for (const line of lines) {
-        if (!line.startsWith('BEGIN:VCALENDAR') &&
-            !line.startsWith('VERSION:2.0') &&
-            !line.startsWith('PRODID:') &&
+        if (!line.startsWith('BEGIN:VCALENDAR') && 
+            !line.startsWith('VERSION:2.0') && 
+            !line.startsWith('PRODID:') && 
             !line.startsWith('END:VCALENDAR')) {
           events.push(line);
         }
       }
     }
   }
-
+  
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -219,14 +162,66 @@ function exportCascadeICS(cascade) {
   ].join('\r\n');
 }
 
+function formatCascadeTimeline(cascade, currentDate) {
+  if (!cascade || cascade.length === 0) return '';
+  
+  const lines = [];
+  for (const step of cascade) {
+    const status = getStepStatus(step, currentDate);
+    const indicator = status === 'completed' ? '[x]' : status === 'overdue' ? '[!]' : '[ ]';
+    lines.push(`${indicator} ${step.name} - ${step.deadline}`);
+  }
+  
+  return lines.join('\n');
+}
+
 function serializeCascade(value) {
-  try { return JSON.stringify(value); } catch { return null; }
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return null;
+  }
 }
 
 function parseCascade(value) {
   if (value === null || value === undefined) return null;
-  try { return JSON.parse(value); } catch { return null; }
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
+
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
+export {
+  getCascadeTemplates,
+  buildCascade,
+  getStepStatus,
+  calculateCascadeProgress,
+  exportCascadeICS,
+  formatCascadeTimeline,
+  serializeCascade,
+  parseCascade
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

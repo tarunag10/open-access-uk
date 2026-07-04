@@ -1,7 +1,7 @@
-// ===== src/app.js =====
-// Professional Complaints — bundled app (all shared modules inlined)
+// professional-complaints/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs professional-complaints
 
-// ===== ../shared/professional-complaints/index.mjs (inlined) =====
+// ===== ../../shared/professional-complaints/index.mjs =====
 const REGULATORS = [
   { id: 'GMC', name: 'General Medical Council', profession: 'Doctors', source: 'gmc-complaints', website: 'https://www.gmc-uk.org', fitnessToPractise: true, deadlineNote: 'No statutory time limit but prompt action recommended' },
   { id: 'SRA', name: 'Solicitors Regulation Authority', profession: 'Solicitors', source: 'sra-complaints', website: 'https://www.sra.org.uk', fitnessToPractise: true, deadlineNote: 'Within 6 years of the issue' },
@@ -150,12 +150,15 @@ function parseProfessionalComplaints(value) {
   }
 }
 
-// ===== ../shared/theme/index.mjs =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+
+const VALID = new Set(['light', 'dark']);
 
 function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
+  if (VALID.has(stored)) return stored;
   return prefersDark ? 'dark' : 'light';
 }
 
@@ -163,61 +166,20 @@ function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
 
-// ===== src/tracker.js (inlined) =====
-const REGULATOR_IDS = ['GMC', 'SRA', 'LeO', 'ACCA', 'RICS', 'NMC', 'GPhC', 'BPS'];
 
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
+// ===== src/tracker.js (imports resolved) =====
 
-function renderRegulatorOptions(selectedId) {
-  return REGULATORS.map(r =>
-    `<option value="${r.id}"${r.id === selectedId ? ' selected' : ''}>${r.name} (${r.profession})</option>`
-  ).join('');
-}
+export {
+  getRegulators,
+  getRegulatorDetails,
+  generateComplaintText,
+  getComplaintDeadlines,
+  getFitnessToPractiseProcess,
+  getComplaintCategories,
+  serializeProfessionalComplaints,
+  parseProfessionalComplaints
+};
 
-function renderComplaintCategories(regulatorId) {
-  const categories = getComplaintCategories(regulatorId);
-  return categories.map(c =>
-    `<option value="${c}">${c.charAt(0).toUpperCase() + c.slice(1)}</option>`
-  ).join('');
-}
-
-function renderComplaintCard(complaint) {
-  const regulator = getRegulatorDetails(complaint.regulator);
-  return `
-    <header>
-      <h3>${escapeHtml(complaint.professionalName || 'Untitled complaint')}</h3>
-      <span class="status-pill regulator-${complaint.regulator}">${regulator ? regulator.profession : complaint.regulator}</span>
-    </header>
-    <p class="meta">${escapeHtml(complaint.complaintType || 'No category')} — ${regulator ? regulator.name : complaint.regulator}</p>
-    <p class="meta">${escapeHtml(complaint.descriptionOfConcern || 'No description')}</p>
-    <div class="item-actions">
-      <button type="button" data-action="view" data-id="${complaint.id}">View</button>
-      <button type="button" data-action="delete" data-id="${complaint.id}" class="secondary">Delete</button>
-    </div>`;
-}
-
-function renderComplaints(complaints, container) {
-  container.replaceChildren();
-  if (complaints.length === 0) {
-    const empty = document.createElement('p');
-    empty.className = 'empty-state';
-    empty.textContent = 'No complaints yet. Add one using the form to start tracking.';
-    container.append(empty);
-    return;
-  }
-  const sorted = [...complaints].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-
-  for (const complaint of sorted) {
-    const item = document.createElement('article');
-    item.className = 'complaint-item';
-    item.innerHTML = renderComplaintCard(complaint);
-    container.append(item);
-  }
-}
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

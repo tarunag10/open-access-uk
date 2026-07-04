@@ -1,0 +1,50 @@
+# Law Change Watch
+# Track upcoming and recent legislation changes affecting tool content.
+# Format: legislation title, commencement date, affected tools, summary.
+
+- title: Renters' Rights Act 2025 (RRA)
+  commencement: 2026-05-01
+  affected_tools:
+    - eviction-notice-validator
+  summary: >
+    Abolished Section 21 no-fault evictions in England. Revised Section 8 grounds
+    with new mandatory grounds (landlord sale, landlord family move-in) and raised
+    serious-arrears threshold from 2 to 3 months. Transition window for court
+    proceedings on pre-1 May 2026 notices closes 31 July 2026.
+  status: in_effect
+  action_required: Full rebuild of eviction tool on RRA grounds; remove Section 21 as live option
+
+- title: Employment Rights Act 2025 (ERA) — unfair dismissal 6-month limit
+  commencement: 2026-10-01
+  affected_tools:
+    - employment-tribunal
+  summary: >
+    Extends the unfair dismissal time limit from "3 months less one day" to
+    6 months for most claims. Wrongful dismissal claims retain the 3-month limit.
+  status: pending
+  action_required: Update employment-tribunal tool with October 2026 change banner;
+    add time-limit toggle for 3-month vs 6-month claims
+
+- title: Employment Rights Act 2025 (ERA) — additional provisions
+  commencement: 2027-01-01
+  affected_tools:
+    - employment-tribunal
+    - letter-generator
+  summary: >
+    Day-one rights on unfair dismissal, parental leave, and flexible working.
+    Changes to statutory sick pay and zero-hours contract regulations.
+  status: pending
+  action_required: Review employment-tribunal and letter-generator content;
+    update entitlement descriptions and deadline calculations
+
+- title: Renters' Rights Act 2025 (RRA) — Phase 2 (Awaab's Law)
+  commencement: 2026-10-01
+  affected_tools:
+    - eviction-notice-validator
+    - case-builder
+  summary: >
+    Awaab's Law introduces mandatory timescales for social housing landlords
+    to investigate and fix hazards (damp, mould, excess cold).
+  status: pending
+  action_required: Add hazard-reporting timeline to case-builder repairs module;
+    cross-link from eviction tool

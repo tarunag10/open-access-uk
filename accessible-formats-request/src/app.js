@@ -1,20 +1,7 @@
-// ===== src/app.js =====
-// Accessible Formats Request Generator — bundled app
+// accessible-formats-request/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs accessible-formats-request
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
-
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/accessible-formats/index.mjs =====
+// ===== ../../shared/accessible-formats/index.mjs =====
 const FORMATS = [
   { id: 'braille', name: 'Braille', description: 'Grade 2 (Contracted) Braille', supplier: 'RNIB', source: 'rnib-braille-standards', minLeadTime: '2 weeks' },
   { id: 'large-print', name: 'Large Print', description: 'Minimum 16pt font, sans-serif, high contrast', supplier: 'RNIB', source: 'rnib-large-print', minLeadTime: '1 week' },
@@ -197,7 +184,25 @@ function parseAccessibleFormats(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 const ORGANISATION_TYPES = [
   { value: 'council', label: 'Local Authority / Council' },
   { value: 'nhs', label: 'NHS Organisation' },
@@ -208,9 +213,17 @@ const ORGANISATION_TYPES = [
 ];
 
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  if (typeof document !== 'undefined') {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function renderRequestCard(request) {
@@ -266,6 +279,24 @@ function renderFormatRequirements(formatId, container) {
     container.append(row);
   }
 }
+
+export {
+  ORGANISATION_TYPES,
+  escapeHtml,
+  renderRequestCard,
+  renderRequestList,
+  renderFormatRequirements,
+  getFormats,
+  getFormatDetails,
+  generateRequestText,
+  getFormatRequirements,
+  getOrganisationRoutes,
+  getEqualityActRights,
+  getMonitoringInfo,
+  serializeAccessibleFormats,
+  parseAccessibleFormats
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

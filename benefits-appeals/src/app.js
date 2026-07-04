@@ -1,87 +1,8 @@
-// ===== src/app.js =====
-// Benefits Appeals Helper — bundled app with inlined shared modules.
+// benefits-appeals/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs benefits-appeals
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
+// ===== ../../shared/appeals/index.mjs =====
 
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-function readStoredTheme() {
-  try {
-    return window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function writeStoredTheme(value) {
-  try {
-    window.localStorage.setItem(THEME_STORAGE_KEY, value);
-  } catch {
-    /* private mode */
-  }
-}
-
-function applyTheme(theme, toggle) {
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-}
-
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let theme = resolveInitialTheme({ stored: readStoredTheme(), prefersDark });
-  applyTheme(theme, toggle);
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    applyTheme(theme, toggle);
-    writeStoredTheme(theme);
-  });
-}
-
-// ===== ../shared/deadlines/index.mjs =====
-function parseLocalDate(value) {
-  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
-function toLocalDateString(date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0')
-  ].join('-');
-}
-
-function addWorkingDays(value, days) {
-  const date = parseLocalDate(value);
-  if (!date) return null;
-  let remaining = Number(days);
-  const result = new Date(date);
-  while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    const day = result.getDay();
-    if (day !== 0 && day !== 6) remaining -= 1;
-  }
-  return toLocalDateString(result);
-}
-
-// ===== ../shared/appeals/index.mjs =====
 const BENEFIT_TYPES = [
   { id: 'pip', name: 'Personal Independence Payment (PIP)', mrDeadlineMonths: 1, tribunalDeadlineMonths: 1, source: 'govuk-pip' },
   { id: 'uc', name: 'Universal Credit (UC)', mrDeadlineMonths: 1, tribunalDeadlineMonths: 1, source: 'govuk-uc-mandatory-reconsideration' },
@@ -212,7 +133,25 @@ function parseAppeals(value) {
   }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 const APPEAL_STATUSES = [
   { value: 'mr_draft', label: 'MR draft', description: 'Mandatory reconsideration not yet sent.' },
   { value: 'mr_sent', label: 'MR sent', description: 'MR request sent to DWP.' },
@@ -264,8 +203,14 @@ function serializeAppealsList(list) {
   return JSON.stringify(list.map((item) => createAppeal(item)));
 }
 
-function getAppealStatusMeta(status) {
+function getStatusMeta(status) {
   return APPEAL_STATUSES.find((s) => s.value === status) || APPEAL_STATUSES[0];
+}
+
+function getBenefitName(benefitType) {
+  const types = getAppealTypes();
+  const found = types.find((b) => b.id === benefitType);
+  return found ? found.name : benefitType;
 }
 
 function renderAppeals(appeals, container) {
@@ -286,41 +231,50 @@ function renderAppeals(appeals, container) {
 function renderAppealCard(appeal) {
   const item = document.createElement('article');
   item.className = 'request-item';
-  if (appeal.id === activeAppealId) item.classList.add('active');
+  if (appeal.id === window.__activeAppealId) item.classList.add('active');
 
   const head = document.createElement('header');
   const title = document.createElement('h3');
-  title.textContent = findBenefitName(appeal.benefitType);
+  title.textContent = getBenefitName(appeal.benefitType);
   const status = document.createElement('span');
   status.className = 'status-pill';
-  status.textContent = getAppealStatusMeta(appeal.status).label;
+  status.textContent = getStatusMeta(appeal.status).label;
   head.append(title, status);
 
   const meta = document.createElement('p');
   meta.className = 'meta';
   const decided = appeal.decisionDate || 'No date';
-  meta.textContent = `Decision: ${decided} — ${getAppealStatusMeta(appeal.status).description}`;
+  meta.textContent = `Decision: ${decided}`;
+
+  const timeline = renderTimeline(appeal);
 
   const actions = document.createElement('div');
   actions.className = 'item-actions';
   const viewBtn = document.createElement('button');
   viewBtn.type = 'button';
   viewBtn.textContent = 'View';
-  viewBtn.addEventListener('click', () => selectAppeal(appeal.id));
+  viewBtn.addEventListener('click', () => {
+    window.__selectAppeal(appeal.id);
+  });
   const deleteBtn = document.createElement('button');
   deleteBtn.type = 'button';
   deleteBtn.className = 'secondary';
   deleteBtn.textContent = 'Delete';
-  deleteBtn.addEventListener('click', () => deleteAppeal(appeal.id));
+  deleteBtn.addEventListener('click', () => {
+    window.__deleteAppeal(appeal.id);
+  });
   actions.append(viewBtn, deleteBtn);
 
-  item.append(head, meta, actions);
+  item.append(head, meta, timeline, actions);
   return item;
 }
 
 function renderTimeline(appeal) {
   const wrap = document.createElement('div');
   wrap.className = 'appeal-timeline';
+
+  const mrDeadline = getMandatoryReconsiderationDeadline(appeal.benefitType);
+  const tribunalDeadline = getTribunalDeadline(appeal.benefitType);
 
   if (appeal.decisionDate) {
     const d = document.createElement('p');
@@ -329,31 +283,26 @@ function renderTimeline(appeal) {
     wrap.append(d);
   }
 
-  if (appeal.mrDecisionDate) {
-    const d = document.createElement('p');
-    d.className = 'timeline-item';
-    d.textContent = `MR decision date: ${formatDate(appeal.mrDecisionDate)}`;
-    wrap.append(d);
-  }
-
-  const mrDeadline = getMandatoryReconsiderationDeadline(appeal.benefitType);
   if (appeal.decisionDate && mrDeadline) {
     const deadline = computeMonthsDeadline(appeal.decisionDate, mrDeadline.months);
     const d = document.createElement('p');
     d.className = 'timeline-item';
     const overdue = isOverdue(deadline);
-    if (overdue) d.classList.add('overdue');
+    if (overdue) {
+      d.classList.add('overdue');
+    }
     d.textContent = `MR deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
     wrap.append(d);
   }
 
-  const tribunalDeadline = getTribunalDeadline(appeal.benefitType);
   if (appeal.mrDecisionDate && tribunalDeadline) {
     const deadline = computeMonthsDeadline(appeal.mrDecisionDate, tribunalDeadline.months);
     const d = document.createElement('p');
     d.className = 'timeline-item';
     const overdue = isOverdue(deadline);
-    if (overdue) d.classList.add('overdue');
+    if (overdue) {
+      d.classList.add('overdue');
+    }
     d.textContent = `Tribunal deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
     wrap.append(d);
   }
@@ -379,6 +328,19 @@ function isOverdue(dateStr) {
   return todayStr > dateStr;
 }
 
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return dateStr;
+  const d = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC'
+  }).format(d);
+}
+
 function generateLetterPreview(appeal) {
   const data = {
     benefitType: appeal.benefitType,
@@ -394,38 +356,23 @@ function generateLetterPreview(appeal) {
   return generateSSCS1Text(data);
 }
 
-function renderSummary(appeals) {
-  const stats = {
-    total: appeals.length,
-    mrDraft: appeals.filter((a) => a.status === 'mr_draft').length,
-    mrSent: appeals.filter((a) => a.status === 'mr_sent').length,
-    mrRefused: appeals.filter((a) => a.status === 'mr_refused').length,
-    tribunalReady: appeals.filter((a) => ['mr_refused', 'tribunal_draft'].includes(a.status)).length,
-    closed: appeals.filter((a) => a.status === 'closed').length
-  };
+export {
+  APPEAL_STATUSES,
+  createAppeal,
+  parseAppealsList,
+  serializeAppealsList,
+  getStatusMeta,
+  getBenefitName,
+  renderAppeals,
+  renderAppealCard,
+  renderTimeline,
+  generateLetterPreview,
+  getDescriptorGuidance,
+  getAppealTypes,
+  getMandatoryReconsiderationDeadline,
+  getTribunalDeadline
+};
 
-  summaryEl.replaceChildren(
-    ...[
-      { label: 'Total appeals', value: stats.total, tone: 'default' },
-      { label: 'MR drafts', value: stats.mrDraft, tone: 'default' },
-      { label: 'MR sent', value: stats.mrSent, tone: 'default' },
-      { label: 'MR refused', value: stats.mrRefused, tone: stats.mrRefused > 0 ? 'warning' : 'default' },
-      { label: 'Tribunal ready', value: stats.tribunalReady, tone: stats.tribunalReady > 0 ? 'warning' : 'default' },
-      { label: 'Closed', value: stats.closed, tone: 'default' }
-    ].map((c) => {
-      const card = document.createElement('article');
-      card.className = `summary-card ${c.tone === 'warning' ? 'warning' : ''}`;
-      const label = document.createElement('p');
-      label.className = 'summary-label';
-      label.textContent = c.label;
-      const value = document.createElement('p');
-      value.className = 'summary-value';
-      value.textContent = String(c.value);
-      card.append(label, value);
-      return card;
-    })
-  );
-}
 
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:benefits-appeals:appeals';

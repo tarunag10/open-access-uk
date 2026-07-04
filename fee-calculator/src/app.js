@@ -1,20 +1,7 @@
-// ===== src/app.js =====
-// Court and Tribunal Fee Calculator — bundled app (all shared modules inlined)
+// fee-calculator/src/app.js — generated bundle (all shared modules inlined)
+// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs fee-calculator
 
-// ===== ../shared/theme/index.mjs =====
-const THEME_STORAGE_KEY = 'open-access-uk:theme';
-const VALID_THEMES = new Set(['light', 'dark']);
-
-function resolveInitialTheme({ stored, prefersDark } = {}) {
-  if (VALID_THEMES.has(stored)) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
-
-function nextTheme(current) {
-  return current === 'dark' ? 'light' : 'dark';
-}
-
-// ===== ../shared/fees-calculator/index.mjs (inlined) =====
+// ===== ../../shared/fees-calculator/index.mjs =====
 const FEE_SCHEDULES = {
   'county-court': [
     { claimRange: 'Up to £300', fee: 35, source: 'hmcts-county-court-fees' },
@@ -87,8 +74,10 @@ function getFeeSchedules(category) {
 function calculateFee(category, claimAmount) {
   const amount = Number(claimAmount);
   if (Number.isNaN(amount) || amount < 0) return null;
+
   const bands = FEE_BANDS[category];
   if (!bands) return null;
+
   for (const band of bands) {
     if (amount >= band.min && amount <= band.max) {
       return band.fee;
@@ -132,36 +121,76 @@ function getExemptions() {
 function generateFeeEstimate(category, claimAmount, extras = {}) {
   const items = [];
   const baseFee = calculateFee(category, claimAmount);
+
   if (baseFee !== null) {
     items.push({ description: `Court/Tribunal fee (${category})`, amount: baseFee });
   }
+
   if (extras.hearing) {
     items.push({ description: 'Additional hearing fee', amount: 50 });
   }
+
   if (extras.expedited) {
     items.push({ description: 'Expedited procedure fee', amount: 100 });
   }
+
   if (extras.witness) {
     const witnessFee = typeof extras.witness === 'number' ? extras.witness : 25;
     items.push({ description: 'Witness fee', amount: witnessFee });
   }
+
   const totalFee = items.reduce((sum, item) => sum + item.amount, 0);
-  return { category, claimAmount: Number(claimAmount), items, totalFee };
+
+  return {
+    category,
+    claimAmount: Number(claimAmount),
+    items,
+    totalFee
+  };
 }
 
 function getFeeRemissionForm() {
-  return { reference: 'EX160', name: 'Request for a fee remission' };
+  return {
+    reference: 'EX160',
+    name: 'Request for a fee remission'
+  };
 }
 
 function serializeFeesCalculator(value) {
-  try { return JSON.stringify(value); } catch { return null; }
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return null;
+  }
 }
 
 function parseFeesCalculator(value) {
-  try { return JSON.parse(value); } catch { return null; }
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
 
-// ===== src/tracker.js (inlined) =====
+
+// ===== ../../shared/theme/index.mjs =====
+// shared/theme/index.mjs
+const THEME_STORAGE_KEY = 'open-access-uk:theme';
+
+const VALID = new Set(['light', 'dark']);
+
+function resolveInitialTheme({ stored, prefersDark } = {}) {
+  if (VALID.has(stored)) return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+
+// ===== src/tracker.js (imports resolved) =====
+
 const CATEGORY_LABELS = {
   'county-court': 'County Court',
   'employment-tribunal': 'Employment Tribunal',
@@ -175,9 +204,17 @@ function formatCurrency(amount) {
 }
 
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  if (typeof document !== 'undefined') {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function renderFeeResult(estimate, eligibility) {
@@ -240,6 +277,25 @@ function renderCalcList(calcs, container) {
     container.append(item);
   }
 }
+
+export {
+  CATEGORY_LABELS,
+  formatCurrency,
+  escapeHtml,
+  renderFeeResult,
+  renderCalcCard,
+  renderCalcList,
+  getFeeCategories,
+  getFeeSchedules,
+  calculateFee,
+  getHelpWithFeesEligibility,
+  getExemptions,
+  generateFeeEstimate,
+  getFeeRemissionForm,
+  serializeFeesCalculator,
+  parseFeesCalculator
+};
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
