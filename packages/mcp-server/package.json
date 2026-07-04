@@ -1,0 +1,15 @@
+{
+  "name": "@open-access-uk/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for Open Access UK — deadline calculations, escalation routes, letter templates, and possession grounds.",
+  "type": "module",
+  "main": "src/index.mjs",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "test": "node --test src/**/*.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0"
+  },
+  "license": "MIT"
+}

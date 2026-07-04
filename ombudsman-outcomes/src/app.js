@@ -44,6 +44,10 @@ function getOmbudsmen() {
   return OMBUDSMEN.map((o) => ({ ...o }));
 }
 
+function getOmbudsmanDetails(ombudsmanId) {
+  return OMBUDSMEN.find((o) => o.id === ombudsmanId) || null;
+}
+
 function getOutcomeStatistics(ombudsmanId) {
   if (!SHOW_UNSOURCED_STATS) return null;
   const stats = OUTCOME_STATISTICS[ombudsmanId];
@@ -112,6 +116,10 @@ function parseOmbudsman(value) {
     return [];
   }
 }
+
+// Aliases for backwards compatibility with inlined tool bundles
+const serializeOmbudsmanOutcomes = serializeOmbudsman;
+const parseOmbudsmanOutcomes = parseOmbudsman;
 
 
 // ===== ../../shared/theme/index.mjs =====

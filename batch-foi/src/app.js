@@ -365,7 +365,6 @@ function removeUndefined(obj) {
   }
   return result;
 }
-}
 
 function calculateETDeadline(effectiveDateOfTermination, earlyConciliationDays = 0) {
   const todayStr = toLocalDateString(new Date());

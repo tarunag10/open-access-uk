@@ -1,0 +1,30 @@
+# Open Access UK: Possession Grounds (RRA 2025)
+
+**Jurisdiction:** England only
+**Effective from:** 1 May 2026
+**Source:** Renters' Rights Act 2025, Housing Act 1988 (as amended)
+
+## Transition
+
+- Section 21 abolished 1 May 2026.
+- Pre-1 May 2026 Section 21 notices: court proceedings must be issued by 31 July 2026.
+- From 1 May 2026, all possession claims under the RRA use the revised Section 8 grounds below.
+
+## Mandatory grounds
+
+| ID | Ground | Notice period | Condition | Source |
+|----|--------|---------------|-----------|--------|
+| rra-landlord-sale | Landlord intends to sell | 2 months | Landlord genuinely intends to sell. Cannot be used if landlord has owned <12 months. | RRA 2025 Sch.1 |
+| rra-landlord-move-in | Landlord or family move in | 2 months | Landlord, parent, child, sibling, or grandparent needs to occupy. | RRA 2025 Sch.1 |
+| rra-serious-arrears | Serious rent arrears (3+ months) | 14 days | At least 3 months rent arrears at notice and hearing. Replaces pre-RRA Ground 8 (2-month threshold). | RRA 2025 s.8 |
+| rra-repeated-arrears | Repeated rent arrears | 14 days | At least 2 arrears notices in the previous 12 months, regardless of arrears amount at hearing. | RRA 2025 Sch.1 |
+
+## Discretionary grounds
+
+| ID | Ground | Notice period | Condition | Source |
+|----|--------|---------------|-----------|--------|
+| ground-10 | Some rent arrears | 14 days | Rent arrears at time of notice and hearing (pre-RRA). | HA 1988 s.8 |
+| ground-11 | Persistent delay in paying rent | 14 days | Habitual late payment (pre-RRA). | HA 1988 s.8 |
+| ground-12 | Breach of tenancy obligation | 14 days | Any breach of tenancy terms (pre-RRA). | HA 1988 s.8 |
+| ground-14 | Nuisance or anti-social behaviour | 0 days (immediate) | Nuisance, ASB, or conviction. Proceedings may commence immediately. | HA 1988 s.8 |
+| rra-landlord-sale-discretionary | Landlord sale (discretionary alternative) | 2 months | For cases where mandatory conditions not fully met. | RRA 2025 |

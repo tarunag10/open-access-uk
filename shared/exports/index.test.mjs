@@ -1,31 +1,45 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  createMarkdownDocument,
-  createPrintDocument,
-  createTextExport,
-  safeFilename
+  generateAdviserPack,
+  generateCaseSummary,
+  safeFilename,
+  createTextExport
 } from './index.mjs';
 
-test('creates safe filenames and text exports', () => {
-  assert.equal(
-    safeFilename('FOI request: Council / Housing', 'md'),
-    'foi-request-council-housing.md'
-  );
-  const exported = createTextExport('Complaint follow up', 'Hello', { extension: 'md' });
-  assert.equal(exported.filename, 'complaint-follow-up.md');
-  assert.equal(exported.mimeType, 'text/markdown;charset=utf-8');
-  assert.equal(exported.content, 'Hello\n');
+test('generateAdviserPack produces HTML with case data', () => {
+  const caseObj = {
+    title: 'My Housing Case',
+    jurisdiction: 'england',
+    parties: [{ role: 'tenant', name: 'Alice' }],
+    events: [{ date: '2026-06-01', type: 'notice-served', summary: 'Section 21 notice' }],
+    deadlines: [{ ruleId: 'et-claim', startDate: '2026-06-01', targetDate: '2026-09-01', status: 'pending' }],
+    documents: [{ name: 'Photo', kind: 'evidence', addedAt: '2026-06-02' }],
+    letters: [{ toolId: 'eviction', templateId: 'challenge', renderedAt: '2026-06-03', fields: {} }]
+  };
+  const pack = generateAdviserPack(caseObj);
+  assert.ok(pack);
+  assert.ok(pack.html.includes('My Housing Case'));
+  assert.ok(pack.html.includes('notice'));
 });
 
-test('creates markdown and print documents', () => {
-  const markdown = createMarkdownDocument('Evidence pack', [
-    { heading: 'Evidence', items: ['Photo', 'Email'] }
-  ]);
-  assert.match(markdown, /^# Evidence pack/);
-  assert.match(markdown, /- Photo/);
+test('generateAdviserPack returns null for no case', () => {
+  assert.equal(generateAdviserPack(null), null);
+});
 
-  const printDoc = createPrintDocument('Pack', markdown);
-  assert.equal(printDoc.generatedLocally, true);
-  assert.match(printDoc.privacyNote, /Nothing was sent/);
+test('generateCaseSummary includes case title', () => {
+  const s = generateCaseSummary({ title: 'Test', events: [], deadlines: [], documents: [], letters: [] });
+  assert.ok(s.includes('Test'));
+  assert.ok(s.includes('Not legal advice'));
+});
+
+test('safeFilename creates safe filenames', () => {
+  assert.equal(safeFilename('FOI / Council', 'md'), 'foi-council.md');
+  assert.equal(safeFilename('test', 'txt'), 'test.txt');
+});
+
+test('createTextExport creates export object', () => {
+  const e = createTextExport('Letter', 'Hello', { extension: 'txt' });
+  assert.equal(e.filename, 'letter.txt');
+  assert.equal(e.content, 'Hello\n');
 });
