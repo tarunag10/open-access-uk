@@ -1,11 +1,36 @@
 export const EVIDENCE_UPLOAD_KEY = 'open-access-uk:evidence-upload';
 
 const TRIBUNAL_FORMATS = {
-  SSCS: { name: 'Social Security and Child Support Tribunal', acceptedFormats: ['.pdf'], maxSizeMB: 10, source: 'hmcts-sscs-guidance' },
-  FTT: { name: 'First-tier Tribunal (Tax)', acceptedFormats: ['.pdf', '.docx'], maxSizeMB: 25, source: 'hmcts-tribunal-guidance' },
-  countyCourt: { name: 'County Court', acceptedFormats: ['.pdf'], maxSizeMB: 20, source: 'hmcts-county-court-guidance' },
-  employment: { name: 'Employment Tribunal', acceptedFormats: ['.pdf', '.docx'], maxSizeMB: 25, source: 'et-practice-direction' },
-  housing: { name: 'Housing Tribunal', acceptedFormats: ['.pdf'], maxSizeMB: 15, source: 'housing-tribunal-guidance' }
+  SSCS: {
+    name: 'Social Security and Child Support Tribunal',
+    acceptedFormats: ['.pdf'],
+    maxSizeMB: 10,
+    source: 'hmcts-sscs-guidance'
+  },
+  FTT: {
+    name: 'First-tier Tribunal (Tax)',
+    acceptedFormats: ['.pdf', '.docx'],
+    maxSizeMB: 25,
+    source: 'hmcts-tribunal-guidance'
+  },
+  countyCourt: {
+    name: 'County Court',
+    acceptedFormats: ['.pdf'],
+    maxSizeMB: 20,
+    source: 'hmcts-county-court-guidance'
+  },
+  employment: {
+    name: 'Employment Tribunal',
+    acceptedFormats: ['.pdf', '.docx'],
+    maxSizeMB: 25,
+    source: 'et-practice-direction'
+  },
+  housing: {
+    name: 'Housing Tribunal',
+    acceptedFormats: ['.pdf'],
+    maxSizeMB: 15,
+    source: 'housing-tribunal-guidance'
+  }
 };
 
 const REDACTION_CHECKLIST = [
@@ -15,11 +40,7 @@ const REDACTION_CHECKLIST = [
   "children's names"
 ];
 
-const METADATA_STRIPPING_CHECKLIST = [
-  'GPS coordinates',
-  'device info',
-  'author names'
-];
+const METADATA_STRIPPING_CHECKLIST = ['GPS coordinates', 'device info', 'author names'];
 
 export function getTribunalFormats(tribunalType) {
   const t = TRIBUNAL_FORMATS[tribunalType];
@@ -49,7 +70,9 @@ export function validateFileForUpload(fileData, tribunalType) {
   const ext = fileData.name ? '.' + fileData.name.split('.').pop().toLowerCase() : '';
 
   if (!tribunal.acceptedFormats.includes(ext)) {
-    errors.push(`File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`);
+    errors.push(
+      `File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`
+    );
   }
 
   const maxBytes = tribunal.maxSizeMB * 1024 * 1024;
@@ -69,7 +92,9 @@ export function checkFileCompliance(fileData, tribunalType) {
   const ext = fileData.name ? '.' + fileData.name.split('.').pop().toLowerCase() : '';
 
   if (!tribunal.acceptedFormats.includes(ext)) {
-    errors.push(`File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`);
+    errors.push(
+      `File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`
+    );
   }
 
   const maxBytes = tribunal.maxSizeMB * 1024 * 1024;
@@ -89,7 +114,7 @@ export function generateEvidenceManifest(evidenceItems) {
     return { items: [], totalSize: 0 };
   }
 
-  const items = evidenceItems.map(item => ({
+  const items = evidenceItems.map((item) => ({
     filename: item.filename || '',
     description: item.description || '',
     category: item.category || '',
@@ -108,7 +133,10 @@ export function serializeEvidenceUpload(value) {
 export function parseEvidenceUpload(value) {
   try {
     const parsed = JSON.parse(value || '{}');
-    return { files: Array.isArray(parsed.files) ? parsed.files : [], tribunal: parsed.tribunal || '' };
+    return {
+      files: Array.isArray(parsed.files) ? parsed.files : [],
+      tribunal: parsed.tribunal || ''
+    };
   } catch {
     return { files: [], tribunal: '' };
   }

@@ -1,10 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  getToolJurisdiction,
-  nationToJurisdiction,
-  getNations
-} from './index.mjs';
+import { getToolJurisdiction, nationToJurisdiction, getNations } from './index.mjs';
 
 test('getToolJurisdiction returns England for eviction tool', () => {
   const j = getToolJurisdiction('eviction-notice-validator');

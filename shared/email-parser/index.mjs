@@ -15,7 +15,15 @@ const DATE_EVENT_PATTERN = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s*[-–:]\s*(.+)
 const EMAIL_PATTERN = /[\w.+-]+@[\w-]+\.[\w.-]+/g;
 const PHONE_PATTERN = /(?:tel(?:ephone)?|phone|mobile|fax)[:\s]*(\+?[\d\s\-()]{7,20})/gi;
 
-const SIGNATURE_SEPARATORS = ['--', '---', 'Kind regards', 'Best regards', 'Regards', 'Yours sincerely', 'Yours faithfully'];
+const SIGNATURE_SEPARATORS = [
+  '--',
+  '---',
+  'Kind regards',
+  'Best regards',
+  'Regards',
+  'Yours sincerely',
+  'Yours faithfully'
+];
 
 export function parseReferenceNumbers(text) {
   if (!text) return [];
@@ -45,7 +53,8 @@ export function parseDeadlines(text) {
           raw: fullMatch
         });
       } else {
-        const dateStr = match[1] || match[2] || fullMatch.replace(/^(?:by|before|deadline[:\s]*)/i, '').trim();
+        const dateStr =
+          match[1] || match[2] || fullMatch.replace(/^(?:by|before|deadline[:\s]*)/i, '').trim();
         deadlines.push({
           type: 'date',
           date: dateStr,
@@ -83,7 +92,10 @@ export function parseAuthorityInfo(text) {
     phones.push(phoneMatch[1].trim());
   }
 
-  const lines = signature.split('\n').map((l) => l.trim()).filter(Boolean);
+  const lines = signature
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
   let name = '';
   for (const line of lines) {
     if (hasEmail(line) || /phone|tel|fax|mobile|email/i.test(line)) continue;

@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addWorkingDays, calculateDeadline, parseLocalDate, formatDateForDisplay, buildICS } from './index.mjs';
+import {
+  addWorkingDays,
+  calculateDeadline,
+  parseLocalDate,
+  formatDateForDisplay,
+  buildICS
+} from './index.mjs';
 
 test('parses local dates and adds working days', () => {
   assert.equal(parseLocalDate('2026-06-02').getFullYear(), 2026);

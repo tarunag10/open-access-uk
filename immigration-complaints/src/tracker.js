@@ -82,8 +82,7 @@ function renderComplaints(complaints, container) {
   if (complaints.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent =
-      'No immigration complaints yet. Add one using the form to start tracking.';
+    empty.textContent = 'No immigration complaints yet. Add one using the form to start tracking.';
     container.append(empty);
     return;
   }

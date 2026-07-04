@@ -10,17 +10,84 @@
  */
 
 const OMBUDSMEN = [
-  { id: 'PHSO', name: 'Parliamentary and Health Service Ombudsman', sectors: ['NHS', 'UK Government'], source: 'phso-annual-report', website: 'https://www.ombudsman.org.uk' },
-  { id: 'housing', name: 'Housing Ombudsman', sectors: ['Social Housing'], source: 'housing-ombudsman-report', website: 'https://www.housing-ombudsman.org.uk' },
-  { id: 'financial', name: 'Financial Ombudsman Service', sectors: ['Finance', 'Insurance', 'Banking'], source: 'fos-annual-report', website: 'https://www.financial-ombudsman.org.uk' },
-  { id: 'rail', name: 'Rail Ombudsman', sectors: ['Rail', 'Transport'], source: 'rail-ombudsman-report', website: 'https://www.railombudsman.org' },
-  { id: 'legal', name: 'Legal Ombudsman', sectors: ['Legal Services'], source: 'leo-annual-report', website: 'https://www.legalombudsman.org.uk' },
-  { id: 'local-government', name: 'Local Government Ombudsman', sectors: ['Councils', 'Local Services'], source: 'lgo-annual-report', website: 'https://www.lgo.org.uk' },
-  { id: 'water', name: 'Consumer Council for Water', sectors: ['Water', 'Drainage'], source: 'ccw-annual-report', website: 'https://www.ccw.org.uk' },
-  { id: 'energy', name: 'Ombudsman Services: Energy', sectors: ['Energy', 'Gas', 'Electricity'], source: 'ombudsman-energy-report', website: 'https://www.ombudsman-services.org' },
-  { id: 'telecoms', name: 'Ombudsman Services: Communications', sectors: ['Telecoms', 'Internet', 'TV'], source: 'ombudsman-comms-report', website: 'https://www.ombudsman-services.org' },
-  { id: 'police', name: 'Independent Office for Police Conduct', sectors: ['Police'], source: 'iopc-annual-report', website: 'https://www.policeconduct.gov.uk' },
-  { id: 'immigration', name: 'Immigration Services Commissioner', sectors: ['Immigration', 'Asylum'], source: 'oisc-annual-report', website: 'https://www.gov.uk/government/organisations/office-of-the-immigration-services-commissioner' }
+  {
+    id: 'PHSO',
+    name: 'Parliamentary and Health Service Ombudsman',
+    sectors: ['NHS', 'UK Government'],
+    source: 'phso-annual-report',
+    website: 'https://www.ombudsman.org.uk'
+  },
+  {
+    id: 'housing',
+    name: 'Housing Ombudsman',
+    sectors: ['Social Housing'],
+    source: 'housing-ombudsman-report',
+    website: 'https://www.housing-ombudsman.org.uk'
+  },
+  {
+    id: 'financial',
+    name: 'Financial Ombudsman Service',
+    sectors: ['Finance', 'Insurance', 'Banking'],
+    source: 'fos-annual-report',
+    website: 'https://www.financial-ombudsman.org.uk'
+  },
+  {
+    id: 'rail',
+    name: 'Rail Ombudsman',
+    sectors: ['Rail', 'Transport'],
+    source: 'rail-ombudsman-report',
+    website: 'https://www.railombudsman.org'
+  },
+  {
+    id: 'legal',
+    name: 'Legal Ombudsman',
+    sectors: ['Legal Services'],
+    source: 'leo-annual-report',
+    website: 'https://www.legalombudsman.org.uk'
+  },
+  {
+    id: 'local-government',
+    name: 'Local Government Ombudsman',
+    sectors: ['Councils', 'Local Services'],
+    source: 'lgo-annual-report',
+    website: 'https://www.lgo.org.uk'
+  },
+  {
+    id: 'water',
+    name: 'Consumer Council for Water',
+    sectors: ['Water', 'Drainage'],
+    source: 'ccw-annual-report',
+    website: 'https://www.ccw.org.uk'
+  },
+  {
+    id: 'energy',
+    name: 'Ombudsman Services: Energy',
+    sectors: ['Energy', 'Gas', 'Electricity'],
+    source: 'ombudsman-energy-report',
+    website: 'https://www.ombudsman-services.org'
+  },
+  {
+    id: 'telecoms',
+    name: 'Ombudsman Services: Communications',
+    sectors: ['Telecoms', 'Internet', 'TV'],
+    source: 'ombudsman-comms-report',
+    website: 'https://www.ombudsman-services.org'
+  },
+  {
+    id: 'police',
+    name: 'Independent Office for Police Conduct',
+    sectors: ['Police'],
+    source: 'iopc-annual-report',
+    website: 'https://www.policeconduct.gov.uk'
+  },
+  {
+    id: 'immigration',
+    name: 'Immigration Services Commissioner',
+    sectors: ['Immigration', 'Asylum'],
+    source: 'oisc-annual-report',
+    website:
+      'https://www.gov.uk/government/organisations/office-of-the-immigration-services-commissioner'
+  }
 ];
 
 // Statistics are illustrative and currently hidden behind a flag.
@@ -28,11 +95,76 @@ const OMBUDSMEN = [
 const SHOW_UNSOURCED_STATS = false;
 
 const OUTCOME_STATISTICS = {
-  PHSO: { totalCases: 7800, upheldRate: 42, notUpheldRate: 38, partiallyUpheldRate: 20, yearlyTrend: [{ year: 2022, cases: 7200 }, { year: 2023, cases: 7500 }, { year: 2024, cases: 7800 }], sectorBreakdown: [{ sector: 'NHS', cases: 6500 }, { sector: 'UK Government', cases: 1300 }] },
-  housing: { totalCases: 12000, upheldRate: 55, notUpheldRate: 30, partiallyUpheldRate: 15, yearlyTrend: [{ year: 2022, cases: 9800 }, { year: 2023, cases: 10900 }, { year: 2024, cases: 12000 }], sectorBreakdown: [{ sector: 'Social Housing', cases: 12000 }] },
-  financial: { totalCases: 420000, upheldRate: 38, notUpheldRate: 45, partiallyUpheldRate: 17, yearlyTrend: [{ year: 2022, cases: 390000 }, { year: 2023, cases: 410000 }, { year: 2024, cases: 420000 }], sectorBreakdown: [{ sector: 'Finance', cases: 180000 }, { sector: 'Insurance', cases: 120000 }, { sector: 'Banking', cases: 120000 }] },
-  rail: { totalCases: 3500, upheldRate: 35, notUpheldRate: 50, partiallyUpheldRate: 15, yearlyTrend: [{ year: 2022, cases: 3000 }, { year: 2023, cases: 3200 }, { year: 2024, cases: 3500 }], sectorBreakdown: [{ sector: 'Rail', cases: 2800 }, { sector: 'Transport', cases: 700 }] },
-  legal: { totalCases: 8200, upheldRate: 44, notUpheldRate: 35, partiallyUpheldRate: 21, yearlyTrend: [{ year: 2022, cases: 7600 }, { year: 2023, cases: 7900 }, { year: 2024, cases: 8200 }], sectorBreakdown: [{ sector: 'Legal Services', cases: 8200 }] }
+  PHSO: {
+    totalCases: 7800,
+    upheldRate: 42,
+    notUpheldRate: 38,
+    partiallyUpheldRate: 20,
+    yearlyTrend: [
+      { year: 2022, cases: 7200 },
+      { year: 2023, cases: 7500 },
+      { year: 2024, cases: 7800 }
+    ],
+    sectorBreakdown: [
+      { sector: 'NHS', cases: 6500 },
+      { sector: 'UK Government', cases: 1300 }
+    ]
+  },
+  housing: {
+    totalCases: 12000,
+    upheldRate: 55,
+    notUpheldRate: 30,
+    partiallyUpheldRate: 15,
+    yearlyTrend: [
+      { year: 2022, cases: 9800 },
+      { year: 2023, cases: 10900 },
+      { year: 2024, cases: 12000 }
+    ],
+    sectorBreakdown: [{ sector: 'Social Housing', cases: 12000 }]
+  },
+  financial: {
+    totalCases: 420000,
+    upheldRate: 38,
+    notUpheldRate: 45,
+    partiallyUpheldRate: 17,
+    yearlyTrend: [
+      { year: 2022, cases: 390000 },
+      { year: 2023, cases: 410000 },
+      { year: 2024, cases: 420000 }
+    ],
+    sectorBreakdown: [
+      { sector: 'Finance', cases: 180000 },
+      { sector: 'Insurance', cases: 120000 },
+      { sector: 'Banking', cases: 120000 }
+    ]
+  },
+  rail: {
+    totalCases: 3500,
+    upheldRate: 35,
+    notUpheldRate: 50,
+    partiallyUpheldRate: 15,
+    yearlyTrend: [
+      { year: 2022, cases: 3000 },
+      { year: 2023, cases: 3200 },
+      { year: 2024, cases: 3500 }
+    ],
+    sectorBreakdown: [
+      { sector: 'Rail', cases: 2800 },
+      { sector: 'Transport', cases: 700 }
+    ]
+  },
+  legal: {
+    totalCases: 8200,
+    upheldRate: 44,
+    notUpheldRate: 35,
+    partiallyUpheldRate: 21,
+    yearlyTrend: [
+      { year: 2022, cases: 7600 },
+      { year: 2023, cases: 7900 },
+      { year: 2024, cases: 8200 }
+    ],
+    sectorBreakdown: [{ sector: 'Legal Services', cases: 8200 }]
+  }
 };
 
 // Flag to show notice about unsourced statistics
@@ -59,22 +191,48 @@ function findOmbudsmanForIssue(issueType, nation) {
   const issue = (issueType || '').toLowerCase();
   const country = (nation || '').toLowerCase();
 
-  if (issue.includes('nhs') || issue.includes('health') || issue.includes('gp') || issue.includes('hospital')) {
+  if (
+    issue.includes('nhs') ||
+    issue.includes('health') ||
+    issue.includes('gp') ||
+    issue.includes('hospital')
+  ) {
     if (country === 'scotland') return 'PHSO';
     if (country === 'wales') return 'PHSO';
     if (country === 'northern-ireland') return 'PHSO';
     return 'PHSO';
   }
-  if (issue.includes('housing') || issue.includes('repair') || issue.includes('landlord')) return 'housing';
-  if (issue.includes('bank') || issue.includes('insurance') || issue.includes('finance') || issue.includes('pension')) return 'financial';
+  if (issue.includes('housing') || issue.includes('repair') || issue.includes('landlord'))
+    return 'housing';
+  if (
+    issue.includes('bank') ||
+    issue.includes('insurance') ||
+    issue.includes('finance') ||
+    issue.includes('pension')
+  )
+    return 'financial';
   if (issue.includes('rail') || issue.includes('train')) return 'rail';
-  if (issue.includes('solicitor') || issue.includes('lawyer') || issue.includes('legal')) return 'legal';
-  if (issue.includes('council') || issue.includes('local government') || issue.includes('social care')) return 'local-government';
+  if (issue.includes('solicitor') || issue.includes('lawyer') || issue.includes('legal'))
+    return 'legal';
+  if (
+    issue.includes('council') ||
+    issue.includes('local government') ||
+    issue.includes('social care')
+  )
+    return 'local-government';
   if (issue.includes('water') || issue.includes('drainage')) return 'water';
-  if (issue.includes('energy') || issue.includes('gas') || issue.includes('electricity')) return 'energy';
-  if (issue.includes('phone') || issue.includes('broadband') || issue.includes('mobile') || issue.includes('internet')) return 'telecoms';
+  if (issue.includes('energy') || issue.includes('gas') || issue.includes('electricity'))
+    return 'energy';
+  if (
+    issue.includes('phone') ||
+    issue.includes('broadband') ||
+    issue.includes('mobile') ||
+    issue.includes('internet')
+  )
+    return 'telecoms';
   if (issue.includes('police')) return 'police';
-  if (issue.includes('immigration') || issue.includes('visa') || issue.includes('home office')) return 'immigration';
+  if (issue.includes('immigration') || issue.includes('visa') || issue.includes('home office'))
+    return 'immigration';
 
   return null;
 }
@@ -82,12 +240,34 @@ function findOmbudsmanForIssue(issueType, nation) {
 function getCompensationRanges(ombudsmanId) {
   const ranges = {
     PHSO: { typical: '£500–£5,000', max: '£10,000+', note: 'For distress and inconvenience' },
-    housing: { typical: '£100–£3,000', max: '£10,000+', note: 'Based on severity and duration of maladministration' },
-    financial: { typical: '£100–£5,000', max: '£430,000', note: 'FOS awards are binding up to £430,000 (2025/26 limit)' },
-    rail: { typical: '£50–£1,000', max: '£5,000', note: 'Compensation for delay, missed connections, and poor complaint handling' },
-    legal: { typical: '£500–£5,000', max: '£50,000+', note: 'Based on distress, inconvenience, and financial loss' }
+    housing: {
+      typical: '£100–£3,000',
+      max: '£10,000+',
+      note: 'Based on severity and duration of maladministration'
+    },
+    financial: {
+      typical: '£100–£5,000',
+      max: '£430,000',
+      note: 'FOS awards are binding up to £430,000 (2025/26 limit)'
+    },
+    rail: {
+      typical: '£50–£1,000',
+      max: '£5,000',
+      note: 'Compensation for delay, missed connections, and poor complaint handling'
+    },
+    legal: {
+      typical: '£500–£5,000',
+      max: '£50,000+',
+      note: 'Based on distress, inconvenience, and financial loss'
+    }
   };
-  return ranges[ombudsmanId] || { typical: 'Varies', max: 'Varies', note: 'Contact the ombudsman for guidance' };
+  return (
+    ranges[ombudsmanId] || {
+      typical: 'Varies',
+      max: 'Varies',
+      note: 'Contact the ombudsman for guidance'
+    }
+  );
 }
 
 function getDecisionTimescales(ombudsmanId) {
@@ -121,7 +301,6 @@ function parseOmbudsman(value) {
 const serializeOmbudsmanOutcomes = serializeOmbudsman;
 const parseOmbudsmanOutcomes = parseOmbudsman;
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -137,121 +316,90 @@ function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
 
-
 // ===== src/tracker.js (imports resolved) =====
 
 function getIssueTypes(ombudsmanId) {
   const ombudsman = getOmbudsmanDetails(ombudsmanId);
   if (!ombudsman) return [];
-  const stats = getOutcomeStatistics(ombudsmanId);
-  if (!stats) return [];
   return [
     { value: 'complaint-handling', label: 'Complaint handling' },
     { value: 'clinical-negligence', label: 'Clinical negligence' },
     { value: 'disrepair', label: 'Disrepair' },
-    { value: 'product-sale', label: 'Product sale' },
-    { value: 'insurance-claim', label: 'Insurance claim' },
-    { value: 'delay-repay', label: 'Delay Repay' },
-    { value: 'service-failure', label: 'Service failure' },
     { value: 'maladministration', label: 'Maladministration' },
     { value: 'billing', label: 'Billing' },
-    { value: 'metering', label: 'Metering' },
-    { value: 'service', label: 'Service' },
-    { value: 'conduct', label: 'Conduct' }
+    { value: 'service', label: 'Service' }
   ];
 }
 
 function getAvailableIssueTypes(ombudsmanId) {
   const ombudsman = getOmbudsmanDetails(ombudsmanId);
   if (!ombudsman) return [];
-  const allTypes = getIssueTypes(ombudsmanId);
-  const results = [];
-  for (const t of allTypes) {
-    const outcomes = getTypicalOutcomes(ombudsmanId, t.value);
-    if (outcomes && outcomes.outcomes.length > 0) {
-      results.push(t);
-    }
+  const outcomes = getTypicalOutcomes(ombudsmanId, 'complaint-handling');
+  if (outcomes && outcomes.length > 0) {
+    return [{ value: 'complaint-handling', label: 'Complaint handling' }];
   }
-  return results;
+  return [];
 }
 
 function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
+  if (typeof amount === 'number') {
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
+  }
+  return String(amount || 'Varies');
 }
 
 function formatNumber(num) {
-  return new Intl.NumberFormat('en-GB').format(num);
+  return new Intl.NumberFormat('en-GB').format(num || 0);
 }
 
 function renderOmbudsmanSummary(ombudsmanId) {
   const details = getOmbudsmanDetails(ombudsmanId);
-  const stats = getOutcomeStatistics(ombudsmanId);
   const timescales = getDecisionTimescales(ombudsmanId);
   const compensation = getCompensationRanges(ombudsmanId);
 
-  if (!details || !stats) return '';
+  if (!details) return '';
 
   const lines = [];
-  lines.push(`${details.name}`);
+  lines.push(details.name);
   lines.push(`Sectors: ${details.sectors.join(', ')}`);
-  lines.push(`Total cases: ${formatNumber(stats.totalCases)}`);
-  lines.push(`Upheld: ${stats.upheldRate}% | Not upheld: ${stats.notUpheldRate}% | Partially upheld: ${stats.partiallyUpheldRate}%`);
+  lines.push(`Website: ${details.website}`);
   if (timescales) {
-    lines.push(`Average decision time: ${timescales.averageDays} days (median: ${timescales.medianDays} days)`);
+    lines.push(`Initial response: ${timescales.initialResponse}`);
+    lines.push(`Full investigation: ${timescales.fullInvestigation}`);
   }
   if (compensation) {
-    lines.push(`Average compensation: ${formatCurrency(compensation.averageCompensation)}`);
+    lines.push(`Typical compensation: ${compensation.typical}`);
   }
+  lines.push('');
+  lines.push(getUnsourcedStatsNotice());
   return lines.join('\n');
 }
 
 function renderOutcomeResults(ombudsmanId, issueType) {
   const details = getOmbudsmanDetails(ombudsmanId);
-  const outcomes = getTypicalOutcomes(ombudsmanId, issueType);
   const compensation = getCompensationRanges(ombudsmanId);
   const timescales = getDecisionTimescales(ombudsmanId);
-  const stats = getOutcomeStatistics(ombudsmanId);
 
   if (!details) return '';
 
   const sections = [];
+  sections.push(`<p class="uncited-warning" role="note">${getUnsourcedStatsNotice()}</p>`);
 
-  if (stats) {
-    sections.push(`<h4>Overall statistics</h4>`);
-    sections.push(`<div class="stat-row"><span>Total cases:</span><span>${formatNumber(stats.totalCases)}</span></div>`);
-    sections.push(`<div class="stat-row"><span>Upheld rate:</span><span>${stats.upheldRate}%</span></div>`);
-    sections.push(`<div class="stat-row"><span>Not upheld rate:</span><span>${stats.notUpheldRate}%</span></div>`);
-    sections.push(`<div class="stat-row"><span>Partially upheld rate:</span><span>${stats.partiallyUpheldRate}%</span></div>`);
-  }
-
-  if (outcomes && outcomes.outcomes.length > 0) {
-    sections.push(`<h4>Typical outcomes for: ${issueType}</h4>`);
-    for (const o of outcomes.outcomes) {
-      sections.push(`<div class="outcome-row"><span>${o.description}</span><span>${o.frequency}%</span></div>`);
-    }
-  } else if (outcomes && outcomes.outcomes.length === 0) {
-    sections.push(`<p class="empty-state">No typical outcomes data for this issue type with ${details.name}.</p>`);
-  }
+  sections.push(`<h4>About ${details.name}</h4>`);
+  sections.push(`<p>Sectors: ${details.sectors.join(', ')}</p>`);
+  sections.push(`<p><a href="${details.website}" rel="noopener noreferrer">Visit website</a></p>`);
 
   if (compensation) {
-    sections.push(`<h4>Compensation ranges</h4>`);
-    for (const range of compensation.ranges) {
-      sections.push(`<div class="comp-row"><span>${range.category}</span><span>${formatCurrency(range.min)} – ${formatCurrency(range.max)} (typical: ${formatCurrency(range.typical)})</span></div>`);
-    }
-    sections.push(`<div class="stat-row total"><span>Average compensation:</span><span>${formatCurrency(compensation.averageCompensation)}</span></div>`);
+    sections.push(`<h4>Compensation</h4>`);
+    sections.push(`<p>Typical: ${compensation.typical}</p>`);
+    if (compensation.max) sections.push(`<p>Maximum: ${compensation.max}</p>`);
+    if (compensation.note) sections.push(`<p>${compensation.note}</p>`);
   }
 
   if (timescales) {
     sections.push(`<h4>Decision timescales</h4>`);
-    sections.push(`<div class="stat-row"><span>Average:</span><span>${timescales.averageDays} days</span></div>`);
-    sections.push(`<div class="stat-row"><span>Median:</span><span>${timescales.medianDays} days</span></div>`);
-    sections.push(`<div class="stat-row"><span>90th percentile:</span><span>${timescales.percentile90Days} days</span></div>`);
-    if (timescales.bySector && timescales.bySector.length > 0) {
-      sections.push(`<h4>By sector</h4>`);
-      for (const s of timescales.bySector) {
-        sections.push(`<div class="stat-row"><span>${s.sector}:</span><span>${s.averageDays} days</span></div>`);
-      }
-    }
+    sections.push(`<p>Initial response: ${timescales.initialResponse}</p>`);
+    sections.push(`<p>Full investigation: ${timescales.fullInvestigation}</p>`);
   }
 
   return sections.join('');
@@ -276,6 +424,7 @@ export {
   getOmbudsmanDetails,
   getOutcomeStatistics,
   getTypicalOutcomes,
+  getUnsourcedStatsNotice,
   getCompensationRanges,
   getDecisionTimescales,
   serializeOmbudsmanOutcomes,
@@ -289,13 +438,16 @@ export {
   escapeHtml
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -308,7 +460,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -498,7 +654,14 @@ function handleExport() {
     const outcomes = getTypicalOutcomes(l.ombudsmanId, l.issueType);
     const compensation = getCompensationRanges(l.ombudsmanId);
     const timescales = getDecisionTimescales(l.ombudsmanId);
-    return { ...l, ombudsmanDetails: details, statistics: stats, typicalOutcomes: outcomes, compensation, timescales };
+    return {
+      ...l,
+      ombudsmanDetails: details,
+      statistics: stats,
+      typicalOutcomes: outcomes,
+      compensation,
+      timescales
+    };
   });
   const blob = new Blob([serializeOmbudsmanOutcomes(results)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);

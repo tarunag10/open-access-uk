@@ -12,13 +12,15 @@ const GLOSSARY = new Map();
 const BUILTIN_TERMS = [
   {
     term: 'Mandatory reconsideration',
-    definition: 'A formal request asking DWP to review its own benefit decision. Must usually be made within 1 month.',
+    definition:
+      'A formal request asking DWP to review its own benefit decision. Must usually be made within 1 month.',
     source: 'GOV.UK',
     jurisdiction: 'Great Britain'
   },
   {
     term: 'Early conciliation',
-    definition: 'Free ACAS service to resolve workplace disputes without tribunal. Pauses the statutory time limit.',
+    definition:
+      'Free ACAS service to resolve workplace disputes without tribunal. Pauses the statutory time limit.',
     source: 'ACAS',
     jurisdiction: 'Great Britain'
   },
@@ -77,9 +79,16 @@ export function definitionPopup(term) {
 }
 
 function escapeHtml(str) {
-  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 function escapeAttr(str) {
-  return String(str || '').replace(/"/g, '&quot;').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(str || '')
+    .replace(/"/g, '&quot;')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }

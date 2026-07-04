@@ -9,7 +9,7 @@ import {
   generateSENDTribunalText,
   getEvidenceChecklist,
   serializeSEND,
-  parseSEND,
+  parseSEND
 } from '../../shared/send-appeals/index.mjs';
 
 export {
@@ -20,19 +20,23 @@ export {
   generateSENDTribunalText,
   getEvidenceChecklist,
   serializeSEND,
-  parseSEND,
+  parseSEND
 };
 
 export const APPEAL_STATUS = [
   { value: 'draft', label: 'Drafting', description: 'Appeal not yet submitted.' },
-  { value: 'submitted', label: 'Submitted', description: 'Appeal sent to school, LA, or tribunal.' },
+  {
+    value: 'submitted',
+    label: 'Submitted',
+    description: 'Appeal sent to school, LA, or tribunal.'
+  },
   { value: 'acknowledged', label: 'Acknowledged', description: 'Recipient has confirmed receipt.' },
   { value: 'in-progress', label: 'In progress', description: 'Appeal is being considered.' },
   { value: 'mediation', label: 'Mediation', description: 'Mediation in progress.' },
   { value: 'hearing', label: 'Hearing scheduled', description: 'Tribunal hearing date set.' },
   { value: 'decided', label: 'Decided', description: 'Decision received.' },
   { value: 'withdrawn', label: 'Withdrawn', description: 'Appeal withdrawn.' },
-  { value: 'closed', label: 'Closed', description: 'No further action planned.' },
+  { value: 'closed', label: 'Closed', description: 'No further action planned.' }
 ];
 
 export function generateAppealId() {
@@ -56,7 +60,7 @@ export function createAppeal(data = {}) {
     contact: String(data.contact || '').trim(),
     status: data.status || 'draft',
     createdAt: data.createdAt || new Date().toISOString(),
-    updatedAt: data.updatedAt || new Date().toISOString(),
+    updatedAt: data.updatedAt || new Date().toISOString()
   };
 }
 
@@ -101,7 +105,10 @@ export function getStatusMeta(status) {
 
 export function computeDeadline(appeal) {
   if (!appeal.decisionDate) return null;
-  if (appeal.appealType === 'exclusion-review' || appeal.appealType === 'independent-review-panel') {
+  if (
+    appeal.appealType === 'exclusion-review' ||
+    appeal.appealType === 'independent-review-panel'
+  ) {
     const schoolDays = getExclusionDeadlines(appeal.exclusionType).schoolDays;
     const date = new Date(appeal.decisionDate);
     if (Number.isNaN(date.getTime())) return null;
@@ -135,7 +142,9 @@ export function daysUntilDeadline(appeal, today = new Date()) {
 
 export function buildSummary(appeals) {
   const total = appeals.length;
-  const active = appeals.filter((a) => !['closed', 'decided', 'withdrawn'].includes(a.status)).length;
+  const active = appeals.filter(
+    (a) => !['closed', 'decided', 'withdrawn'].includes(a.status)
+  ).length;
   const overdue = appeals.filter((a) => {
     const days = daysUntilDeadline(a);
     return days !== null && days < 0 && !['closed', 'decided', 'withdrawn'].includes(a.status);
@@ -154,13 +163,16 @@ export function buildTypeBreakdown(appeals) {
 }
 
 export function generateLetterPreview(appeal) {
-  if (appeal.appealType === 'exclusion-review' || appeal.appealType === 'independent-review-panel') {
+  if (
+    appeal.appealType === 'exclusion-review' ||
+    appeal.appealType === 'independent-review-panel'
+  ) {
     return generateExclusionReviewText({
       pupilName: appeal.childName,
       schoolName: appeal.schoolName,
       exclusionType: appeal.exclusionType,
       exclusionDate: appeal.decisionDate,
-      grounds: appeal.grounds,
+      grounds: appeal.grounds
     });
   }
   if (appeal.appealType === 'send-tribunal') {
@@ -168,7 +180,7 @@ export function generateLetterPreview(appeal) {
       childName: appeal.childName,
       laName: appeal.laName,
       ehcpDate: appeal.decisionDate,
-      grounds: appeal.grounds,
+      grounds: appeal.grounds
     });
   }
   return [
@@ -187,8 +199,10 @@ export function generateLetterPreview(appeal) {
     '',
     'Yours sincerely,',
     appeal.parentName || '[Your name]',
-    appeal.contact || '[Your contact details]',
-  ].filter(Boolean).join('\n');
+    appeal.contact || '[Your contact details]'
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 export function buildEvidenceChecklist(appeal) {
@@ -196,7 +210,17 @@ export function buildEvidenceChecklist(appeal) {
 }
 
 export function buildExportCsv(appeals) {
-  const headers = ['id', 'appealType', 'childName', 'schoolName', 'laName', 'decisionDate', 'status', 'createdAt', 'updatedAt'];
+  const headers = [
+    'id',
+    'appealType',
+    'childName',
+    'schoolName',
+    'laName',
+    'decisionDate',
+    'status',
+    'createdAt',
+    'updatedAt'
+  ];
   const rows = appeals.map((a) => [
     a.id,
     a.appealType,
@@ -206,7 +230,7 @@ export function buildExportCsv(appeals) {
     a.decisionDate,
     a.status,
     a.createdAt,
-    a.updatedAt,
+    a.updatedAt
   ]);
   return [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
 }
@@ -220,5 +244,9 @@ function csvField(value) {
 }
 
 export function buildExportJson(appeals) {
-  return JSON.stringify(appeals.map((a) => createAppeal(a)), null, 2);
+  return JSON.stringify(
+    appeals.map((a) => createAppeal(a)),
+    null,
+    2
+  );
 }

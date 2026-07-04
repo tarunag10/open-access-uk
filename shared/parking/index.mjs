@@ -1,10 +1,50 @@
 const OPERATORS = [
-  { id: 'council', name: 'Local Council', type: 'council', appealDays: 28, tribunalEligible: true, source: 'govuk-parking-penalty-notice' },
-  { id: 'traffic-penalty-tribunal', name: 'Traffic Penalty Tribunal', type: 'tribunal', source: 'traffic-penalty-tribunal' },
-  { id: 'parking-ey', name: 'ParkingEye', type: 'private', appealDays: 28, tribunalEligible: false, source: 'citizens-advice-parking' },
-  { id: 'apcoa', name: 'APCOA', type: 'private', appealDays: 28, tribunalEligible: false, source: 'citizens-advice-parking' },
-  { id: 'ncp', name: 'National Car Parks', type: 'private', appealDays: 28, tribunalEligible: false, source: 'citizens-advice-parking' },
-  { id: 'q-park', name: 'Q-Park', type: 'private', appealDays: 28, tribunalEligible: false, source: 'citizens-advice-parking' },
+  {
+    id: 'council',
+    name: 'Local Council',
+    type: 'council',
+    appealDays: 28,
+    tribunalEligible: true,
+    source: 'govuk-parking-penalty-notice'
+  },
+  {
+    id: 'traffic-penalty-tribunal',
+    name: 'Traffic Penalty Tribunal',
+    type: 'tribunal',
+    source: 'traffic-penalty-tribunal'
+  },
+  {
+    id: 'parking-ey',
+    name: 'ParkingEye',
+    type: 'private',
+    appealDays: 28,
+    tribunalEligible: false,
+    source: 'citizens-advice-parking'
+  },
+  {
+    id: 'apcoa',
+    name: 'APCOA',
+    type: 'private',
+    appealDays: 28,
+    tribunalEligible: false,
+    source: 'citizens-advice-parking'
+  },
+  {
+    id: 'ncp',
+    name: 'National Car Parks',
+    type: 'private',
+    appealDays: 28,
+    tribunalEligible: false,
+    source: 'citizens-advice-parking'
+  },
+  {
+    id: 'q-park',
+    name: 'Q-Park',
+    type: 'private',
+    appealDays: 28,
+    tribunalEligible: false,
+    source: 'citizens-advice-parking'
+  }
 ];
 
 const GROUNDS = [
@@ -12,7 +52,7 @@ const GROUNDS = [
   'Incorrect signage',
   'Extenuating circumstances',
   'Procedural errors',
-  'Permit valid',
+  'Permit valid'
 ];
 
 export function getParkingOperators() {
@@ -31,7 +71,7 @@ export function getAppealDeadlines(operatorId) {
 
   return {
     formalAppealDays: operator.appealDays,
-    tribunalDays: operator.tribunalEligible ? 28 : null,
+    tribunalDays: operator.tribunalEligible ? 28 : null
   };
 }
 

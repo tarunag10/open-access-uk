@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <noscript><p>This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere. See <a href="https://www.gov.uk/">GOV.UK</a> or <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.</p></noscript>
+    <noscript
+      ><p>
+        This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere.
+        See <a href="https://www.gov.uk/">GOV.UK</a> or
+        <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.
+      </p></noscript
+    >
     <a class="skip-link" href="#tool">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="index.html">Open Access UK</a>
@@ -28,8 +34,8 @@
         <div>
           <h1>Employment Tribunal Case Builder</h1>
           <p>
-            Build ET1 claims for unfair dismissal, discrimination, and unpaid wages.
-            Track ACAS conciliation and calculate potential remedies. Everything runs in your browser.
+            Build ET1 claims for unfair dismissal, discrimination, and unpaid wages. Track ACAS
+            conciliation and calculate potential remedies. Everything runs in your browser.
           </p>
           <div class="hero-actions">
             <a class="button" href="#tool">Build a claim</a>
@@ -45,7 +51,6 @@
         </div>
       </section>
 
-
       <section id="tool" class="grid" aria-label="Employment tribunal claim form">
         <form id="claim-form" class="panel" aria-describedby="form-status">
           <h2>Build an employment tribunal claim</h2>
@@ -59,20 +64,10 @@
           </select>
 
           <label for="claimantName">Claimant name</label>
-          <input
-            id="claimantName"
-            name="claimantName"
-            placeholder="e.g. Jane Smith"
-            required
-          />
+          <input id="claimantName" name="claimantName" placeholder="e.g. Jane Smith" required />
 
           <label for="employerName">Employer name</label>
-          <input
-            id="employerName"
-            name="employerName"
-            placeholder="e.g. Acme Corp Ltd"
-            required
-          />
+          <input id="employerName" name="employerName" placeholder="e.g. Acme Corp Ltd" required />
 
           <label for="employerAddress">Employer address</label>
           <textarea
@@ -135,7 +130,12 @@
         <div id="claim-list" class="claim-list"></div>
       </section>
 
-      <section id="detail-panel" class="panel detail-panel" hidden aria-label="Selected claim detail">
+      <section
+        id="detail-panel"
+        class="panel detail-panel"
+        hidden
+        aria-label="Selected claim detail"
+      >
         <div id="detail-content"></div>
       </section>
 
@@ -145,8 +145,8 @@
           <article class="card">
             <h3>ACAS early conciliation</h3>
             <p>
-              Before submitting an ET1, you must contact ACAS for early conciliation. This
-              is free and can help resolve your dispute without a tribunal hearing.
+              Before submitting an ET1, you must contact ACAS for early conciliation. This is free
+              and can help resolve your dispute without a tribunal hearing.
             </p>
           </article>
           <article class="card">
@@ -159,15 +159,17 @@
           <article class="card">
             <h3>Time limits</h3>
             <p>
-              Most claims must be submitted within 3 months. Some claims like breach of contract
-              and redundancy have a 6-month limit. Always check the specific time limit for your claim type.
+              Most claims must be submitted within 3 months. Some claims like breach of contract and
+              redundancy have a 6-month limit. Always check the specific time limit for your claim
+              type.
             </p>
           </article>
           <article class="card warning">
             <h3>Not legal advice</h3>
             <p>
               This is a case building aid, not legal advice. Verify deadlines, routes, and rights
-              against the current employment tribunal guidance and seek professional legal advice if needed.
+              against the current employment tribunal guidance and seek professional legal advice if
+              needed.
             </p>
           </article>
         </div>
@@ -177,12 +179,16 @@
       <nav aria-label="Footer">
         <a href="index.html">Open Access UK</a>
         <a href="#tool">Tool</a>
-        <a href="https://www.gov.uk/courts-tribunals/employment-tribunal" rel="noopener noreferrer">GOV.UK Employment Tribunal</a>
-        <a href="https://www.acas.org.uk/early-conciliation" rel="noopener noreferrer">ACAS Early Conciliation</a>
+        <a href="https://www.gov.uk/courts-tribunals/employment-tribunal" rel="noopener noreferrer"
+          >GOV.UK Employment Tribunal</a
+        >
+        <a href="https://www.acas.org.uk/early-conciliation" rel="noopener noreferrer"
+          >ACAS Early Conciliation</a
+        >
       </nav>
       <p>
-        Open-source, privacy-first, and local to your browser. Not legal advice.
-        Source: GOV.UK employment tribunal and ACAS guidance.
+        Open-source, privacy-first, and local to your browser. Not legal advice. Source: GOV.UK
+        employment tribunal and ACAS guidance.
       </p>
     </footer>
     <script type="module" src="src/app.js"></script>

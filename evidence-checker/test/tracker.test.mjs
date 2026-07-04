@@ -152,9 +152,7 @@ test('generateEvidenceManifest processes files correctly', () => {
 test('serializeEvidenceUpload and parseEvidenceUpload round-trip', () => {
   const data = {
     tribunal: 'SSCS',
-    files: [
-      { filename: 'evidence.pdf', size: 5 * 1024 * 1024 }
-    ]
+    files: [{ filename: 'evidence.pdf', size: 5 * 1024 * 1024 }]
   };
   const serialized = serializeEvidenceUpload(data);
   const parsed = parseEvidenceUpload(serialized);

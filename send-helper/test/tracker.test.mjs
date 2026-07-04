@@ -17,7 +17,7 @@ import {
   generateLetterPreview,
   buildEvidenceChecklist,
   buildExportCsv,
-  buildExportJson,
+  buildExportJson
 } from '../src/tracker.js';
 
 test('generateAppealId produces send- prefix', () => {
@@ -77,7 +77,17 @@ test('getStatusMeta returns known and fallback status', () => {
 
 test('APPEAL_STATUS includes all expected statuses', () => {
   const values = APPEAL_STATUS.map((s) => s.value);
-  for (const expected of ['draft', 'submitted', 'acknowledged', 'in-progress', 'mediation', 'hearing', 'decided', 'withdrawn', 'closed']) {
+  for (const expected of [
+    'draft',
+    'submitted',
+    'acknowledged',
+    'in-progress',
+    'mediation',
+    'hearing',
+    'decided',
+    'withdrawn',
+    'closed'
+  ]) {
     assert.ok(values.includes(expected), `missing status ${expected}`);
   }
 });
@@ -88,7 +98,11 @@ test('computeDeadline returns null when no decision date', () => {
 });
 
 test('computeDeadline returns school days for exclusion review', () => {
-  const a = createAppeal({ appealType: 'exclusion-review', decisionDate: '2026-06-01', exclusionType: 'fixed-term' });
+  const a = createAppeal({
+    appealType: 'exclusion-review',
+    decisionDate: '2026-06-01',
+    exclusionType: 'fixed-term'
+  });
   const dl = computeDeadline(a);
   assert.ok(dl);
   assert.ok(dl.targetDate);
@@ -135,7 +149,7 @@ test('buildSummary counts appeals', () => {
   const appeals = [
     createAppeal({ status: 'decided' }),
     createAppeal({ status: 'draft' }),
-    createAppeal({ status: 'closed' }),
+    createAppeal({ status: 'closed' })
   ];
   const summary = buildSummary(appeals);
   assert.equal(summary.total, 3);
@@ -147,7 +161,7 @@ test('buildTypeBreakdown counts each type', () => {
   const appeals = [
     createAppeal({ appealType: 'exclusion-review' }),
     createAppeal({ appealType: 'exclusion-review' }),
-    createAppeal({ appealType: 'send-tribunal' }),
+    createAppeal({ appealType: 'send-tribunal' })
   ];
   const breakdown = buildTypeBreakdown(appeals);
   assert.equal(breakdown['exclusion-review'], 2);
@@ -162,7 +176,7 @@ test('generateLetterPreview returns exclusion review text', () => {
     schoolName: 'Riverside',
     exclusionType: 'fixed-term',
     decisionDate: '2026-06-01',
-    grounds: 'Disruptive behaviour',
+    grounds: 'Disruptive behaviour'
   });
   const letter = generateLetterPreview(a);
   assert.match(letter, /School Exclusion Review Request/);
@@ -177,7 +191,7 @@ test('generateLetterPreview returns SEND tribunal text', () => {
     childName: 'Sam',
     laName: 'Manchester',
     decisionDate: '2026-06-01',
-    grounds: 'Refusal to assess',
+    grounds: 'Refusal to assess'
   });
   const letter = generateLetterPreview(a);
   assert.match(letter, /First-tier Tribunal/);
@@ -191,7 +205,7 @@ test('generateLetterPreview returns generic text for EHCP dispute', () => {
     appealType: 'ehcp-dispute',
     childName: 'Jordan',
     laName: 'Leeds',
-    grounds: 'Provision not met',
+    grounds: 'Provision not met'
   });
   const letter = generateLetterPreview(a);
   assert.match(letter, /EHCP Dispute/);
@@ -210,7 +224,7 @@ test('buildEvidenceChecklist returns items for each type', () => {
 test('buildExportCsv produces valid CSV with headers', () => {
   const appeals = [
     createAppeal({ childName: 'A', appealType: 'exclusion-review', decisionDate: '2026-06-01' }),
-    createAppeal({ childName: 'B', appealType: 'send-tribunal', decisionDate: '2026-06-02' }),
+    createAppeal({ childName: 'B', appealType: 'send-tribunal', decisionDate: '2026-06-02' })
   ];
   const csv = buildExportCsv(appeals);
   const lines = csv.split('\n');

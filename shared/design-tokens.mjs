@@ -23,12 +23,14 @@ export const tokens = {
 
 export function createTokenExport(tokenSet = tokens) {
   // Minimal version of design-system one for shared publish
-  const decls = Object.entries(tokenSet).flatMap(([k, v]) => {
-    if (v && typeof v === 'object') {
-      return Object.entries(v).map(([sk, sv]) => `  --${k}-${sk}: ${sv};`);
-    }
-    return [`  --${k}: ${v};`];
-  }).join('\n');
+  const decls = Object.entries(tokenSet)
+    .flatMap(([k, v]) => {
+      if (v && typeof v === 'object') {
+        return Object.entries(v).map(([sk, sv]) => `  --${k}-${sk}: ${sv};`);
+      }
+      return [`  --${k}: ${v};`];
+    })
+    .join('\n');
   return {
     css: `:root {\n${decls}\n}\n`,
     json: JSON.stringify(tokenSet, null, 2) + '\n'
@@ -38,8 +40,26 @@ export function createTokenExport(tokenSet = tokens) {
 export function getContrastSummary() {
   // Simplified; full luminance in design-system
   return [
-    { name: 'Body text', foreground: tokens.color.text, background: tokens.color.background, ratio: '21+:1', rating: 'AAA' },
-    { name: 'Primary action', foreground: '#ffffff', background: tokens.color.blue, ratio: '8.6:1', rating: 'AAA' },
-    { name: 'Focus indicator', foreground: tokens.color.text, background: tokens.color.focus, ratio: '4.5:1', rating: 'AA' }
+    {
+      name: 'Body text',
+      foreground: tokens.color.text,
+      background: tokens.color.background,
+      ratio: '21+:1',
+      rating: 'AAA'
+    },
+    {
+      name: 'Primary action',
+      foreground: '#ffffff',
+      background: tokens.color.blue,
+      ratio: '8.6:1',
+      rating: 'AAA'
+    },
+    {
+      name: 'Focus indicator',
+      foreground: tokens.color.text,
+      background: tokens.color.focus,
+      ratio: '4.5:1',
+      rating: 'AA'
+    }
   ];
 }

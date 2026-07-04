@@ -578,7 +578,7 @@ button {
   cursor: pointer;
 }
 
-.checklist input[type="checkbox"] {
+.checklist input[type='checkbox'] {
   width: auto;
   accent-color: var(--accent);
 }

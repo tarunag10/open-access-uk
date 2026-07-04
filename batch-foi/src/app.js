@@ -8,8 +8,18 @@ const AUTHORITY_TYPES = [
   { id: 'nhs-trust', name: 'NHS Trust', deadlineWorkingDays: 20, source: 'foia-2000' },
   { id: 'police', name: 'Police Force', deadlineWorkingDays: 20, source: 'foia-2000' },
   { id: 'university', name: 'University', deadlineWorkingDays: 20, source: 'foia-2000' },
-  { id: 'government-department', name: 'Government Department', deadlineWorkingDays: 20, source: 'foia-2000' },
-  { id: 'police-fire-authority', name: 'Police and Fire Authority', deadlineWorkingDays: 20, source: 'foia-2000' }
+  {
+    id: 'government-department',
+    name: 'Government Department',
+    deadlineWorkingDays: 20,
+    source: 'foia-2000'
+  },
+  {
+    id: 'police-fire-authority',
+    name: 'Police and Fire Authority',
+    deadlineWorkingDays: 20,
+    source: 'foia-2000'
+  }
 ];
 
 const DEFAULT_AUTHORITIES = {
@@ -86,7 +96,9 @@ function generateBatchCoverLetter(data) {
   }
   lines.push(`Date of request: ${data.sentDate || ''}`);
   lines.push('');
-  lines.push('Please respond within 20 working days as required by the Freedom of Information Act 2000.');
+  lines.push(
+    'Please respond within 20 working days as required by the Freedom of Information Act 2000.'
+  );
   lines.push('');
   lines.push('This request was generated locally. Nothing was sent to a server.');
   return lines.join('\n');
@@ -143,7 +155,6 @@ function parseBatchFOI(value) {
   }
 }
 
-
 // ===== ../../shared/deadlines/index.mjs =====
 /**
  * Deadline calculation engine for UK public-law, complaint, and tribunal time limits.
@@ -151,7 +162,6 @@ function parseBatchFOI(value) {
  * Bank holidays sourced from data/generated/bank-holidays.json (ingested from GOV.UK).
  * Law-change scheduling: rules carry valid_from/valid_until for automatic transitions.
  */
-
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..', '..');
@@ -161,7 +171,11 @@ function parseLocalDate(value) {
   if (!match) return null;
   const [, year, month, day] = match.map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
-  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
     return null;
   }
   if (Number.isNaN(date.getTime())) return null;
@@ -173,11 +187,7 @@ function toLocalDateString(date) {
   const y = date.getUTCFullYear ? date.getUTCFullYear() : date.getFullYear();
   const m = date.getUTCMonth ? date.getUTCMonth() : date.getMonth();
   const d = date.getUTCDate ? date.getUTCDate() : date.getDate();
-  return [
-    y,
-    String(m + 1).padStart(2, '0'),
-    String(d).padStart(2, '0')
-  ].join('-');
+  return [y, String(m + 1).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 
 // ---------------------------------------------------------------------------
@@ -200,16 +210,46 @@ function loadBankHolidays() {
     }
   }
   const staticEW = new Set([
-    '2024-01-01', '2024-03-29', '2024-04-01', '2024-05-06', '2024-05-27',
-    '2024-08-26', '2024-12-25', '2024-12-26',
-    '2025-01-01', '2025-04-18', '2025-04-21', '2025-05-05', '2025-05-26',
-    '2025-08-25', '2025-12-25', '2025-12-26',
-    '2026-01-01', '2026-04-03', '2026-04-06', '2026-05-04', '2026-05-25',
-    '2026-08-31', '2026-12-25', '2026-12-28',
-    '2027-01-01', '2027-03-26', '2027-03-29', '2027-05-03', '2027-05-31',
-    '2027-08-30', '2027-12-27', '2027-12-28',
-    '2028-01-03', '2028-04-14', '2028-04-17', '2028-05-01', '2028-05-29',
-    '2028-08-28', '2028-12-25', '2028-12-26'
+    '2024-01-01',
+    '2024-03-29',
+    '2024-04-01',
+    '2024-05-06',
+    '2024-05-27',
+    '2024-08-26',
+    '2024-12-25',
+    '2024-12-26',
+    '2025-01-01',
+    '2025-04-18',
+    '2025-04-21',
+    '2025-05-05',
+    '2025-05-26',
+    '2025-08-25',
+    '2025-12-25',
+    '2025-12-26',
+    '2026-01-01',
+    '2026-04-03',
+    '2026-04-06',
+    '2026-05-04',
+    '2026-05-25',
+    '2026-08-31',
+    '2026-12-25',
+    '2026-12-28',
+    '2027-01-01',
+    '2027-03-26',
+    '2027-03-29',
+    '2027-05-03',
+    '2027-05-31',
+    '2027-08-30',
+    '2027-12-27',
+    '2027-12-28',
+    '2028-01-03',
+    '2028-04-14',
+    '2028-04-17',
+    '2028-05-01',
+    '2028-05-29',
+    '2028-08-28',
+    '2028-12-25',
+    '2028-12-26'
   ]);
   return {
     'england-and-wales': staticEW,
@@ -229,8 +269,10 @@ const LAW_CHANGE_RULES = [
     months: 3,
     day_type: 'calendar',
     valid_until: '2026-09-30',
-    conservative_note: 'Deadline is "3 months less one day" from the effective date of termination. ACAS Early Conciliation pauses the clock (up to 12 weeks since 1 Dec 2025). From October 2026, the limit extends to 6 months for most claims.',
-    explanation: 'Employment Rights Act 1996 s.111: claim must be presented before the end of 3 months beginning with EDT, less one day.'
+    conservative_note:
+      'Deadline is "3 months less one day" from the effective date of termination. ACAS Early Conciliation pauses the clock (up to 12 weeks since 1 Dec 2025). From October 2026, the limit extends to 6 months for most claims.',
+    explanation:
+      'Employment Rights Act 1996 s.111: claim must be presented before the end of 3 months beginning with EDT, less one day.'
   },
   {
     id: 'et-claim-limit-6m',
@@ -238,8 +280,10 @@ const LAW_CHANGE_RULES = [
     months: 6,
     day_type: 'calendar',
     valid_from: '2026-10-01',
-    conservative_note: 'New 6-month limit under ERA 2025. Wrongful dismissal claims retain the 3-month limit. This rule is provisional pending the commencement SI.',
-    explanation: 'Employment Rights Act 2025 extends the unfair dismissal time limit from 3 months to 6 months for most claim types.',
+    conservative_note:
+      'New 6-month limit under ERA 2025. Wrongful dismissal claims retain the 3-month limit. This rule is provisional pending the commencement SI.',
+    explanation:
+      'Employment Rights Act 2025 extends the unfair dismissal time limit from 3 months to 6 months for most claim types.',
     provisional: true
   }
 ];
@@ -311,7 +355,8 @@ function calculateDeadline(startDate, rule, jurisdiction) {
       ruleId: rule.id,
       targetDate: null,
       explanation: rule.explanation,
-      conservative_note: rule.conservative_note || 'This time limit may have changed. Check current legislation.',
+      conservative_note:
+        rule.conservative_note || 'This time limit may have changed. Check current legislation.',
       expired: true
     };
   }
@@ -330,9 +375,12 @@ function calculateDeadline(startDate, rule, jurisdiction) {
   let bankHolidays;
   if (rule.day_type === 'working') {
     const all = loadBankHolidays();
-    const jKey = jurisdiction === 'scotland' ? 'scotland'
-      : jurisdiction === 'northern-ireland' ? 'northern-ireland'
-      : 'england-and-wales';
+    const jKey =
+      jurisdiction === 'scotland'
+        ? 'scotland'
+        : jurisdiction === 'northern-ireland'
+          ? 'northern-ireland'
+          : 'england-and-wales';
     bankHolidays = all[jKey] || all['england-and-wales'];
   }
 
@@ -368,7 +416,7 @@ function removeUndefined(obj) {
 
 function calculateETDeadline(effectiveDateOfTermination, earlyConciliationDays = 0) {
   const todayStr = toLocalDateString(new Date());
-  const sixMonthRule = LAW_CHANGE_RULES.find(r => r.id === 'et-claim-limit-6m');
+  const sixMonthRule = LAW_CHANGE_RULES.find((r) => r.id === 'et-claim-limit-6m');
   const useSixMonth = sixMonthRule && todayStr >= sixMonthRule.valid_from;
 
   const date = parseLocalDate(effectiveDateOfTermination);
@@ -421,7 +469,9 @@ function buildICS(title, dateStr, description = '') {
   const day = String(d.getUTCDate()).padStart(2, '0');
   const dt = `${y}${m}${day}`;
   const safeTitle = title || 'Follow-up';
-  const safeDesc = (description || 'Open Access UK deadline') + ' (Generated locally. Nothing was sent to a server.)';
+  const safeDesc =
+    (description || 'Open Access UK deadline') +
+    ' (Generated locally. Nothing was sent to a server.)';
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -435,7 +485,6 @@ function buildICS(title, dateStr, description = '') {
     'END:VCALENDAR'
   ].join('\r\n');
 }
-
 
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
@@ -452,9 +501,7 @@ function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
 
-
 // ===== src/tracker.js (imports resolved) =====
-
 
 function calculateDaysRemaining(sentDate, today = new Date()) {
   if (!sentDate) return null;
@@ -522,8 +569,7 @@ function renderBatches(batches, container) {
   if (batches.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent =
-      'No FOI batches yet. Create one using the form to start tracking.';
+    empty.textContent = 'No FOI batches yet. Create one using the form to start tracking.';
     container.append(empty);
     return;
   }
@@ -563,13 +609,16 @@ export {
   formatDateForDisplay
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -582,7 +631,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -753,7 +806,12 @@ function renderDetail(batch) {
   const aggregated = aggregateBatchResponses(batch);
   for (const row of aggregated) {
     const tr = document.createElement('tr');
-    const statusClass = row.status === 'received' ? 'status-received' : row.status === 'overdue' ? 'status-overdue' : 'status-pending';
+    const statusClass =
+      row.status === 'received'
+        ? 'status-received'
+        : row.status === 'overdue'
+          ? 'status-overdue'
+          : 'status-pending';
     tr.innerHTML = `<td>${escapeHtml(row.authority)}</td><td>${escapeHtml(row.type)}</td><td class="${statusClass}">${row.status}</td><td>${row.responseDate || '—'}</td>`;
     tbody.append(tr);
   }
@@ -1037,7 +1095,8 @@ loadSampleBtn?.addEventListener('click', () => {
   past.setDate(past.getDate() - 15);
   const sample = createBatchRequest({
     subject: 'Park maintenance spending data 2025-2026',
-    description: 'Total expenditure on park maintenance across all borough parks for the financial year 2025-2026, broken down by category.',
+    description:
+      'Total expenditure on park maintenance across all borough parks for the financial year 2025-2026, broken down by category.',
     authorities: [
       { name: 'Westminster City Council', type: 'council' },
       { name: 'Birmingham City Council', type: 'council' },

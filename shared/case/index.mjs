@@ -75,7 +75,7 @@ export function getCaseStorageKey() {
  * Finds a case by ID.
  */
 export function findCase(cases, id) {
-  return cases.find(c => c.id === id) || null;
+  return cases.find((c) => c.id === id) || null;
 }
 
 /**
@@ -127,7 +127,7 @@ export function addParty(caseObj, party) {
  * Deduplicates by (date + type + summary).
  */
 export function mergeEvents(existing, incoming) {
-  const seen = new Set(existing.events.map(e => `${e.date}:${e.type}:${e.summary}`));
+  const seen = new Set(existing.events.map((e) => `${e.date}:${e.type}:${e.summary}`));
   for (const event of incoming) {
     const key = `${event.date}:${event.type}:${event.summary}`;
     if (!seen.has(key)) {
@@ -153,7 +153,7 @@ export function mergeCases(existing, incoming) {
 
   // Merge parties: incoming overrides existing by role
   for (const party of incoming.parties) {
-    const idx = existing.parties.findIndex(p => p.role === party.role);
+    const idx = existing.parties.findIndex((p) => p.role === party.role);
     if (idx >= 0) existing.parties[idx] = party;
     else existing.parties.push(party);
   }
@@ -163,13 +163,13 @@ export function mergeCases(existing, incoming) {
 
   // Merge deadlines: latest status wins per ruleId
   for (const dl of incoming.deadlines) {
-    const idx = existing.deadlines.findIndex(d => d.ruleId === dl.ruleId);
+    const idx = existing.deadlines.findIndex((d) => d.ruleId === dl.ruleId);
     if (idx >= 0) existing.deadlines[idx] = dl;
     else existing.deadlines.push(dl);
   }
 
   // Merge documents: deduplicate by name + addedAt
-  const docKeys = new Set(existing.documents.map(d => `${d.name}:${d.addedAt}`));
+  const docKeys = new Set(existing.documents.map((d) => `${d.name}:${d.addedAt}`));
   for (const doc of incoming.documents) {
     const key = `${doc.name}:${doc.addedAt}`;
     if (!docKeys.has(key)) {
@@ -180,7 +180,7 @@ export function mergeCases(existing, incoming) {
 
   // Merge letters: latest renderedAt wins per templateId
   for (const letter of incoming.letters) {
-    const idx = existing.letters.findIndex(l => l.templateId === letter.templateId);
+    const idx = existing.letters.findIndex((l) => l.templateId === letter.templateId);
     if (idx >= 0 && letter.renderedAt > existing.letters[idx].renderedAt) {
       existing.letters[idx] = letter;
     } else if (idx < 0) {

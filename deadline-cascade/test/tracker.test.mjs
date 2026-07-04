@@ -18,7 +18,7 @@ test('getCascadeTemplates returns array of templates', () => {
 
 test('getCascadeTemplates includes required template IDs', () => {
   const templates = getCascadeTemplates();
-  const ids = templates.map(t => t.id);
+  const ids = templates.map((t) => t.id);
   assert.ok(ids.includes('foi-complaint'));
   assert.ok(ids.includes('nhs-complaint'));
   assert.ok(ids.includes('housing-repair'));
@@ -122,17 +122,12 @@ test('calculateCascadeProgress returns partial percentage', () => {
 });
 
 test('calculateCascadeProgress returns 0 when no steps completed', () => {
-  const cascade = [
-    { deadline: '2026-01-10' },
-    { deadline: '2026-01-20' }
-  ];
+  const cascade = [{ deadline: '2026-01-10' }, { deadline: '2026-01-20' }];
   assert.equal(calculateCascadeProgress(cascade, '2026-01-01'), 0);
 });
 
 test('exportCascadeICS returns ICS content for cascade', () => {
-  const cascade = [
-    { name: 'Step 1', deadline: '2026-01-01', description: 'First step' }
-  ];
+  const cascade = [{ name: 'Step 1', deadline: '2026-01-01', description: 'First step' }];
   const ics = exportCascadeICS(cascade);
   assert.ok(ics.includes('BEGIN:VCALENDAR'));
   assert.ok(ics.includes('END:VCALENDAR'));

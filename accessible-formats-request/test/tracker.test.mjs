@@ -24,7 +24,16 @@ test('getFormats returns all format options', () => {
   const formats = getFormats();
   assert.ok(formats.length >= 8);
   const ids = formats.map((f) => f.id);
-  for (const expected of ['braille', 'large-print', 'audio', 'easy-read', 'email', 'telephone', 'bsl', 'welsh']) {
+  for (const expected of [
+    'braille',
+    'large-print',
+    'audio',
+    'easy-read',
+    'email',
+    'telephone',
+    'bsl',
+    'welsh'
+  ]) {
     assert.ok(ids.includes(expected), `missing format ${expected}`);
   }
 });
@@ -122,7 +131,10 @@ test('getMonitoringInfo returns EHRC info', () => {
 });
 
 test('serializeAccessibleFormats and parseAccessibleFormats round-trip', () => {
-  const list = [{ id: 'req-1', organisationName: 'A' }, { id: 'req-2', organisationName: 'B' }];
+  const list = [
+    { id: 'req-1', organisationName: 'A' },
+    { id: 'req-2', organisationName: 'B' }
+  ];
   const serialized = serializeAccessibleFormats(list);
   const parsed = parseAccessibleFormats(serialized);
   assert.equal(parsed.length, 2);

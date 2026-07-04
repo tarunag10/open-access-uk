@@ -82,7 +82,10 @@ test('createComplaintRecord throws on missing patientName', () => {
 });
 
 test('createComplaintRecord throws on invalid stage', () => {
-  assert.throws(() => createComplaintRecord({ patientName: 'Test', stage: 'invalid' }), /Invalid stage/);
+  assert.throws(
+    () => createComplaintRecord({ patientName: 'Test', stage: 'invalid' }),
+    /Invalid stage/
+  );
 });
 
 test('serializeComplaints and parseComplaints round-trip', () => {

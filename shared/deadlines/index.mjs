@@ -17,7 +17,11 @@ export function parseLocalDate(value) {
   if (!match) return null;
   const [, year, month, day] = match.map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
-  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
     return null;
   }
   if (Number.isNaN(date.getTime())) return null;
@@ -29,11 +33,7 @@ export function toLocalDateString(date) {
   const y = date.getUTCFullYear ? date.getUTCFullYear() : date.getFullYear();
   const m = date.getUTCMonth ? date.getUTCMonth() : date.getMonth();
   const d = date.getUTCDate ? date.getUTCDate() : date.getDate();
-  return [
-    y,
-    String(m + 1).padStart(2, '0'),
-    String(d).padStart(2, '0')
-  ].join('-');
+  return [y, String(m + 1).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 
 // ---------------------------------------------------------------------------
@@ -56,16 +56,46 @@ export function loadBankHolidays() {
     }
   }
   const staticEW = new Set([
-    '2024-01-01', '2024-03-29', '2024-04-01', '2024-05-06', '2024-05-27',
-    '2024-08-26', '2024-12-25', '2024-12-26',
-    '2025-01-01', '2025-04-18', '2025-04-21', '2025-05-05', '2025-05-26',
-    '2025-08-25', '2025-12-25', '2025-12-26',
-    '2026-01-01', '2026-04-03', '2026-04-06', '2026-05-04', '2026-05-25',
-    '2026-08-31', '2026-12-25', '2026-12-28',
-    '2027-01-01', '2027-03-26', '2027-03-29', '2027-05-03', '2027-05-31',
-    '2027-08-30', '2027-12-27', '2027-12-28',
-    '2028-01-03', '2028-04-14', '2028-04-17', '2028-05-01', '2028-05-29',
-    '2028-08-28', '2028-12-25', '2028-12-26'
+    '2024-01-01',
+    '2024-03-29',
+    '2024-04-01',
+    '2024-05-06',
+    '2024-05-27',
+    '2024-08-26',
+    '2024-12-25',
+    '2024-12-26',
+    '2025-01-01',
+    '2025-04-18',
+    '2025-04-21',
+    '2025-05-05',
+    '2025-05-26',
+    '2025-08-25',
+    '2025-12-25',
+    '2025-12-26',
+    '2026-01-01',
+    '2026-04-03',
+    '2026-04-06',
+    '2026-05-04',
+    '2026-05-25',
+    '2026-08-31',
+    '2026-12-25',
+    '2026-12-28',
+    '2027-01-01',
+    '2027-03-26',
+    '2027-03-29',
+    '2027-05-03',
+    '2027-05-31',
+    '2027-08-30',
+    '2027-12-27',
+    '2027-12-28',
+    '2028-01-03',
+    '2028-04-14',
+    '2028-04-17',
+    '2028-05-01',
+    '2028-05-29',
+    '2028-08-28',
+    '2028-12-25',
+    '2028-12-26'
   ]);
   return {
     'england-and-wales': staticEW,
@@ -85,8 +115,10 @@ export const LAW_CHANGE_RULES = [
     months: 3,
     day_type: 'calendar',
     valid_until: '2026-09-30',
-    conservative_note: 'Deadline is "3 months less one day" from the effective date of termination. ACAS Early Conciliation pauses the clock (up to 12 weeks since 1 Dec 2025). From October 2026, the limit extends to 6 months for most claims.',
-    explanation: 'Employment Rights Act 1996 s.111: claim must be presented before the end of 3 months beginning with EDT, less one day.'
+    conservative_note:
+      'Deadline is "3 months less one day" from the effective date of termination. ACAS Early Conciliation pauses the clock (up to 12 weeks since 1 Dec 2025). From October 2026, the limit extends to 6 months for most claims.',
+    explanation:
+      'Employment Rights Act 1996 s.111: claim must be presented before the end of 3 months beginning with EDT, less one day.'
   },
   {
     id: 'et-claim-limit-6m',
@@ -94,8 +126,10 @@ export const LAW_CHANGE_RULES = [
     months: 6,
     day_type: 'calendar',
     valid_from: '2026-10-01',
-    conservative_note: 'New 6-month limit under ERA 2025. Wrongful dismissal claims retain the 3-month limit. This rule is provisional pending the commencement SI.',
-    explanation: 'Employment Rights Act 2025 extends the unfair dismissal time limit from 3 months to 6 months for most claim types.',
+    conservative_note:
+      'New 6-month limit under ERA 2025. Wrongful dismissal claims retain the 3-month limit. This rule is provisional pending the commencement SI.',
+    explanation:
+      'Employment Rights Act 2025 extends the unfair dismissal time limit from 3 months to 6 months for most claim types.',
     provisional: true
   }
 ];
@@ -167,7 +201,8 @@ export function calculateDeadline(startDate, rule, jurisdiction) {
       ruleId: rule.id,
       targetDate: null,
       explanation: rule.explanation,
-      conservative_note: rule.conservative_note || 'This time limit may have changed. Check current legislation.',
+      conservative_note:
+        rule.conservative_note || 'This time limit may have changed. Check current legislation.',
       expired: true
     };
   }
@@ -186,9 +221,12 @@ export function calculateDeadline(startDate, rule, jurisdiction) {
   let bankHolidays;
   if (rule.day_type === 'working') {
     const all = loadBankHolidays();
-    const jKey = jurisdiction === 'scotland' ? 'scotland'
-      : jurisdiction === 'northern-ireland' ? 'northern-ireland'
-      : 'england-and-wales';
+    const jKey =
+      jurisdiction === 'scotland'
+        ? 'scotland'
+        : jurisdiction === 'northern-ireland'
+          ? 'northern-ireland'
+          : 'england-and-wales';
     bankHolidays = all[jKey] || all['england-and-wales'];
   }
 
@@ -224,7 +262,7 @@ function removeUndefined(obj) {
 
 export function calculateETDeadline(effectiveDateOfTermination, earlyConciliationDays = 0) {
   const todayStr = toLocalDateString(new Date());
-  const sixMonthRule = LAW_CHANGE_RULES.find(r => r.id === 'et-claim-limit-6m');
+  const sixMonthRule = LAW_CHANGE_RULES.find((r) => r.id === 'et-claim-limit-6m');
   const useSixMonth = sixMonthRule && todayStr >= sixMonthRule.valid_from;
 
   const date = parseLocalDate(effectiveDateOfTermination);
@@ -277,7 +315,9 @@ export function buildICS(title, dateStr, description = '') {
   const day = String(d.getUTCDate()).padStart(2, '0');
   const dt = `${y}${m}${day}`;
   const safeTitle = title || 'Follow-up';
-  const safeDesc = (description || 'Open Access UK deadline') + ' (Generated locally. Nothing was sent to a server.)';
+  const safeDesc =
+    (description || 'Open Access UK deadline') +
+    ' (Generated locally. Nothing was sent to a server.)';
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',

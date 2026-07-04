@@ -59,30 +59,30 @@ The suite is deliberately static and browser-only. Open any `index.html`, fill i
 
 ## Toolkit
 
-| Tool | Launch | GitHub | Local path | Jurisdiction | Risk |
-|------|--------|--------|------------|-------------|------|
-| Letter Generator | [demo](https://letter-generator-psi.vercel.app) | [repo](https://github.com/tarunag10/letter-generator) | `./letter-generator` | UK-wide | high |
-| Accessible Forms | [demo](https://accessible-forms-two.vercel.app) | [repo](https://github.com/tarunag10/accessible-forms) | `./accessible-forms` | UK-wide | medium |
-| Public Service Directory | [demo](https://public-service-directory.vercel.app) | [repo](https://github.com/tarunag10/public-service-directory) | `./public-service-directory` | UK-wide | high |
-| Legal Templates | [demo](https://legal-templates-seven.vercel.app) | [repo](https://github.com/tarunag10/legal-templates) | `./legal-templates` | UK-wide | high |
-| Design System | [demo](https://design-system-two-delta.vercel.app) | [repo](https://github.com/tarunag10/design-system) | `./design-system` | UK-wide | low |
-| FOI Response Tracker | [demo](https://foi-tracker.vercel.app) | [repo](https://github.com/tarunag10/foi-tracker) | `./foi-tracker` | UK-wide | high |
-| Case Builder | [demo](https://case-builder.vercel.app) | [repo](https://github.com/tarunag10/case-builder) | `./case-builder` | UK-wide | medium |
-| Employment Tribunal | [demo](https://employment-tribunal.vercel.app) | [repo](https://github.com/tarunag10/employment-tribunal) | `./employment-tribunal` | GB | high |
-| Eviction Notice Validator | [demo](https://eviction-notice-validator.vercel.app) | [repo](https://github.com/tarunag10/eviction-notice-validator) | `./eviction-notice-validator` | England only | high |
-| UC Sanctions Challenge | [demo](https://uc-sanctions.vercel.app) | [repo](https://github.com/tarunag10/uc-sanctions) | `./uc-sanctions` | GB | high |
-| Benefits Appeals Helper | [demo](https://benefits-appeals.vercel.app) | [repo](https://github.com/tarunag10/benefits-appeals) | `./benefits-appeals` | GB | high |
-| Immigration Complaint Tool | [demo](https://immigration-complaints.vercel.app) | [repo](https://github.com/tarunag10/immigration-complaints) | `./immigration-complaints` | UK-wide | high |
-| NHS Complaints Tracker | [demo](https://nhs-complaints-tracker.vercel.app) | [repo](https://github.com/tarunag10/nhs-complaints-tracker) | `./nhs-complaints-tracker` | England | high |
-| Professional Complaints Router | [demo](https://professional-complaints.vercel.app) | [repo](https://github.com/tarunag10/professional-complaints) | `./professional-complaints` | UK-wide | high |
-| Ombudsman Outcomes Database | [demo](https://ombudsman-outcomes.vercel.app) | [repo](https://github.com/tarunag10/ombudsman-outcomes) | `./ombudsman-outcomes` | UK-wide | medium |
-| Batch FOI Tool | [demo](https://batch-foi.vercel.app) | [repo](https://github.com/tarunag10/batch-foi) | `./batch-foi` | UK-wide | medium |
-| Deadline Cascade Visualizer | [demo](https://deadline-cascade.vercel.app) | [repo](https://github.com/tarunag10/deadline-cascade) | `./deadline-cascade` | UK-wide | medium |
-| Fee Calculator | [demo](https://fee-calculator.vercel.app) | [repo](https://github.com/tarunag10/fee-calculator) | `./fee-calculator` | England & Wales | medium |
-| Evidence Checker | [demo](https://evidence-checker.vercel.app) | [repo](https://github.com/tarunag10/evidence-checker) | `./evidence-checker` | UK-wide | medium |
-| SEND Helper | [demo](https://send-helper.vercel.app) | [repo](https://github.com/tarunag10/send-helper) | `./send-helper` | England | high |
-| Accessible Formats Request | [demo](https://accessible-formats-request.vercel.app) | [repo](https://github.com/tarunag10/accessible-formats-request) | `./accessible-formats-request` | UK-wide | medium |
-| Case Aggregator | [demo](./case-aggregator/index.html) | (in parent repo) | `./case-aggregator` | UK-wide | low |
+| Tool                           | Launch                                                | GitHub                                                          | Local path                     | Jurisdiction    | Risk   |
+| ------------------------------ | ----------------------------------------------------- | --------------------------------------------------------------- | ------------------------------ | --------------- | ------ |
+| Letter Generator               | [demo](https://letter-generator-psi.vercel.app)       | [repo](https://github.com/tarunag10/letter-generator)           | `./letter-generator`           | UK-wide         | high   |
+| Accessible Forms               | [demo](https://accessible-forms-two.vercel.app)       | [repo](https://github.com/tarunag10/accessible-forms)           | `./accessible-forms`           | UK-wide         | medium |
+| Public Service Directory       | [demo](https://public-service-directory.vercel.app)   | [repo](https://github.com/tarunag10/public-service-directory)   | `./public-service-directory`   | UK-wide         | high   |
+| Legal Templates                | [demo](https://legal-templates-seven.vercel.app)      | [repo](https://github.com/tarunag10/legal-templates)            | `./legal-templates`            | UK-wide         | high   |
+| Design System                  | [demo](https://design-system-two-delta.vercel.app)    | [repo](https://github.com/tarunag10/design-system)              | `./design-system`              | UK-wide         | low    |
+| FOI Response Tracker           | [demo](https://foi-tracker.vercel.app)                | [repo](https://github.com/tarunag10/foi-tracker)                | `./foi-tracker`                | UK-wide         | high   |
+| Case Builder                   | [demo](https://case-builder.vercel.app)               | [repo](https://github.com/tarunag10/case-builder)               | `./case-builder`               | UK-wide         | medium |
+| Employment Tribunal            | [demo](https://employment-tribunal.vercel.app)        | [repo](https://github.com/tarunag10/employment-tribunal)        | `./employment-tribunal`        | GB              | high   |
+| Eviction Notice Validator      | [demo](https://eviction-notice-validator.vercel.app)  | [repo](https://github.com/tarunag10/eviction-notice-validator)  | `./eviction-notice-validator`  | England only    | high   |
+| UC Sanctions Challenge         | [demo](https://uc-sanctions.vercel.app)               | [repo](https://github.com/tarunag10/uc-sanctions)               | `./uc-sanctions`               | GB              | high   |
+| Benefits Appeals Helper        | [demo](https://benefits-appeals.vercel.app)           | [repo](https://github.com/tarunag10/benefits-appeals)           | `./benefits-appeals`           | GB              | high   |
+| Immigration Complaint Tool     | [demo](https://immigration-complaints.vercel.app)     | [repo](https://github.com/tarunag10/immigration-complaints)     | `./immigration-complaints`     | UK-wide         | high   |
+| NHS Complaints Tracker         | [demo](https://nhs-complaints-tracker.vercel.app)     | [repo](https://github.com/tarunag10/nhs-complaints-tracker)     | `./nhs-complaints-tracker`     | England         | high   |
+| Professional Complaints Router | [demo](https://professional-complaints.vercel.app)    | [repo](https://github.com/tarunag10/professional-complaints)    | `./professional-complaints`    | UK-wide         | high   |
+| Ombudsman Outcomes Database    | [demo](https://ombudsman-outcomes.vercel.app)         | [repo](https://github.com/tarunag10/ombudsman-outcomes)         | `./ombudsman-outcomes`         | UK-wide         | medium |
+| Batch FOI Tool                 | [demo](https://batch-foi.vercel.app)                  | [repo](https://github.com/tarunag10/batch-foi)                  | `./batch-foi`                  | UK-wide         | medium |
+| Deadline Cascade Visualizer    | [demo](https://deadline-cascade.vercel.app)           | [repo](https://github.com/tarunag10/deadline-cascade)           | `./deadline-cascade`           | UK-wide         | medium |
+| Fee Calculator                 | [demo](https://fee-calculator.vercel.app)             | [repo](https://github.com/tarunag10/fee-calculator)             | `./fee-calculator`             | England & Wales | medium |
+| Evidence Checker               | [demo](https://evidence-checker.vercel.app)           | [repo](https://github.com/tarunag10/evidence-checker)           | `./evidence-checker`           | UK-wide         | medium |
+| SEND Helper                    | [demo](https://send-helper.vercel.app)                | [repo](https://github.com/tarunag10/send-helper)                | `./send-helper`                | England         | high   |
+| Accessible Formats Request     | [demo](https://accessible-formats-request.vercel.app) | [repo](https://github.com/tarunag10/accessible-formats-request) | `./accessible-formats-request` | UK-wide         | medium |
+| Case Aggregator                | [demo](./case-aggregator/index.html)                  | (in parent repo)                                                | `./case-aggregator`            | UK-wide         | low    |
 
 ## Shared principles
 

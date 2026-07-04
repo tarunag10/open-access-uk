@@ -18,9 +18,12 @@ export function generateAdviserPack(caseObj, options = {}) {
   const now = new Date().toISOString().slice(0, 10);
 
   // Cover sheet
-  const parties = (caseObj.parties || []).map(p =>
-    `${p.role}: ${p.name || ''}${p.org ? ` (${p.org})` : ''}${p.contact ? ` — ${p.contact}` : ''}`
-  ).join('\n');
+  const parties = (caseObj.parties || [])
+    .map(
+      (p) =>
+        `${p.role}: ${p.name || ''}${p.org ? ` (${p.org})` : ''}${p.contact ? ` — ${p.contact}` : ''}`
+    )
+    .join('\n');
 
   sections.push({
     heading: 'Cover sheet',
@@ -37,7 +40,7 @@ ${parties ? `**Parties:**\n${parties}` : ''}
   // Chronology
   if (caseObj.events && caseObj.events.length > 0) {
     const sorted = [...caseObj.events].sort((a, b) => a.date.localeCompare(b.date));
-    const rows = sorted.map(e => `| ${e.date} | ${e.type} | ${e.summary} |`).join('\n');
+    const rows = sorted.map((e) => `| ${e.date} | ${e.type} | ${e.summary} |`).join('\n');
     sections.push({
       heading: 'Chronology',
       content: `| Date | Type | Summary |\n|------|------|---------|\n${rows}`
@@ -46,9 +49,11 @@ ${parties ? `**Parties:**\n${parties}` : ''}
 
   // Deadlines
   if (caseObj.deadlines && caseObj.deadlines.length > 0) {
-    const rows = caseObj.deadlines.map(d =>
-      `| ${d.ruleId} | ${d.startDate} | ${d.targetDate} | ${d.status} | ${d.note || ''} |`
-    ).join('\n');
+    const rows = caseObj.deadlines
+      .map(
+        (d) => `| ${d.ruleId} | ${d.startDate} | ${d.targetDate} | ${d.status} | ${d.note || ''} |`
+      )
+      .join('\n');
     sections.push({
       heading: 'Deadlines',
       content: `| Rule | Start | Target | Status | Note |\n|------|-------|--------|--------|------|\n${rows}`
@@ -57,9 +62,12 @@ ${parties ? `**Parties:**\n${parties}` : ''}
 
   // Letters appendix
   if (caseObj.letters && caseObj.letters.length > 0) {
-    const items = caseObj.letters.map(l =>
-      `- **${l.templateId}** (from ${l.toolId}, rendered ${formatDateForDisplay(l.renderedAt)})`
-    ).join('\n');
+    const items = caseObj.letters
+      .map(
+        (l) =>
+          `- **${l.templateId}** (from ${l.toolId}, rendered ${formatDateForDisplay(l.renderedAt)})`
+      )
+      .join('\n');
     sections.push({
       heading: 'Letters sent',
       content: items
@@ -68,9 +76,9 @@ ${parties ? `**Parties:**\n${parties}` : ''}
 
   // Documents checklist
   if (caseObj.documents && caseObj.documents.length > 0) {
-    const items = caseObj.documents.map(d =>
-      `- [ ] ${d.name} (${d.kind})${d.note ? ` — ${d.note}` : ''}`
-    ).join('\n');
+    const items = caseObj.documents
+      .map((d) => `- [ ] ${d.name} (${d.kind})${d.note ? ` — ${d.note}` : ''}`)
+      .join('\n');
     sections.push({
       heading: 'Documents checklist',
       content: items
@@ -78,17 +86,25 @@ ${parties ? `**Parties:**\n${parties}` : ''}
   }
 
   // Build HTML
-  const sectionHtml = sections.map(s => `
+  const sectionHtml = sections
+    .map(
+      (s) => `
     <section class="pack-section">
       <h2>${s.heading}</h2>
-      ${s.content.split('\n').filter(l => l.trim()).map(l => {
-        if (l.startsWith('|')) return `<table>${parseTableRow(l)}</table>`;
-        if (l.startsWith('- [')) return `<p>${l}</p>`;
-        if (l.startsWith('**')) return `<p>${renderInlineMarkdown(l)}</p>`;
-        return `<p>${renderInlineMarkdown(l)}</p>`;
-      }).join('\n')}
+      ${s.content
+        .split('\n')
+        .filter((l) => l.trim())
+        .map((l) => {
+          if (l.startsWith('|')) return `<table>${parseTableRow(l)}</table>`;
+          if (l.startsWith('- [')) return `<p>${l}</p>`;
+          if (l.startsWith('**')) return `<p>${renderInlineMarkdown(l)}</p>`;
+          return `<p>${renderInlineMarkdown(l)}</p>`;
+        })
+        .join('\n')}
     </section>
-  `).join('\n');
+  `
+    )
+    .join('\n');
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -124,7 +140,11 @@ ${parties ? `**Parties:**\n${parties}` : ''}
 
 function escapeHtml(str) {
   if (!str) return '';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function renderInlineMarkdown(text) {
@@ -134,9 +154,12 @@ function renderInlineMarkdown(text) {
 }
 
 function parseTableRow(markdownRow) {
-  const cells = markdownRow.split('|').filter(Boolean).map(c => c.trim());
+  const cells = markdownRow
+    .split('|')
+    .filter(Boolean)
+    .map((c) => c.trim());
   if (cells.length === 0) return '';
-  const header = cells.map(c => `<th>${escapeHtml(c)}</th>`).join('');
+  const header = cells.map((c) => `<th>${escapeHtml(c)}</th>`).join('');
   return `<thead>${header}</thead>`;
 }
 
@@ -162,7 +185,12 @@ export function generateCaseSummary(caseObj) {
 
 // Backwards compatibility aliases
 export const createMarkdownDocument = generateAdviserPack;
-export const createPrintDocument = (title, body) => ({ title, body, generatedLocally: true, privacyNote: 'Generated locally in the browser.' });
+export const createPrintDocument = (title, body) => ({
+  title,
+  body,
+  generatedLocally: true,
+  privacyNote: 'Generated locally in the browser.'
+});
 
 /**
  * Creates a safe filename from a title string.

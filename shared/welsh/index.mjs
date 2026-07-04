@@ -13,9 +13,9 @@ const UI_STRINGS = {
     'letter.generate': 'Generate Letter',
     'form.submit': 'Submit',
     'form.cancel': 'Cancel',
-    'save': 'Save',
-    'delete': 'Delete',
-    'export': 'Export',
+    save: 'Save',
+    delete: 'Delete',
+    export: 'Export',
     'language.select': 'Choose language'
   },
   cy: {
@@ -25,9 +25,9 @@ const UI_STRINGS = {
     'letter.generate': 'Cynhyffyrddu Llythyr',
     'form.submit': 'Cyflwyno',
     'form.cancel': 'Canslo',
-    'save': 'Cadw',
-    'delete': 'Dileu',
-    'export': 'Allforio',
+    save: 'Cadw',
+    delete: 'Dileu',
+    export: 'Allforio',
     'language.select': 'Dewiswch iaith'
   }
 };
@@ -43,19 +43,39 @@ const TEMPLATE_TRANSLATIONS = {
     cy: {
       greeting: 'Annwyl Syr/Foneddiges,',
       subject: 'Cwyn ynghylch mynediad at wybodaeth',
-      body: 'Rwy\'n ysgrifennu i wneud cynswm ffurfiol am y methiant i ddarparu mynediad at wybodaeth dan Ddeddf Rhyddid Gwybodaeth 2000.',
+      body: "Rwy'n ysgrifennu i wneud cynswm ffurfiol am y methiant i ddarparu mynediad at wybodaeth dan Ddeddf Rhyddid Gwybodaeth 2000.",
       closing: 'Yn gywir,'
     }
   }
 };
 
 const WELSH_AUTHORITIES = [
-  { id: 'welsh-government', name: 'Llywodraeth Cymru / Welsh Government', type: 'government', subjectToWelshStandards: true },
+  {
+    id: 'welsh-government',
+    name: 'Llywodraeth Cymru / Welsh Government',
+    type: 'government',
+    subjectToWelshStandards: true
+  },
   { id: 'nhs-wales', name: 'GIG Cymru / NHS Wales', type: 'health', subjectToWelshStandards: true },
-  { id: 'nrw', name: 'Cyfoeth Naturiol Cymru / Natural Resources Wales', type: 'environment', subjectToWelshStandards: true },
-  { id: 'heddlu-cymru', name: 'Heddlu Cymru / Wales Police', type: 'police', subjectToWelshStandards: true },
+  {
+    id: 'nrw',
+    name: 'Cyfoeth Naturiol Cymru / Natural Resources Wales',
+    type: 'environment',
+    subjectToWelshStandards: true
+  },
+  {
+    id: 'heddlu-cymru',
+    name: 'Heddlu Cymru / Wales Police',
+    type: 'police',
+    subjectToWelshStandards: true
+  },
   { id: 'swalec', name: 'SWALEC (Welsh water)', type: 'utility', subjectToWelshStandards: true },
-  { id: 'welsh-local-authorities', name: 'Cymunedau Lleol Cymru / Welsh Local Authorities', type: 'council', subjectToWelshStandards: true }
+  {
+    id: 'welsh-local-authorities',
+    name: 'Cymunedau Lleol Cymru / Welsh Local Authorities',
+    type: 'council',
+    subjectToWelshStandards: true
+  }
 ];
 
 const LANGUAGE_PREF_KEY = 'open-access-uk:language';

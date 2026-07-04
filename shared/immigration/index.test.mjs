@@ -99,10 +99,7 @@ describe('generateComplaintText', () => {
   });
 
   it('throws on missing type', () => {
-    assert.throws(
-      () => generateComplaintText({ complainantName: 'Jane Doe' }),
-      /type/
-    );
+    assert.throws(() => generateComplaintText({ complainantName: 'Jane Doe' }), /type/);
   });
 });
 
@@ -132,7 +129,11 @@ describe('getRequiredDocuments', () => {
     const docs = getRequiredDocuments('visa-delay');
     assert.ok(Array.isArray(docs));
     assert.ok(docs.length > 0);
-    assert.ok(docs.some((d) => d.includes('application') || d.includes('reference') || d.includes('submission')));
+    assert.ok(
+      docs.some(
+        (d) => d.includes('application') || d.includes('reference') || d.includes('submission')
+      )
+    );
   });
 
   it('returns evidence checklist for brp-issue', () => {

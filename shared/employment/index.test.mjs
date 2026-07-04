@@ -32,7 +32,13 @@ test('getClaimTypes each type has id, name, deadlineMonths, source, description'
 test('getClaimTypes returns expected ids', () => {
   const types = getClaimTypes();
   const ids = types.map((t) => t.id);
-  assert.deepEqual(ids, ['unfair-dismissal', 'discrimination', 'wages', 'breach-of-contract', 'redundancy']);
+  assert.deepEqual(ids, [
+    'unfair-dismissal',
+    'discrimination',
+    'wages',
+    'breach-of-contract',
+    'redundancy'
+  ]);
 });
 
 test('getClaimTypes returns copy of array', () => {

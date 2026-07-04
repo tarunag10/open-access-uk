@@ -43,7 +43,8 @@ function initLanguageToggle(containerSelector) {
   btn.className = 'oa-language-toggle';
   btn.setAttribute('aria-label', 'Toggle language');
   btn.textContent = currentLang === 'cy' ? 'CY' : 'EN';
-  btn.style.cssText = 'background:#2563eb;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:14px;';
+  btn.style.cssText =
+    'background:#2563eb;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:14px;';
 
   btn.addEventListener('click', () => {
     const current = getResolvedLanguage();

@@ -35,8 +35,14 @@ function addMonths(value, months) {
   if (!parts) return null;
   let [, y, m, d] = parts.map(Number);
   m += months;
-  while (m > 12) { m -= 12; y += 1; }
-  while (m < 1) { m += 12; y -= 1; }
+  while (m > 12) {
+    m -= 12;
+    y += 1;
+  }
+  while (m < 1) {
+    m += 12;
+    y -= 1;
+  }
   return [y, String(m).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 

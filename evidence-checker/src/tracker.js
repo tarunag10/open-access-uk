@@ -83,7 +83,8 @@ function renderEvidenceManifest(files) {
     return '<p class="empty-state">No evidence files checked yet.</p>';
   }
   const manifest = generateEvidenceManifest(files);
-  let html = '<table class="manifest-table"><thead><tr><th>Filename</th><th>Description</th><th>Size</th></tr></thead><tbody>';
+  let html =
+    '<table class="manifest-table"><thead><tr><th>Filename</th><th>Description</th><th>Size</th></tr></thead><tbody>';
   for (const item of manifest.items) {
     html += `<tr><td>${escapeHtml(item.filename)}</td><td>${escapeHtml(item.description || '-')}</td><td>${formatBytes(item.size)}</td></tr>`;
   }

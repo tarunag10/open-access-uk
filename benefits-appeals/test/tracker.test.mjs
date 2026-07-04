@@ -69,9 +69,16 @@ test('getBenefitName returns correct names', () => {
 test('APPEAL_STATUSES includes all expected statuses', () => {
   const values = APPEAL_STATUSES.map((s) => s.value);
   for (const expected of [
-    'mr_draft', 'mr_sent', 'mr_refused', 'mr_allowed',
-    'tribunal_draft', 'tribunal_submitted', 'tribunal_hearing',
-    'tribunal_allowed', 'tribunal_refused', 'closed'
+    'mr_draft',
+    'mr_sent',
+    'mr_refused',
+    'mr_allowed',
+    'tribunal_draft',
+    'tribunal_submitted',
+    'tribunal_hearing',
+    'tribunal_allowed',
+    'tribunal_refused',
+    'closed'
   ]) {
     assert.ok(values.includes(expected), `missing status ${expected}`);
   }

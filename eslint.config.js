@@ -1,6 +1,8 @@
 export default [
   {
-    ignores: ['node_modules/**', '**/node_modules/**'],
+    ignores: ['node_modules/**', '**/node_modules/**', '**/src/app.js']
+  },
+  {
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module'

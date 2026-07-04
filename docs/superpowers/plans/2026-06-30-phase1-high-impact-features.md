@@ -135,7 +135,12 @@ Expected: FAIL — `Cannot find module './index.mjs'`.
 
 ```js
 // shared/complaints/index.mjs
-import { parseLocalDate, toLocalDateString, addWorkingDays, formatDateForDisplay } from '../deadlines/index.mjs';
+import {
+  parseLocalDate,
+  toLocalDateString,
+  addWorkingDays,
+  formatDateForDisplay
+} from '../deadlines/index.mjs';
 import { buildICS } from '../deadlines/index.mjs';
 
 export const COMPLAINTS_STORAGE_KEY = 'open-access-uk:nhs-complaints-tracker:complaints';
@@ -147,7 +152,8 @@ export const COMPLAINT_STAGES = [
     label: 'PALS (Patient Advice and Liaison Service)',
     deadlineDays: 0,
     deadlineWorking: false,
-    deadlineNote: 'No statutory deadline, but aim for an initial PALS contact within 5 working days.',
+    deadlineNote:
+      'No statutory deadline, but aim for an initial PALS contact within 5 working days.',
     escalationNext: 'formal',
     description: 'Informal resolution through the hospital or trust PALS team.'
   },
@@ -156,7 +162,8 @@ export const COMPLAINT_STAGES = [
     label: 'Formal NHS complaint',
     deadlineDays: 0,
     deadlineWorking: false,
-    deadlineNote: 'Acknowledgement within 3 working days; full response target varies by trust, usually within 25 working days.',
+    deadlineNote:
+      'Acknowledgement within 3 working days; full response target varies by trust, usually within 25 working days.',
     escalationNext: 'phso',
     description: 'Written formal complaint under the NHS Complaints Regulations 2009.'
   },
@@ -165,9 +172,11 @@ export const COMPLAINT_STAGES = [
     label: 'Parliamentary and Health Service Ombudsman (PHSO)',
     deadlineDays: 0,
     deadlineWorking: false,
-    deadlineNote: 'Must complain to PHSO within 12 months of the date of the events complained about, or within 6 months of the final response from the NHS body.',
+    deadlineNote:
+      'Must complain to PHSO within 12 months of the date of the events complained about, or within 6 months of the final response from the NHS body.',
     escalationNext: null,
-    description: 'Independent investigation by PHSO after the NHS body has completed its investigation.'
+    description:
+      'Independent investigation by PHSO after the NHS body has completed its investigation.'
   }
 ];
 
@@ -211,10 +220,19 @@ export function buildEvidenceChecklist(stageId) {
     return [...base, 'Notes of any PALS conversations or meetings'];
   }
   if (stageId === 'formal') {
-    return [...base, 'Copy of the formal complaint acknowledgement', 'Copy of the NHS body response or investigation report'];
+    return [
+      ...base,
+      'Copy of the formal complaint acknowledgement',
+      'Copy of the NHS body response or investigation report'
+    ];
   }
   if (stageId === 'phso') {
-    return [...base, 'Copy of the NHS body final response', 'Evidence of the complaint timeline and outcomes sought', 'Any medical records relevant to the complaint'];
+    return [
+      ...base,
+      'Copy of the NHS body final response',
+      'Evidence of the complaint timeline and outcomes sought',
+      'Any medical records relevant to the complaint'
+    ];
   }
   return base;
 }
@@ -368,7 +386,12 @@ Expected: FAIL — `Cannot find module './index.mjs'`.
 
 ```js
 // shared/appeals/index.mjs
-import { parseLocalDate, toLocalDateString, addWorkingDays, formatDateForDisplay } from '../deadlines/index.mjs';
+import {
+  parseLocalDate,
+  toLocalDateString,
+  addWorkingDays,
+  formatDateForDisplay
+} from '../deadlines/index.mjs';
 
 export const APPEALS_STORAGE_KEY = 'open-access-uk:benefits-appeals:appeals';
 export const APPEALS_DRAFT_KEY = 'open-access-uk:benefits-appeals:draft';
@@ -380,7 +403,8 @@ export const BENEFIT_TYPES = [
     mrDeadlineDays: 1,
     mrDeadlineUnit: 'month',
     tribunalDeadlineMonths: 1,
-    tribunalNote: 'You have 1 month from the date of the MR decision to appeal to the First-tier Tribunal (Social Entitlement Chamber).',
+    tribunalNote:
+      'You have 1 month from the date of the MR decision to appeal to the First-tier Tribunal (Social Entitlement Chamber).',
     description: 'Universal Credit decisions including work capability, sanctions, housing costs.'
   },
   {
@@ -389,7 +413,8 @@ export const BENEFIT_TYPES = [
     mrDeadlineDays: 1,
     mrDeadlineUnit: 'month',
     tribunalDeadlineMonths: 1,
-    tribunalNote: 'You have 1 month from the date of the MR decision to appeal to the First-tier Tribunal.',
+    tribunalNote:
+      'You have 1 month from the date of the MR decision to appeal to the First-tier Tribunal.',
     description: 'PIP daily living and mobility component decisions.'
   },
   {
@@ -398,7 +423,8 @@ export const BENEFIT_TYPES = [
     mrDeadlineDays: 1,
     mrDeadlineUnit: 'month',
     tribunalDeadlineMonths: 1,
-    tribunalNote: 'You have 1 month from the date of the MR decision to appeal to the First-tier Tribunal.',
+    tribunalNote:
+      'You have 1 month from the date of the MR decision to appeal to the First-tier Tribunal.',
     description: 'ESA work capability assessment decisions.'
   }
 ];
@@ -439,10 +465,19 @@ export function calculateTribunalDeadline(benefitId, mrDecisionDate) {
   };
 }
 
-export function buildMRLetter({ benefitType, decisionDate, decisionRef, reasons = [], claimantName } = {}) {
+export function buildMRLetter({
+  benefitType,
+  decisionDate,
+  decisionRef,
+  reasons = [],
+  claimantName
+} = {}) {
   const benefit = getBenefitType(benefitType);
   const benefitLabel = benefit ? benefit.label : benefitType;
-  const reasonsList = reasons.filter(Boolean).map((r) => `- ${r}`).join('\n');
+  const reasonsList = reasons
+    .filter(Boolean)
+    .map((r) => `- ${r}`)
+    .join('\n');
 
   return `Dear Sir or Madam,
 
@@ -466,12 +501,23 @@ Yours faithfully,
 ${claimantName || 'Your name'}`;
 }
 
-export function buildTribunalApplication({ benefitType, mrDecisionDate, mrDecisionRef, grounds = [], claimantName } = {}) {
+export function buildTribunalApplication({
+  benefitType,
+  mrDecisionDate,
+  mrDecisionRef,
+  grounds = [],
+  claimantName
+} = {}) {
   const benefit = getBenefitType(benefitType);
   const benefitLabel = benefit ? benefit.label : benefitType;
   const deadline = calculateTribunalDeadline(benefitType, mrDecisionDate);
-  const deadlineDate = deadline ? formatDateForDisplay(deadline.targetDate) : 'within 1 month of the MR decision';
-  const groundsList = grounds.filter(Boolean).map((g) => `- ${g}`).join('\n');
+  const deadlineDate = deadline
+    ? formatDateForDisplay(deadline.targetDate)
+    : 'within 1 month of the MR decision';
+  const groundsList = grounds
+    .filter(Boolean)
+    .map((g) => `- ${g}`)
+    .join('\n');
 
   return `SSCS1 — Appeal to the First-tier Tribunal (Social Entitlement Chamber)
 
@@ -492,18 +538,58 @@ Date: ${formatDateForDisplay(toLocalDateString(new Date()))}`;
 }
 
 const PIP_DESCRIPTORS = [
-  { activity: 'Preparing food', scoring: '0 = Can prepare food. 1 = Needs prompting. 2 = Needs supervision. 3 = Cannot prepare food safely.' },
-  { activity: 'Taking nutrition', scoring: '0 = Can take nutrition unaided. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot take nutrition.' },
-  { activity: 'Managing therapy or monitoring a health condition', scoring: '0 = Can manage therapy. 1 = Needs prompting. 2 = Needs supervision. 3 = Cannot manage therapy.' },
-  { activity: 'Washing and bathing', scoring: '0 = Can wash unaided. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot wash.' },
-  { activity: 'Managing toilet needs', scoring: '0 = Can manage. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot manage.' },
-  { activity: 'Dressing and undressing', scoring: '0 = Can dress. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot dress.' },
-  { activity: 'Communicating verbally', scoring: '0 = Can communicate. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot communicate.' },
-  { activity: 'Reading and understanding signs, symbols and words', scoring: '0 = Can read. 1 = Needs prompting. 2 = Cannot read.' },
-  { activity: 'Engaging with other people face to face', scoring: '0 = Can engage. 1 = Needs prompting. 2 = Cannot engage.' },
-  { activity: 'Making budgeting decisions', scoring: '0 = Can budget. 1 = Needs prompting. 2 = Cannot budget.' },
-  { activity: 'Planning and following journeys', scoring: '0 = Can plan journeys. 1 = Needs prompting. 2 = Cannot plan journeys.' },
-  { activity: 'Moving around', scoring: '0 = Can move 200m+. 1 = Can move 50–200m. 2 = Can move 20–50m. 3 = Cannot move.' }
+  {
+    activity: 'Preparing food',
+    scoring:
+      '0 = Can prepare food. 1 = Needs prompting. 2 = Needs supervision. 3 = Cannot prepare food safely.'
+  },
+  {
+    activity: 'Taking nutrition',
+    scoring:
+      '0 = Can take nutrition unaided. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot take nutrition.'
+  },
+  {
+    activity: 'Managing therapy or monitoring a health condition',
+    scoring:
+      '0 = Can manage therapy. 1 = Needs prompting. 2 = Needs supervision. 3 = Cannot manage therapy.'
+  },
+  {
+    activity: 'Washing and bathing',
+    scoring: '0 = Can wash unaided. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot wash.'
+  },
+  {
+    activity: 'Managing toilet needs',
+    scoring: '0 = Can manage. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot manage.'
+  },
+  {
+    activity: 'Dressing and undressing',
+    scoring: '0 = Can dress. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot dress.'
+  },
+  {
+    activity: 'Communicating verbally',
+    scoring:
+      '0 = Can communicate. 1 = Needs prompting. 2 = Needs assistance. 3 = Cannot communicate.'
+  },
+  {
+    activity: 'Reading and understanding signs, symbols and words',
+    scoring: '0 = Can read. 1 = Needs prompting. 2 = Cannot read.'
+  },
+  {
+    activity: 'Engaging with other people face to face',
+    scoring: '0 = Can engage. 1 = Needs prompting. 2 = Cannot engage.'
+  },
+  {
+    activity: 'Making budgeting decisions',
+    scoring: '0 = Can budget. 1 = Needs prompting. 2 = Cannot budget.'
+  },
+  {
+    activity: 'Planning and following journeys',
+    scoring: '0 = Can plan journeys. 1 = Needs prompting. 2 = Cannot plan journeys.'
+  },
+  {
+    activity: 'Moving around',
+    scoring: '0 = Can move 200m+. 1 = Can move 50–200m. 2 = Can move 20–50m. 3 = Cannot move.'
+  }
 ];
 
 export function getDescriptorGuidance(benefitId) {
@@ -628,7 +714,12 @@ Expected: FAIL — `Cannot find module './index.mjs'`.
 
 ```js
 // shared/parking/index.mjs
-import { parseLocalDate, toLocalDateString, addWorkingDays, formatDateForDisplay } from '../deadlines/index.mjs';
+import {
+  parseLocalDate,
+  toLocalDateString,
+  addWorkingDays,
+  formatDateForDisplay
+} from '../deadlines/index.mjs';
 
 export const PARKING_STORAGE_KEY = 'open-access-uk:parking-appeal:pcns';
 export const PARKING_DRAFT_KEY = 'open-access-uk:parking-appeal:draft';
@@ -638,19 +729,24 @@ export const OPERATOR_TYPES = [
     id: 'council',
     label: 'Council (Local Authority)',
     firstDeadlineDays: 28,
-    firstDeadlineNote: 'Pay or challenge within 28 days of the PCN being issued (Transport Act 2004, s.66).',
+    firstDeadlineNote:
+      'Pay or challenge within 28 days of the PCN being issued (Transport Act 2004, s.66).',
     appealDeadlineDays: 28,
-    appealDeadlineNote: 'If your initial challenge is rejected, you have 28 days to appeal to the Traffic Penalty Tribunal.',
+    appealDeadlineNote:
+      'If your initial challenge is rejected, you have 28 days to appeal to the Traffic Penalty Tribunal.',
     escalationRoute: 'Traffic Penalty Tribunal (TPT)',
-    description: 'PCN issued by a council or local authority for on-street parking, bus lanes, or CCTV offences.'
+    description:
+      'PCN issued by a council or local authority for on-street parking, bus lanes, or CCTV offences.'
   },
   {
     id: 'private',
     label: 'Private parking operator',
     firstDeadlineDays: 14,
-    firstDeadlineNote: 'The operator must allow 14 days to pay the reduced amount or challenge before any further action (POFA 2012, Schedule 1).',
+    firstDeadlineNote:
+      'The operator must allow 14 days to pay the reduced amount or challenge before any further action (POFA 2012, Schedule 1).',
     appealDeadlineDays: 0,
-    appealDeadlineNote: 'There is no formal independent appeal body; escalation may be through the operator\'s approved Independent ADR provider or the courts.',
+    appealDeadlineNote:
+      "There is no formal independent appeal body; escalation may be through the operator's approved Independent ADR provider or the courts.",
     escalationRoute: 'Independent ADR provider or county court',
     description: 'Parking Charge Notice on private land (car parks, retail, residential).'
   }
@@ -683,10 +779,19 @@ export function calculatePCNDeadline(operatorId, issueDate, stage = 'first') {
   return { operatorId, stage, targetDate: target, explanation };
 }
 
-export function buildPCNAppealLetter({ operatorType, pcnNumber, issueDate, grounds = [], driverName } = {}) {
+export function buildPCNAppealLetter({
+  operatorType,
+  pcnNumber,
+  issueDate,
+  grounds = [],
+  driverName
+} = {}) {
   const op = getOperatorType(operatorType);
   const operatorLabel = op ? op.label : operatorType;
-  const groundsList = grounds.filter(Boolean).map((g) => `- ${g}`).join('\n');
+  const groundsList = grounds
+    .filter(Boolean)
+    .map((g) => `- ${g}`)
+    .join('\n');
 
   return `Dear Sir or Madam,
 
@@ -698,9 +803,11 @@ I am writing to challenge the Parking Charge Notice referenced above. I believe 
 
 ${groundsList || '- [Add your grounds for appeal here]'}
 
-${operatorType === 'council'
-  ? 'I request that the PCN be cancelled under the relevant traffic management powers.'
-  : 'I understand that under the Protection of Freedoms Act 2012, the operator must allow a minimum period before any keeper liability proceedings. I do not accept that this PCN has been issued fairly or in accordance with the applicable code of practice.'}
+${
+  operatorType === 'council'
+    ? 'I request that the PCN be cancelled under the relevant traffic management powers.'
+    : 'I understand that under the Protection of Freedoms Act 2012, the operator must allow a minimum period before any keeper liability proceedings. I do not accept that this PCN has been issued fairly or in accordance with the applicable code of practice.'
+}
 
 Please confirm receipt of this challenge and the expected timeline for a response.
 
@@ -715,9 +822,19 @@ export function getEvidenceChecklist(operatorId) {
     'Photographs of any obstruction, damage, or circumstances relied upon'
   ];
   if (operatorId === 'council') {
-    return [...base, 'Copy of the PCN with the council reference number', 'Any traffic regulation order or CCTV evidence notice', 'Any witness statements or dashcam footage'];
+    return [
+      ...base,
+      'Copy of the PCN with the council reference number',
+      'Any traffic regulation order or CCTV evidence notice',
+      'Any witness statements or dashcam footage'
+    ];
   }
-  return [...base, 'Copy of the Parking Charge Notice', 'Photographs of the private car park signage and terms', 'Evidence of any ANPR or keeper liability notice'];
+  return [
+    ...base,
+    'Copy of the Parking Charge Notice',
+    'Photographs of the private car park signage and terms',
+    'Evidence of any ANPR or keeper liability notice'
+  ];
 }
 ```
 
@@ -863,7 +980,12 @@ Expected: FAIL — `Cannot find module './index.mjs'`.
 
 ```js
 // shared/send-appeals/index.mjs
-import { parseLocalDate, toLocalDateString, addWorkingDays, formatDateForDisplay } from '../deadlines/index.mjs';
+import {
+  parseLocalDate,
+  toLocalDateString,
+  addWorkingDays,
+  formatDateForDisplay
+} from '../deadlines/index.mjs';
 
 export const SEND_STORAGE_KEY = 'open-access-uk:send-helper:cases';
 export const SEND_DRAFT_KEY = 'open-access-uk:send-helper:draft';
@@ -873,15 +995,18 @@ export const SEND_STAGES = [
     id: 'exclusion-review',
     label: 'Exclusion review (governing body)',
     deadlineDays: 15,
-    deadlineNote: 'The governing body must consider the exclusion within 15 school days of receiving notice. Parents can make representations.',
+    deadlineNote:
+      'The governing body must consider the exclusion within 15 school days of receiving notice. Parents can make representations.',
     escalationNext: 'irp',
-    description: 'Request a review of a fixed-term or permanent exclusion by the school governing body.'
+    description:
+      'Request a review of a fixed-term or permanent exclusion by the school governing body.'
   },
   {
     id: 'irp',
     label: 'Independent Review Panel (IRP)',
     deadlineDays: 15,
-    deadlineNote: 'Applications to the IRP must be made within 15 school days of the exclusion decision. Applies to permanent exclusions and some fixed-term exclusions.',
+    deadlineNote:
+      'Applications to the IRP must be made within 15 school days of the exclusion decision. Applies to permanent exclusions and some fixed-term exclusions.',
     escalationNext: 'send-tribunal',
     description: 'Apply to the Independent Review Panel for a review of a permanent exclusion.'
   },
@@ -889,7 +1014,8 @@ export const SEND_STAGES = [
     id: 'send-tribunal',
     label: 'SEND Tribunal (First-tier Tribunal, Special Educational Needs and Disability)',
     deadlineDays: 60,
-    deadlineNote: 'Appeals relating to EHCP decisions must be made within 2 months of the decision, or 1 month after a mediated mediation certificate is issued, whichever is later.',
+    deadlineNote:
+      'Appeals relating to EHCP decisions must be made within 2 months of the decision, or 1 month after a mediated mediation certificate is issued, whichever is later.',
     escalationNext: null,
     description: 'Appeal EHCP refusal, contents, or SEND-related discrimination.'
   },
@@ -897,9 +1023,11 @@ export const SEND_STAGES = [
     id: 'ehcp-dispute',
     label: 'EHCP disagreement resolution / mediation',
     deadlineDays: 30,
-    deadlineNote: 'Disagreement resolution must be sought within 30 days. Mediation is mandatory before appealing to the tribunal for EHCP decisions.',
+    deadlineNote:
+      'Disagreement resolution must be sought within 30 days. Mediation is mandatory before appealing to the tribunal for EHCP decisions.',
     escalationNext: 'send-tribunal',
-    description: 'Disagreement resolution for EHCP content, Annual Review outcomes, or assessment decisions.'
+    description:
+      'Disagreement resolution for EHCP content, Annual Review outcomes, or assessment decisions.'
   }
 ];
 
@@ -911,14 +1039,22 @@ export function calculateExclusionReviewDeadline(exclusionDate) {
   const start = parseLocalDate(exclusionDate);
   if (!start) return null;
   const target = addWorkingDays(exclusionDate, 15);
-  return { targetDate: target, explanation: 'Exclusion review: The governing body must consider the exclusion within 15 school days. Parents should make representations promptly.' };
+  return {
+    targetDate: target,
+    explanation:
+      'Exclusion review: The governing body must consider the exclusion within 15 school days. Parents should make representations promptly.'
+  };
 }
 
 export function calculateIRPDeadline(exclusionDate) {
   const start = parseLocalDate(exclusionDate);
   if (!start) return null;
   const target = addWorkingDays(exclusionDate, 15);
-  return { targetDate: target, explanation: 'IRP: Applications for an Independent Review Panel must be made within 15 school days of the exclusion decision.' };
+  return {
+    targetDate: target,
+    explanation:
+      'IRP: Applications for an Independent Review Panel must be made within 15 school days of the exclusion decision.'
+  };
 }
 
 export function calculateSENDTribunalDeadline(decisionDate) {
@@ -926,10 +1062,20 @@ export function calculateSENDTribunalDeadline(decisionDate) {
   if (!start) return null;
   const result = new Date(start.getTime());
   result.setUTCMonth(result.getUTCMonth() + 2);
-  return { targetDate: toLocalDateString(result), explanation: 'SEND Tribunal: Appeals must be lodged within 2 months of the decision, or 1 month after mediation, whichever is later.' };
+  return {
+    targetDate: toLocalDateString(result),
+    explanation:
+      'SEND Tribunal: Appeals must be lodged within 2 months of the decision, or 1 month after mediation, whichever is later.'
+  };
 }
 
-export function buildExclusionReviewLetter({ childName, schoolName, exclusionDate, exclusionType, parentName } = {}) {
+export function buildExclusionReviewLetter({
+  childName,
+  schoolName,
+  exclusionDate,
+  exclusionType,
+  parentName
+} = {}) {
   return [
     `Dear Head Teacher,`,
     `Re: Request for review of exclusion — ${childName}`,
@@ -953,8 +1099,17 @@ export function buildExclusionReviewLetter({ childName, schoolName, exclusionDat
   ].join('\n');
 }
 
-export function buildIRPRequest({ childName, schoolName, exclusionDate, parentName, grounds = [] } = {}) {
-  const groundsList = grounds.filter(Boolean).map((g) => `- ${g}`).join('\n');
+export function buildIRPRequest({
+  childName,
+  schoolName,
+  exclusionDate,
+  parentName,
+  grounds = []
+} = {}) {
+  const groundsList = grounds
+    .filter(Boolean)
+    .map((g) => `- ${g}`)
+    .join('\n');
   return [
     `Dear Independent Review Panel Clerk,`,
     `Re: Application for Independent Review — ${childName}`,
@@ -977,7 +1132,12 @@ export function buildIRPRequest({ childName, schoolName, exclusionDate, parentNa
   ].join('\n');
 }
 
-export function buildEHCDisputeLetter({ childName, localAuthority, disputeReason, parentName } = {}) {
+export function buildEHCDisputeLetter({
+  childName,
+  localAuthority,
+  disputeReason,
+  parentName
+} = {}) {
   return [
     `Dear Disagreement Resolution Service,`,
     `Re: EHCP dispute — ${childName}`,
@@ -1134,7 +1294,12 @@ Expected: FAIL — `Cannot find module './index.mjs'`.
 
 ```js
 // shared/repairs/index.mjs
-import { parseLocalDate, toLocalDateString, addWorkingDays, formatDateForDisplay } from '../deadlines/index.mjs';
+import {
+  parseLocalDate,
+  toLocalDateString,
+  addWorkingDays,
+  formatDateForDisplay
+} from '../deadlines/index.mjs';
 
 export const REPAIRS_STORAGE_KEY = 'open-access-uk:right-to-repair:repairs';
 export const REPAIRS_DRAFT_KEY = 'open-access-uk:right-to-repair:draft';
@@ -1144,17 +1309,35 @@ export const REPAIR_CATEGORIES = [
     id: 'emergency',
     label: 'Emergency repair',
     deadlineHours: 24,
-    deadlineNote: 'The landlord must carry out an emergency repair within 24 hours (Housing Act 2004, Housing Health and Safety Rating System).',
-    examples: ['No heating or hot water in cold weather', 'Gas leak', 'Blocked or overflowing drain', 'Serious structural issue', 'Burst pipe', 'Lock broken leaving property insecure'],
-    escalationNote: 'If not resolved within 24 hours, contact the local authority housing team and the Housing Ombudsman.'
+    deadlineNote:
+      'The landlord must carry out an emergency repair within 24 hours (Housing Act 2004, Housing Health and Safety Rating System).',
+    examples: [
+      'No heating or hot water in cold weather',
+      'Gas leak',
+      'Blocked or overflowing drain',
+      'Serious structural issue',
+      'Burst pipe',
+      'Lock broken leaving property insecure'
+    ],
+    escalationNote:
+      'If not resolved within 24 hours, contact the local authority housing team and the Housing Ombudsman.'
   },
   {
     id: 'responsive',
     label: 'Responsive repair',
     deadlineDays: 28,
-    deadlineNote: 'The landlord should carry out responsive repairs within 28 days (Landlord and Tenant Act 1985, s.11 implied covenant to repair).',
-    examples: ['Broken boiler (non-emergency)', 'Leaking roof', 'Damp or mould', 'Broken window', 'Faulty electrical wiring', 'Broken door or lock (non-emergency)'],
-    escalationNote: 'If not resolved within 28 days, follow the landlord complaint procedure and then escalate to the Housing Ombudsman.'
+    deadlineNote:
+      'The landlord should carry out responsive repairs within 28 days (Landlord and Tenant Act 1985, s.11 implied covenant to repair).',
+    examples: [
+      'Broken boiler (non-emergency)',
+      'Leaking roof',
+      'Damp or mould',
+      'Broken window',
+      'Faulty electrical wiring',
+      'Broken door or lock (non-emergency)'
+    ],
+    escalationNote:
+      'If not resolved within 28 days, follow the landlord complaint procedure and then escalate to the Housing Ombudsman.'
   }
 ];
 
@@ -1183,7 +1366,13 @@ export function calculateRepairDeadline(categoryId, reportDate) {
   return { category: categoryId, targetDate: target, explanation };
 }
 
-export function buildRepairNotice({ category, reportDate, issueDescription, landlordName, tenantName } = {}) {
+export function buildRepairNotice({
+  category,
+  reportDate,
+  issueDescription,
+  landlordName,
+  tenantName
+} = {}) {
   const cat = getRepairCategory(category);
   const catLabel = cat ? cat.label : category;
   const deadline = calculateRepairDeadline(category, reportDate);
@@ -1196,7 +1385,9 @@ export function buildRepairNotice({ category, reportDate, issueDescription, land
     '',
     issueDescription || 'I am reporting a repair issue at my property.',
     '',
-    cat ? `This is classified as a ${catLabel.toLowerCase()}. Under the ${deadline.explanation}` : '',
+    cat
+      ? `This is classified as a ${catLabel.toLowerCase()}. Under the ${deadline.explanation}`
+      : '',
     '',
     `Please carry out this repair by ${deadlineDate}. If this is an emergency and is not resolved within 24 hours, I will contact the local authority housing team and consider escalation to the Housing Ombudsman.`,
     '',
@@ -1207,7 +1398,13 @@ export function buildRepairNotice({ category, reportDate, issueDescription, land
   ].join('\n');
 }
 
-export function buildOmbudsmanEscalation({ landlordName, complaintDate, repairIssue, tenantName, responseReceived } = {}) {
+export function buildOmbudsmanEscalation({
+  landlordName,
+  complaintDate,
+  repairIssue,
+  tenantName,
+  responseReceived
+} = {}) {
   return [
     `Dear Housing Ombudsman Service,`,
     `Re: Complaint against ${landlordName || 'my landlord'}`,
@@ -1241,9 +1438,19 @@ export function getRepairEvidenceChecklist(categoryId) {
     'Any responses or correspondence from the landlord'
   ];
   if (categoryId === 'emergency') {
-    return [...base, 'Evidence of the emergency nature (e.g. temperature readings, photos of damage)', 'Records of any emergency contact attempts (calls, voicemails)', 'Evidence of alternative accommodation costs if applicable'];
+    return [
+      ...base,
+      'Evidence of the emergency nature (e.g. temperature readings, photos of damage)',
+      'Records of any emergency contact attempts (calls, voicemails)',
+      'Evidence of alternative accommodation costs if applicable'
+    ];
   }
-  return [...base, 'Dated photographs showing the issue at each stage', 'Any inspection reports or contractor quotes', 'Records of any disruption to daily life (e.g. unable to use bathroom, damp-related health issues)'];
+  return [
+    ...base,
+    'Dated photographs showing the issue at each stage',
+    'Any inspection reports or contractor quotes',
+    'Records of any disruption to daily life (e.g. unable to use bathroom, damp-related health issues)'
+  ];
 }
 ```
 
@@ -1434,52 +1641,55 @@ Expected: PASS.
 <!-- nhs-complaints-tracker/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NHS Complaints Tracker — Open Access UK</title>
-  <link rel="stylesheet" href="../shared/suite-skin.css" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="site-header">
-    <a href="../" class="logo">Open Access UK</a>
-    <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
-  </header>
-  <main id="main">
-    <h1>NHS Complaints Tracker</h1>
-    <p class="summary">Track your NHS complaint through PALS, formal complaint, and PHSO escalation stages. Manage deadlines and build evidence checklists locally in your browser.</p>
-    <section id="tool">
-      <form id="complaint-form">
-        <label for="complainantName">Your name</label>
-        <input id="complainantName" name="complainantName" required />
-        <label for="complaintSummary">Complaint summary</label>
-        <textarea id="complaintSummary" name="complaintSummary" rows="3" required></textarea>
-        <label for="startDate">Date complaint raised</label>
-        <input id="startDate" name="startDate" type="date" required />
-        <label for="currentStage">Current stage</label>
-        <select id="currentStage" name="currentStage">
-          <option value="pals">PALS (Patient Advice and Liaison Service)</option>
-          <option value="formal">Formal NHS complaint</option>
-          <option value="phso">Parliamentary and Health Service Ombudsman (PHSO)</option>
-        </select>
-        <label for="referenceNumber">Reference number</label>
-        <input id="referenceNumber" name="referenceNumber" />
-        <div class="actions">
-          <button id="generate" type="button">Generate escalation letter</button>
-          <button id="download" type="button" class="secondary">Download letter</button>
-          <button id="printPage" type="button" class="secondary">Save as PDF / Print</button>
-        </div>
-      </form>
-      <div id="status" role="status" aria-live="polite"></div>
-      <div id="deadline-tracker" aria-live="polite"></div>
-      <div id="evidence-checklist" aria-live="polite"></div>
-      <pre id="preview" class="preview" tabindex="0"></pre>
-      <div id="sources" aria-label="Current source notes"></div>
-    </section>
-  </main>
-  <script type="module" src="src/app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NHS Complaints Tracker — Open Access UK</title>
+    <link rel="stylesheet" href="../shared/suite-skin.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="../" class="logo">Open Access UK</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+    </header>
+    <main id="main">
+      <h1>NHS Complaints Tracker</h1>
+      <p class="summary">
+        Track your NHS complaint through PALS, formal complaint, and PHSO escalation stages. Manage
+        deadlines and build evidence checklists locally in your browser.
+      </p>
+      <section id="tool">
+        <form id="complaint-form">
+          <label for="complainantName">Your name</label>
+          <input id="complainantName" name="complainantName" required />
+          <label for="complaintSummary">Complaint summary</label>
+          <textarea id="complaintSummary" name="complaintSummary" rows="3" required></textarea>
+          <label for="startDate">Date complaint raised</label>
+          <input id="startDate" name="startDate" type="date" required />
+          <label for="currentStage">Current stage</label>
+          <select id="currentStage" name="currentStage">
+            <option value="pals">PALS (Patient Advice and Liaison Service)</option>
+            <option value="formal">Formal NHS complaint</option>
+            <option value="phso">Parliamentary and Health Service Ombudsman (PHSO)</option>
+          </select>
+          <label for="referenceNumber">Reference number</label>
+          <input id="referenceNumber" name="referenceNumber" />
+          <div class="actions">
+            <button id="generate" type="button">Generate escalation letter</button>
+            <button id="download" type="button" class="secondary">Download letter</button>
+            <button id="printPage" type="button" class="secondary">Save as PDF / Print</button>
+          </div>
+        </form>
+        <div id="status" role="status" aria-live="polite"></div>
+        <div id="deadline-tracker" aria-live="polite"></div>
+        <div id="evidence-checklist" aria-live="polite"></div>
+        <pre id="preview" class="preview" tabindex="0"></pre>
+        <div id="sources" aria-label="Current source notes"></div>
+      </section>
+    </main>
+    <script type="module" src="src/app.js"></script>
+  </body>
 </html>
 ```
 
@@ -1510,19 +1720,30 @@ const deadlineTracker = document.querySelector('#deadline-tracker');
 const evidenceChecklist = document.querySelector('#evidence-checklist');
 const sourcesMount = document.querySelector('#sources');
 
-function values() { return Object.fromEntries(new FormData(form).entries()); }
+function values() {
+  return Object.fromEntries(new FormData(form).entries());
+}
 
 function renderDeadline() {
   const data = values();
-  if (!data.startDate || !data.currentStage) { deadlineTracker.textContent = ''; return; }
+  if (!data.startDate || !data.currentStage) {
+    deadlineTracker.textContent = '';
+    return;
+  }
   const deadline = calculateStageDeadline(data.startDate, data.currentStage);
-  if (!deadline) { deadlineTracker.textContent = ''; return; }
+  if (!deadline) {
+    deadlineTracker.textContent = '';
+    return;
+  }
   deadlineTracker.innerHTML = `<h2>Deadline</h2><p>${deadline.explanation}</p><p>Target date: <strong>${formatDateForDisplay(deadline.targetDate)}</strong></p>`;
 }
 
 function renderEvidence() {
   const data = values();
-  if (!data.currentStage) { evidenceChecklist.innerHTML = ''; return; }
+  if (!data.currentStage) {
+    evidenceChecklist.innerHTML = '';
+    return;
+  }
   const checklist = buildEvidenceChecklist(data.currentStage);
   evidenceChecklist.innerHTML = `<h2>Evidence checklist</h2><ul>${checklist.map((item) => `<li>${item}</li>`).join('')}</ul>`;
 }
@@ -1536,7 +1757,12 @@ function renderSources() {
 
 function update() {
   const data = values();
-  const letter = buildEscalationLetter({ stage: data.currentStage, startDate: data.startDate, recipientName: data.complainantName, complaintSummary: data.complaintSummary });
+  const letter = buildEscalationLetter({
+    stage: data.currentStage,
+    startDate: data.startDate,
+    recipientName: data.complainantName,
+    complaintSummary: data.complaintSummary
+  });
   preview.textContent = letter;
   renderDeadline();
   renderEvidence();
@@ -1544,11 +1770,18 @@ function update() {
   saveDraft();
 }
 
-function saveDraft() { try { localStorage.setItem(COMPLAINTS_DRAFT_KEY, JSON.stringify(values())); } catch {} }
+function saveDraft() {
+  try {
+    localStorage.setItem(COMPLAINTS_DRAFT_KEY, JSON.stringify(values()));
+  } catch {}
+}
 function restoreDraft() {
   try {
     const draft = JSON.parse(localStorage.getItem(COMPLAINTS_DRAFT_KEY) || '{}');
-    for (const [name, value] of Object.entries(draft)) { const field = form.elements.namedItem(name); if (field) field.value = value; }
+    for (const [name, value] of Object.entries(draft)) {
+      const field = form.elements.namedItem(name);
+      if (field) field.value = value;
+    }
   } catch {}
 }
 
@@ -1558,7 +1791,9 @@ document.querySelector('#download')?.addEventListener('click', () => {
   const blob = new Blob([preview.textContent], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = url; link.download = 'nhs-complaint-escalation.txt'; link.click();
+  link.href = url;
+  link.download = 'nhs-complaint-escalation.txt';
+  link.click();
   URL.revokeObjectURL(url);
   status.textContent = 'Letter downloaded locally. Nothing was sent to a server.';
 });
@@ -1576,12 +1811,38 @@ Expected: no output (clean).
 
 ```css
 /* nhs-complaints-tracker/styles.css */
-.summary { color: var(--ink-muted); margin-bottom: var(--space-4); }
-#tool { display: grid; gap: var(--space-4); }
-form { display: grid; gap: var(--space-3); }
-.actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-.preview { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2); white-space: pre-wrap; min-height: 120px; }
-#deadline-tracker, #evidence-checklist { padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2); }
+.summary {
+  color: var(--ink-muted);
+  margin-bottom: var(--space-4);
+}
+#tool {
+  display: grid;
+  gap: var(--space-4);
+}
+form {
+  display: grid;
+  gap: var(--space-3);
+}
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.preview {
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+  white-space: pre-wrap;
+  min-height: 120px;
+}
+#deadline-tracker,
+#evidence-checklist {
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
 ```
 
 - [ ] **Step 8: Verify full page tests + static checks**
@@ -1625,58 +1886,63 @@ git commit -m "feat: add NHS complaints tracker tool"
 <!-- benefits-appeals/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Benefits Appeals — Open Access UK</title>
-  <link rel="stylesheet" href="../shared/suite-skin.css" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="site-header">
-    <a href="../" class="logo">Open Access UK</a>
-    <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
-  </header>
-  <main id="main">
-    <h1>Benefits Appeals</h1>
-    <p class="summary">Generate Mandatory Reconsideration requests and Tribunal appeal applications for UC, PIP, and ESA. Track deadlines and scoring guidance locally.</p>
-    <section id="tool">
-      <form id="appeal-form">
-        <label for="benefitType">Benefit type</label>
-        <select id="benefitType" name="benefitType">
-          <option value="uc">Universal Credit (UC)</option>
-          <option value="pip">Personal Independence Payment (PIP)</option>
-          <option value="esa">Employment and Support Allowance (ESA)</option>
-        </select>
-        <label for="appealStage">Appeal stage</label>
-        <select id="appealStage" name="appealStage">
-          <option value="mr">Mandatory Reconsideration</option>
-          <option value="tribunal">Tribunal Appeal</option>
-        </select>
-        <label for="decisionDate">Date of DWP decision</label>
-        <input id="decisionDate" name="decisionDate" type="date" required />
-        <label for="decisionRef">Decision reference number</label>
-        <input id="decisionRef" name="decisionRef" />
-        <label for="claimantName">Your name</label>
-        <input id="claimantName" name="claimantName" required />
-        <label for="reasons">Reasons for appeal (one per line)</label>
-        <textarea id="reasons" name="reasons" rows="4"></textarea>
-        <div class="actions">
-          <button id="generate" type="button">Generate letter</button>
-          <button id="download" type="button" class="secondary">Download letter</button>
-          <button id="printPage" type="button" class="secondary">Save as PDF / Print</button>
-          <button id="addCalendar" type="button" class="secondary">Add deadline to calendar</button>
-        </div>
-      </form>
-      <div id="status" role="status" aria-live="polite"></div>
-      <div id="deadline-tracker" aria-live="polite"></div>
-      <div id="descriptor-guidance" aria-live="polite"></div>
-      <pre id="preview" class="preview" tabindex="0"></pre>
-      <div id="sources" aria-label="Current source notes"></div>
-    </section>
-  </main>
-  <script type="module" src="src/app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Benefits Appeals — Open Access UK</title>
+    <link rel="stylesheet" href="../shared/suite-skin.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="../" class="logo">Open Access UK</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+    </header>
+    <main id="main">
+      <h1>Benefits Appeals</h1>
+      <p class="summary">
+        Generate Mandatory Reconsideration requests and Tribunal appeal applications for UC, PIP,
+        and ESA. Track deadlines and scoring guidance locally.
+      </p>
+      <section id="tool">
+        <form id="appeal-form">
+          <label for="benefitType">Benefit type</label>
+          <select id="benefitType" name="benefitType">
+            <option value="uc">Universal Credit (UC)</option>
+            <option value="pip">Personal Independence Payment (PIP)</option>
+            <option value="esa">Employment and Support Allowance (ESA)</option>
+          </select>
+          <label for="appealStage">Appeal stage</label>
+          <select id="appealStage" name="appealStage">
+            <option value="mr">Mandatory Reconsideration</option>
+            <option value="tribunal">Tribunal Appeal</option>
+          </select>
+          <label for="decisionDate">Date of DWP decision</label>
+          <input id="decisionDate" name="decisionDate" type="date" required />
+          <label for="decisionRef">Decision reference number</label>
+          <input id="decisionRef" name="decisionRef" />
+          <label for="claimantName">Your name</label>
+          <input id="claimantName" name="claimantName" required />
+          <label for="reasons">Reasons for appeal (one per line)</label>
+          <textarea id="reasons" name="reasons" rows="4"></textarea>
+          <div class="actions">
+            <button id="generate" type="button">Generate letter</button>
+            <button id="download" type="button" class="secondary">Download letter</button>
+            <button id="printPage" type="button" class="secondary">Save as PDF / Print</button>
+            <button id="addCalendar" type="button" class="secondary">
+              Add deadline to calendar
+            </button>
+          </div>
+        </form>
+        <div id="status" role="status" aria-live="polite"></div>
+        <div id="deadline-tracker" aria-live="polite"></div>
+        <div id="descriptor-guidance" aria-live="polite"></div>
+        <pre id="preview" class="preview" tabindex="0"></pre>
+        <div id="sources" aria-label="Current source notes"></div>
+      </section>
+    </main>
+    <script type="module" src="src/app.js"></script>
+  </body>
 </html>
 ```
 
@@ -1687,9 +1953,15 @@ git commit -m "feat: add NHS complaints tracker tool"
 ```js
 // benefits-appeals/src/app.js
 import {
-  BENEFIT_TYPES, getBenefitType, calculateMRDeadline, calculateTribunalDeadline,
-  buildMRLetter, buildTribunalApplication, getDescriptorGuidance,
-  APPEALS_STORAGE_KEY, APPEALS_DRAFT_KEY
+  BENEFIT_TYPES,
+  getBenefitType,
+  calculateMRDeadline,
+  calculateTribunalDeadline,
+  buildMRLetter,
+  buildTribunalApplication,
+  getDescriptorGuidance,
+  APPEALS_STORAGE_KEY,
+  APPEALS_DRAFT_KEY
 } from '../../shared/appeals/index.mjs';
 import { formatDateForDisplay, buildICS } from '../../shared/deadlines/index.mjs';
 
@@ -1700,12 +1972,20 @@ const deadlineTracker = document.querySelector('#deadline-tracker');
 const descriptorGuidance = document.querySelector('#descriptor-guidance');
 const sourcesMount = document.querySelector('#sources');
 
-function values() { return Object.fromEntries(new FormData(form).entries()); }
+function values() {
+  return Object.fromEntries(new FormData(form).entries());
+}
 
 function renderDeadline() {
   const data = values();
-  if (!data.decisionDate || !data.benefitType) { deadlineTracker.textContent = ''; return; }
-  const deadline = data.appealStage === 'mr' ? calculateMRDeadline(data.benefitType, data.decisionDate) : calculateTribunalDeadline(data.benefitType, data.decisionDate);
+  if (!data.decisionDate || !data.benefitType) {
+    deadlineTracker.textContent = '';
+    return;
+  }
+  const deadline =
+    data.appealStage === 'mr'
+      ? calculateMRDeadline(data.benefitType, data.decisionDate)
+      : calculateTribunalDeadline(data.benefitType, data.decisionDate);
   if (deadline) {
     deadlineTracker.innerHTML = `<h2>${data.appealStage === 'mr' ? 'MR' : 'Tribunal'} Deadline</h2><p>${deadline.explanation}</p><p>Target date: <strong>${formatDateForDisplay(deadline.targetDate)}</strong></p>`;
   }
@@ -1713,7 +1993,10 @@ function renderDeadline() {
 
 function renderDescriptors() {
   const data = values();
-  if (data.benefitType !== 'pip' || data.appealStage !== 'tribunal') { descriptorGuidance.textContent = ''; return; }
+  if (data.benefitType !== 'pip' || data.appealStage !== 'tribunal') {
+    descriptorGuidance.textContent = '';
+    return;
+  }
   const guidance = getDescriptorGuidance('pip');
   if (!guidance.length) return;
   descriptorGuidance.innerHTML = `<h2>PIP Descriptor Scoring</h2><ul>${guidance.map((d) => `<li><strong>${d.activity}:</strong> ${d.scoring}</li>`).join('')}</ul>`;
@@ -1729,9 +2012,22 @@ function renderSources() {
 
 function update() {
   const data = values();
-  const letter = data.appealStage === 'mr'
-    ? buildMRLetter({ benefitType: data.benefitType, decisionDate: data.decisionDate, decisionRef: data.decisionRef, reasons: (data.reasons || '').split('\n').filter(Boolean), claimantName: data.claimantName })
-    : buildTribunalApplication({ benefitType: data.benefitType, mrDecisionDate: data.decisionDate, mrDecisionRef: data.decisionRef, grounds: (data.reasons || '').split('\n').filter(Boolean), claimantName: data.claimantName });
+  const letter =
+    data.appealStage === 'mr'
+      ? buildMRLetter({
+          benefitType: data.benefitType,
+          decisionDate: data.decisionDate,
+          decisionRef: data.decisionRef,
+          reasons: (data.reasons || '').split('\n').filter(Boolean),
+          claimantName: data.claimantName
+        })
+      : buildTribunalApplication({
+          benefitType: data.benefitType,
+          mrDecisionDate: data.decisionDate,
+          mrDecisionRef: data.decisionRef,
+          grounds: (data.reasons || '').split('\n').filter(Boolean),
+          claimantName: data.claimantName
+        });
   preview.textContent = letter;
   renderDeadline();
   renderDescriptors();
@@ -1739,11 +2035,18 @@ function update() {
   saveDraft();
 }
 
-function saveDraft() { try { localStorage.setItem(APPEALS_DRAFT_KEY, JSON.stringify(values())); } catch {} }
+function saveDraft() {
+  try {
+    localStorage.setItem(APPEALS_DRAFT_KEY, JSON.stringify(values()));
+  } catch {}
+}
 function restoreDraft() {
   try {
     const draft = JSON.parse(localStorage.getItem(APPEALS_DRAFT_KEY) || '{}');
-    for (const [name, value] of Object.entries(draft)) { const field = form.elements.namedItem(name); if (field) field.value = value; }
+    for (const [name, value] of Object.entries(draft)) {
+      const field = form.elements.namedItem(name);
+      if (field) field.value = value;
+    }
   } catch {}
 }
 
@@ -1754,21 +2057,38 @@ document.querySelector('#download')?.addEventListener('click', () => {
   const blob = new Blob([preview.textContent], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = url; link.download = `${data.appealStage === 'mr' ? 'mandatory-reconsideration' : 'tribunal-appeal'}-${data.benefitType}.txt`; link.click();
+  link.href = url;
+  link.download = `${data.appealStage === 'mr' ? 'mandatory-reconsideration' : 'tribunal-appeal'}-${data.benefitType}.txt`;
+  link.click();
   URL.revokeObjectURL(url);
   status.textContent = 'Letter downloaded locally. Nothing was sent to a server.';
 });
 document.querySelector('#printPage')?.addEventListener('click', () => window.print());
 document.querySelector('#addCalendar')?.addEventListener('click', () => {
   const data = values();
-  if (!data.decisionDate || !data.benefitType) { status.textContent = 'Set a decision date and benefit type first.'; return; }
-  const deadline = data.appealStage === 'mr' ? calculateMRDeadline(data.benefitType, data.decisionDate) : calculateTribunalDeadline(data.benefitType, data.decisionDate);
-  if (!deadline) { status.textContent = 'Could not calculate deadline.'; return; }
-  const ics = buildICS(`${data.appealStage === 'mr' ? 'MR' : 'Tribunal'} deadline: ${data.benefitType.toUpperCase()}`, deadline.targetDate, deadline.explanation);
+  if (!data.decisionDate || !data.benefitType) {
+    status.textContent = 'Set a decision date and benefit type first.';
+    return;
+  }
+  const deadline =
+    data.appealStage === 'mr'
+      ? calculateMRDeadline(data.benefitType, data.decisionDate)
+      : calculateTribunalDeadline(data.benefitType, data.decisionDate);
+  if (!deadline) {
+    status.textContent = 'Could not calculate deadline.';
+    return;
+  }
+  const ics = buildICS(
+    `${data.appealStage === 'mr' ? 'MR' : 'Tribunal'} deadline: ${data.benefitType.toUpperCase()}`,
+    deadline.targetDate,
+    deadline.explanation
+  );
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = url; link.download = 'benefits-deadline.ics'; link.click();
+  link.href = url;
+  link.download = 'benefits-deadline.ics';
+  link.click();
   URL.revokeObjectURL(url);
   status.textContent = 'Calendar reminder downloaded. Nothing was sent to a server.';
 });
@@ -1789,12 +2109,38 @@ Expected: at least 2.
 
 ```css
 /* benefits-appeals/styles.css */
-.summary { color: var(--ink-muted); margin-bottom: var(--space-4); }
-#tool { display: grid; gap: var(--space-4); }
-form { display: grid; gap: var(--space-3); }
-.actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-.preview { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2); white-space: pre-wrap; min-height: 120px; }
-#deadline-tracker, #descriptor-guidance { padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2); }
+.summary {
+  color: var(--ink-muted);
+  margin-bottom: var(--space-4);
+}
+#tool {
+  display: grid;
+  gap: var(--space-4);
+}
+form {
+  display: grid;
+  gap: var(--space-3);
+}
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.preview {
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+  white-space: pre-wrap;
+  min-height: 120px;
+}
+#deadline-tracker,
+#descriptor-guidance {
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
 ```
 
 - [ ] **Step 10: Verify full page tests + static checks**
@@ -1856,7 +2202,14 @@ Inside the form in `letter-generator/index.html`, after the existing fields, add
 At the TOP of `letter-generator/src/app.js`, after the existing imports, add:
 
 ```js
-import { OPERATOR_TYPES, getOperatorType, calculatePCNDeadline, buildPCNAppealLetter, getEvidenceChecklist, PARKING_STORAGE_KEY } from '../../shared/parking/index.mjs';
+import {
+  OPERATOR_TYPES,
+  getOperatorType,
+  calculatePCNDeadline,
+  buildPCNAppealLetter,
+  getEvidenceChecklist,
+  PARKING_STORAGE_KEY
+} from '../../shared/parking/index.mjs';
 ```
 
 - [ ] **Step 4: Add PCN generation logic at bottom of app.js**
@@ -1874,11 +2227,17 @@ function showParkingFields() {
 function generatePCNAppeal() {
   const data = values();
   if (data.requestType !== 'pcn-appeal') return null;
-  return buildPCNAppealLetter({ operatorType: data.operatorType, pcnNumber: data.pcnNumber, issueDate: data.issueDate, grounds: (data.appealGrounds || '').split('\n').filter(Boolean), driverName: data.name });
+  return buildPCNAppealLetter({
+    operatorType: data.operatorType,
+    pcnNumber: data.pcnNumber,
+    issueDate: data.issueDate,
+    grounds: (data.appealGrounds || '').split('\n').filter(Boolean),
+    driverName: data.name
+  });
 }
 
 const originalUpdate = update;
-update = function() {
+update = function () {
   const data = values();
   if (data.requestType === 'pcn-appeal') {
     const letter = generatePCNAppeal();
@@ -1887,7 +2246,9 @@ update = function() {
       showParkingFields();
       if (data.issueDate && data.operatorType) {
         const deadline = calculatePCNDeadline(data.operatorType, data.issueDate);
-        deadlineTracker.textContent = deadline ? `${deadline.explanation} Target: ${formatDateForDisplay(deadline.targetDate)}` : '';
+        deadlineTracker.textContent = deadline
+          ? `${deadline.explanation} Target: ${formatDateForDisplay(deadline.targetDate)}`
+          : '';
       }
       const checklist = getEvidenceChecklist(data.operatorType);
       evidenceChecklist.innerHTML = `<h2>Evidence checklist</h2><ul>${checklist.map((item) => `<li>${item}</li>`).join('')}</ul>`;
@@ -1909,8 +2270,14 @@ NOTE: Do NOT redeclare `status`, `preview`, `form`, `values`, `deadlineTracker`,
 Append to `letter-generator/styles.css`:
 
 ```css
-#parking-fields { display: grid; gap: var(--space-3); margin-top: var(--space-3); }
-#parking-fields[hidden] { display: none; }
+#parking-fields {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+#parking-fields[hidden] {
+  display: none;
+}
 ```
 
 - [ ] **Step 6: Verify syntax**
@@ -1944,62 +2311,67 @@ git commit -m "feat: add PCN appeal templates and deadline tracker to letter gen
 <!-- send-helper/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>School SEND Helper — Open Access UK</title>
-  <link rel="stylesheet" href="../shared/suite-skin.css" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="site-header">
-    <a href="../" class="logo">Open Access UK</a>
-    <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
-  </header>
-  <main id="main">
-    <h1>School SEND Helper</h1>
-    <p class="summary">Review school exclusions, apply to the Independent Review Panel, and manage SEND tribunal and EHCP disputes. Track deadlines locally.</p>
-    <section id="tool">
-      <form id="send-form">
-        <label for="sendStage">What do you need help with?</label>
-        <select id="sendStage" name="sendStage">
-          <option value="exclusion-review">Exclusion review (governing body)</option>
-          <option value="irp">Independent Review Panel (IRP) application</option>
-          <option value="send-tribunal">SEND Tribunal application</option>
-          <option value="ehcp-dispute">EHCP dispute / mediation</option>
-        </select>
-        <label for="childName">Child's name</label>
-        <input id="childName" name="childName" required />
-        <label for="parentName">Parent / guardian name</label>
-        <input id="parentName" name="parentName" required />
-        <label for="schoolName">School name</label>
-        <input id="schoolName" name="schoolName" />
-        <label for="localAuthority">Local authority</label>
-        <input id="localAuthority" name="localAuthority" />
-        <label for="eventDate">Date of exclusion / decision</label>
-        <input id="eventDate" name="eventDate" type="date" required />
-        <label for="exclusionType">Exclusion type</label>
-        <select id="exclusionType" name="exclusionType">
-          <option value="fixed">Fixed-term</option>
-          <option value="permanent">Permanent</option>
-        </select>
-        <label for="disputeReason">Reason / grounds (one per line)</label>
-        <textarea id="disputeReason" name="disputeReason" rows="4"></textarea>
-        <div class="actions">
-          <button id="generate" type="button">Generate letter</button>
-          <button id="download" type="button" class="secondary">Download letter</button>
-          <button id="printPage" type="button" class="secondary">Save as PDF / Print</button>
-          <button id="addCalendar" type="button" class="secondary">Add deadline to calendar</button>
-        </div>
-      </form>
-      <div id="status" role="status" aria-live="polite"></div>
-      <div id="deadline-tracker" aria-live="polite"></div>
-      <pre id="preview" class="preview" tabindex="0"></pre>
-      <div id="sources" aria-label="Current source notes"></div>
-    </section>
-  </main>
-  <script type="module" src="src/app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>School SEND Helper — Open Access UK</title>
+    <link rel="stylesheet" href="../shared/suite-skin.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="../" class="logo">Open Access UK</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+    </header>
+    <main id="main">
+      <h1>School SEND Helper</h1>
+      <p class="summary">
+        Review school exclusions, apply to the Independent Review Panel, and manage SEND tribunal
+        and EHCP disputes. Track deadlines locally.
+      </p>
+      <section id="tool">
+        <form id="send-form">
+          <label for="sendStage">What do you need help with?</label>
+          <select id="sendStage" name="sendStage">
+            <option value="exclusion-review">Exclusion review (governing body)</option>
+            <option value="irp">Independent Review Panel (IRP) application</option>
+            <option value="send-tribunal">SEND Tribunal application</option>
+            <option value="ehcp-dispute">EHCP dispute / mediation</option>
+          </select>
+          <label for="childName">Child's name</label>
+          <input id="childName" name="childName" required />
+          <label for="parentName">Parent / guardian name</label>
+          <input id="parentName" name="parentName" required />
+          <label for="schoolName">School name</label>
+          <input id="schoolName" name="schoolName" />
+          <label for="localAuthority">Local authority</label>
+          <input id="localAuthority" name="localAuthority" />
+          <label for="eventDate">Date of exclusion / decision</label>
+          <input id="eventDate" name="eventDate" type="date" required />
+          <label for="exclusionType">Exclusion type</label>
+          <select id="exclusionType" name="exclusionType">
+            <option value="fixed">Fixed-term</option>
+            <option value="permanent">Permanent</option>
+          </select>
+          <label for="disputeReason">Reason / grounds (one per line)</label>
+          <textarea id="disputeReason" name="disputeReason" rows="4"></textarea>
+          <div class="actions">
+            <button id="generate" type="button">Generate letter</button>
+            <button id="download" type="button" class="secondary">Download letter</button>
+            <button id="printPage" type="button" class="secondary">Save as PDF / Print</button>
+            <button id="addCalendar" type="button" class="secondary">
+              Add deadline to calendar
+            </button>
+          </div>
+        </form>
+        <div id="status" role="status" aria-live="polite"></div>
+        <div id="deadline-tracker" aria-live="polite"></div>
+        <pre id="preview" class="preview" tabindex="0"></pre>
+        <div id="sources" aria-label="Current source notes"></div>
+      </section>
+    </main>
+    <script type="module" src="src/app.js"></script>
+  </body>
 </html>
 ```
 
@@ -2010,9 +2382,16 @@ git commit -m "feat: add PCN appeal templates and deadline tracker to letter gen
 ```js
 // send-helper/src/app.js
 import {
-  SEND_STAGES, getSendStage, calculateExclusionReviewDeadline, calculateIRPDeadline,
-  calculateSENDTribunalDeadline, buildExclusionReviewLetter, buildIRPRequest,
-  buildEHCDisputeLetter, SEND_STORAGE_KEY, SEND_DRAFT_KEY
+  SEND_STAGES,
+  getSendStage,
+  calculateExclusionReviewDeadline,
+  calculateIRPDeadline,
+  calculateSENDTribunalDeadline,
+  buildExclusionReviewLetter,
+  buildIRPRequest,
+  buildEHCDisputeLetter,
+  SEND_STORAGE_KEY,
+  SEND_DRAFT_KEY
 } from '../../shared/send-appeals/index.mjs';
 import { formatDateForDisplay, buildICS } from '../../shared/deadlines/index.mjs';
 
@@ -2022,18 +2401,27 @@ const status = document.querySelector('#status');
 const deadlineTracker = document.querySelector('#deadline-tracker');
 const sourcesMount = document.querySelector('#sources');
 
-function values() { return Object.fromEntries(new FormData(form).entries()); }
+function values() {
+  return Object.fromEntries(new FormData(form).entries());
+}
 
 function renderDeadline() {
   const data = values();
-  if (!data.eventDate || !data.sendStage) { deadlineTracker.textContent = ''; return; }
+  if (!data.eventDate || !data.sendStage) {
+    deadlineTracker.textContent = '';
+    return;
+  }
   let deadline = null;
-  if (data.sendStage === 'exclusion-review') deadline = calculateExclusionReviewDeadline(data.eventDate);
+  if (data.sendStage === 'exclusion-review')
+    deadline = calculateExclusionReviewDeadline(data.eventDate);
   else if (data.sendStage === 'irp') deadline = calculateIRPDeadline(data.eventDate);
-  else if (data.sendStage === 'send-tribunal') deadline = calculateSENDTribunalDeadline(data.eventDate);
+  else if (data.sendStage === 'send-tribunal')
+    deadline = calculateSENDTribunalDeadline(data.eventDate);
   if (deadline) {
     deadlineTracker.innerHTML = `<h2>Deadline</h2><p>${deadline.explanation}</p><p>Target date: <strong>${formatDateForDisplay(deadline.targetDate)}</strong></p>`;
-  } else { deadlineTracker.textContent = ''; }
+  } else {
+    deadlineTracker.textContent = '';
+  }
 }
 
 function renderSources() {
@@ -2048,11 +2436,28 @@ function generate() {
   const data = values();
   let letter = '';
   if (data.sendStage === 'exclusion-review') {
-    letter = buildExclusionReviewLetter({ childName: data.childName, schoolName: data.schoolName, exclusionDate: data.eventDate, exclusionType: data.exclusionType, parentName: data.parentName });
+    letter = buildExclusionReviewLetter({
+      childName: data.childName,
+      schoolName: data.schoolName,
+      exclusionDate: data.eventDate,
+      exclusionType: data.exclusionType,
+      parentName: data.parentName
+    });
   } else if (data.sendStage === 'irp') {
-    letter = buildIRPRequest({ childName: data.childName, schoolName: data.schoolName, exclusionDate: data.eventDate, parentName: data.parentName, grounds: (data.disputeReason || '').split('\n').filter(Boolean) });
+    letter = buildIRPRequest({
+      childName: data.childName,
+      schoolName: data.schoolName,
+      exclusionDate: data.eventDate,
+      parentName: data.parentName,
+      grounds: (data.disputeReason || '').split('\n').filter(Boolean)
+    });
   } else if (data.sendStage === 'ehcp-dispute') {
-    letter = buildEHCDisputeLetter({ childName: data.childName, localAuthority: data.localAuthority, disputeReason: data.disputeReason, parentName: data.parentName });
+    letter = buildEHCDisputeLetter({
+      childName: data.childName,
+      localAuthority: data.localAuthority,
+      disputeReason: data.disputeReason,
+      parentName: data.parentName
+    });
   }
   preview.textContent = letter;
   renderDeadline();
@@ -2060,11 +2465,18 @@ function generate() {
   saveDraft();
 }
 
-function saveDraft() { try { localStorage.setItem(SEND_DRAFT_KEY, JSON.stringify(values())); } catch {} }
+function saveDraft() {
+  try {
+    localStorage.setItem(SEND_DRAFT_KEY, JSON.stringify(values()));
+  } catch {}
+}
 function restoreDraft() {
   try {
     const draft = JSON.parse(localStorage.getItem(SEND_DRAFT_KEY) || '{}');
-    for (const [name, value] of Object.entries(draft)) { const field = form.elements.namedItem(name); if (field) field.value = value; }
+    for (const [name, value] of Object.entries(draft)) {
+      const field = form.elements.namedItem(name);
+      if (field) field.value = value;
+    }
   } catch {}
 }
 
@@ -2074,25 +2486,41 @@ document.querySelector('#download')?.addEventListener('click', () => {
   const blob = new Blob([preview.textContent], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = url; link.download = 'send-helper-letter.txt'; link.click();
+  link.href = url;
+  link.download = 'send-helper-letter.txt';
+  link.click();
   URL.revokeObjectURL(url);
   status.textContent = 'Letter downloaded locally. Nothing was sent to a server.';
 });
 document.querySelector('#printPage')?.addEventListener('click', () => window.print());
 document.querySelector('#addCalendar')?.addEventListener('click', () => {
   const data = values();
-  if (!data.eventDate || !data.sendStage) { status.textContent = 'Set a date and stage first.'; return; }
+  if (!data.eventDate || !data.sendStage) {
+    status.textContent = 'Set a date and stage first.';
+    return;
+  }
   let deadline = null;
-  if (data.sendStage === 'exclusion-review') deadline = calculateExclusionReviewDeadline(data.eventDate);
+  if (data.sendStage === 'exclusion-review')
+    deadline = calculateExclusionReviewDeadline(data.eventDate);
   else if (data.sendStage === 'irp') deadline = calculateIRPDeadline(data.eventDate);
-  else if (data.sendStage === 'send-tribunal') deadline = calculateSENDTribunalDeadline(data.eventDate);
-  if (!deadline) { status.textContent = 'Could not calculate deadline.'; return; }
+  else if (data.sendStage === 'send-tribunal')
+    deadline = calculateSENDTribunalDeadline(data.eventDate);
+  if (!deadline) {
+    status.textContent = 'Could not calculate deadline.';
+    return;
+  }
   const stageData = getSendStage(data.sendStage);
-  const ics = buildICS(`${stageData ? stageData.label : data.sendStage} deadline`, deadline.targetDate, deadline.explanation);
+  const ics = buildICS(
+    `${stageData ? stageData.label : data.sendStage} deadline`,
+    deadline.targetDate,
+    deadline.explanation
+  );
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = url; link.download = 'send-deadline.ics'; link.click();
+  link.href = url;
+  link.download = 'send-deadline.ics';
+  link.click();
   URL.revokeObjectURL(url);
   status.textContent = 'Calendar reminder downloaded. Nothing was sent to a server.';
 });
@@ -2113,12 +2541,37 @@ Expected: at least 1 each.
 
 ```css
 /* send-helper/styles.css */
-.summary { color: var(--ink-muted); margin-bottom: var(--space-4); }
-#tool { display: grid; gap: var(--space-4); }
-form { display: grid; gap: var(--space-3); }
-.actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-.preview { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2); white-space: pre-wrap; min-height: 120px; }
-#deadline-tracker { padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2); }
+.summary {
+  color: var(--ink-muted);
+  margin-bottom: var(--space-4);
+}
+#tool {
+  display: grid;
+  gap: var(--space-4);
+}
+form {
+  display: grid;
+  gap: var(--space-3);
+}
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.preview {
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+  white-space: pre-wrap;
+  min-height: 120px;
+}
+#deadline-tracker {
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
 ```
 
 - [ ] **Step 8: Verify full page tests + static checks**
@@ -2170,7 +2623,14 @@ In `case-builder/index.html`, inside the main form, add after existing case fiel
 At the TOP of `case-builder/src/app.js`, after existing imports, add:
 
 ```js
-import { getRepairCategory, calculateRepairDeadline, buildRepairNotice, buildOmbudsmanEscalation, getRepairEvidenceChecklist, REPAIRS_STORAGE_KEY } from '../../shared/repairs/index.mjs';
+import {
+  getRepairCategory,
+  calculateRepairDeadline,
+  buildRepairNotice,
+  buildOmbudsmanEscalation,
+  getRepairEvidenceChecklist,
+  REPAIRS_STORAGE_KEY
+} from '../../shared/repairs/index.mjs';
 import { formatDateForDisplay, buildICS } from '../../shared/deadlines/index.mjs';
 ```
 
@@ -2191,7 +2651,10 @@ function showRepairSection() {
 function renderRepairDeadline() {
   const category = document.querySelector('#repairCategory')?.value;
   const reportDate = document.querySelector('#repairReportDate')?.value;
-  if (!category || !reportDate || !repairDeadlineTracker) { if (repairDeadlineTracker) repairDeadlineTracker.textContent = ''; return; }
+  if (!category || !reportDate || !repairDeadlineTracker) {
+    if (repairDeadlineTracker) repairDeadlineTracker.textContent = '';
+    return;
+  }
   const deadline = calculateRepairDeadline(category, reportDate);
   if (deadline) {
     repairDeadlineTracker.innerHTML = `<h3>Repair deadline</h3><p>${deadline.explanation}</p><p>Target completion: <strong>${formatDateForDisplay(deadline.targetDate)}</strong></p>`;
@@ -2200,7 +2663,10 @@ function renderRepairDeadline() {
 
 function renderRepairEvidence() {
   const category = document.querySelector('#repairCategory')?.value;
-  if (!category || !repairEvidenceChecklist) { if (repairEvidenceChecklist) repairEvidenceChecklist.textContent = ''; return; }
+  if (!category || !repairEvidenceChecklist) {
+    if (repairEvidenceChecklist) repairEvidenceChecklist.textContent = '';
+    return;
+  }
   const checklist = getRepairEvidenceChecklist(category);
   repairEvidenceChecklist.innerHTML = `<h3>Evidence checklist</h3><ul>${checklist.map((item) => `<li>${item}</li>`).join('')}</ul>`;
 }
@@ -2218,9 +2684,25 @@ renderRepairEvidence();
 Append to `case-builder/styles.css`:
 
 ```css
-.repair-section { display: grid; gap: var(--space-3); margin-top: var(--space-4); padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper-2); }
-.repair-section[hidden] { display: none; }
-#repair-deadline-tracker, #repair-evidence-checklist { margin-top: var(--space-3); padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.repair-section {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper-2);
+}
+.repair-section[hidden] {
+  display: none;
+}
+#repair-deadline-tracker,
+#repair-evidence-checklist {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
 ```
 
 - [ ] **Step 5: Verify syntax + tests**

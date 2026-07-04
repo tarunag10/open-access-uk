@@ -18,7 +18,7 @@ test('getRegulators returns all 8 regulators', () => {
 
 test('getRegulators includes GMC', () => {
   const regulators = getRegulators();
-  const gmc = regulators.find(r => r.id === 'GMC');
+  const gmc = regulators.find((r) => r.id === 'GMC');
   assert.ok(gmc);
   assert.equal(gmc.profession, 'Doctors');
 });
@@ -62,11 +62,18 @@ test('generateComplaintText generates a letter with all fields', () => {
 
 test('generateComplaintText throws when required fields are missing', () => {
   assert.throws(() => generateComplaintText({}), /complainantName is required/);
-  assert.throws(() => generateComplaintText({ complainantName: 'X' }), /professionalName is required/);
+  assert.throws(
+    () => generateComplaintText({ complainantName: 'X' }),
+    /professionalName is required/
+  );
 });
 
 test('generateComplaintText uses "Not specified" for unknown regulator', () => {
-  const text = generateComplaintText({ complainantName: 'Test', professionalName: 'Test', regulator: 'UNKNOWN' });
+  const text = generateComplaintText({
+    complainantName: 'Test',
+    professionalName: 'Test',
+    regulator: 'UNKNOWN'
+  });
   assert.ok(text.includes('Not specified'));
 });
 
@@ -85,7 +92,7 @@ test('getFitnessToPractiseProcess returns steps for GMC', () => {
   const process = getFitnessToPractiseProcess('GMC');
   assert.ok(Array.isArray(process));
   assert.ok(process.length > 0);
-  assert.ok(process.every(s => s.name && s.description));
+  assert.ok(process.every((s) => s.name && s.description));
 });
 
 test('getFitnessToPractiseProcess returns empty array for LeO', () => {

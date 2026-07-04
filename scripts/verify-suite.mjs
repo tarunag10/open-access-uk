@@ -35,21 +35,22 @@ const reposRaw = readFileSync(repoYmlPath, 'utf8');
 const allRepos = parseYmlList(reposRaw);
 
 // Filter to deployable tool IDs (skip umbrella-site, contributor-tooling, local-only)
-const verifiable = allRepos.filter(r =>
-  r.category !== 'umbrella-site' &&
-  r.demo !== 'local-only' &&
-  r.category !== 'contributor-tooling'
+const verifiable = allRepos.filter(
+  (r) =>
+    r.category !== 'umbrella-site' &&
+    r.demo !== 'local-only' &&
+    r.category !== 'contributor-tooling'
 );
 
 // Build tool directory list from metadata
 let TOOL_DIRS = verifiable
-  .map(r => r.id)
-  .filter(entry => existsSync(join(root, entry, 'package.json')));
+  .map((r) => r.id)
+  .filter((entry) => existsSync(join(root, entry, 'package.json')));
 
 // Also include tools that have package.json but aren't in metadata (catch drift)
 const allDirs = readdirSync(root, { withFileTypes: true })
-  .filter(d => d.isDirectory() && existsSync(join(root, d.name, 'package.json')))
-  .map(d => d.name);
+  .filter((d) => d.isDirectory() && existsSync(join(root, d.name, 'package.json')))
+  .map((d) => d.name);
 
 for (const dir of allDirs) {
   if (!TOOL_DIRS.includes(dir) && dir !== 'contributor-tools') {
@@ -59,14 +60,19 @@ for (const dir of allDirs) {
 
 // --- CI check: every top-level tool directory must have a metadata row ---
 const toolDirsWithIndex = readdirSync(root, { withFileTypes: true })
-  .filter(d => d.isDirectory() && existsSync(join(root, d.name, 'index.html')) && !d.name.startsWith('.'))
-  .map(d => d.name);
+  .filter(
+    (d) =>
+      d.isDirectory() && existsSync(join(root, d.name, 'index.html')) && !d.name.startsWith('.')
+  )
+  .map((d) => d.name);
 
-const metaIds = new Set(allRepos.map(r => r.id));
-const unregistered = toolDirsWithIndex.filter(d => !metaIds.has(d));
+const metaIds = new Set(allRepos.map((r) => r.id));
+const unregistered = toolDirsWithIndex.filter((d) => !metaIds.has(d));
 
 if (unregistered.length > 0) {
-  console.error(`FAIL: ${unregistered.length} tool director(ies) with index.html but no metadata row in data/repositories.yml:`);
+  console.error(
+    `FAIL: ${unregistered.length} tool director(ies) with index.html but no metadata row in data/repositories.yml:`
+  );
   for (const d of unregistered) console.error(`  - ${d}`);
   process.exit(1);
 }

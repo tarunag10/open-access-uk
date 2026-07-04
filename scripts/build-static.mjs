@@ -110,7 +110,10 @@ function bundleJs(entryFile, outputFile) {
     const defaultMatch = source.match(/^export\s+default\s+/m);
     if (defaultMatch) exportNames.add('default');
     // Remove `export` keyword from declarations (we'll re-export via IIFE return)
-    source = source.replace(/^export\s+(?=(const|let|var|function|class|async\s+function|default\s+))/gm, '');
+    source = source.replace(
+      /^export\s+(?=(const|let|var|function|class|async\s+function|default\s+))/gm,
+      ''
+    );
     // Remove `export { ... };` clauses
     source = source.replace(/^export\s*\{[^}]*\};\s*$/gm, '');
     modules.set(file, { body: source, exports: exportNames });

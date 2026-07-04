@@ -1,12 +1,54 @@
 import { addWorkingDays } from '../deadlines/index.mjs';
 
 const COMPLAINT_TYPES = [
-  { id: 'visa-delay', name: 'Visa Processing Delay', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Delay in processing visa applications' },
-  { id: 'brp-issue', name: 'Biometric Residence Permit Issue', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Issues with BRP card (incorrect details, not received, damaged)' },
-  { id: 'sponsorship-complaint', name: 'Sponsorship Complaint', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Complaints about sponsor licence decisions' },
-  { id: 'right-to-rent', name: 'Right to Rent Dispute', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Disputes about right to rent checks' },
-  { id: 'asylum-support', name: 'Asylum Support Complaint', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Complaints about asylum support decisions' },
-  { id: 'immigration-detention', name: 'Immigration Detention Complaint', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Complaints about detention conditions or decisions' }
+  {
+    id: 'visa-delay',
+    name: 'Visa Processing Delay',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Delay in processing visa applications'
+  },
+  {
+    id: 'brp-issue',
+    name: 'Biometric Residence Permit Issue',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Issues with BRP card (incorrect details, not received, damaged)'
+  },
+  {
+    id: 'sponsorship-complaint',
+    name: 'Sponsorship Complaint',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Complaints about sponsor licence decisions'
+  },
+  {
+    id: 'right-to-rent',
+    name: 'Right to Rent Dispute',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Disputes about right to rent checks'
+  },
+  {
+    id: 'asylum-support',
+    name: 'Asylum Support Complaint',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Complaints about asylum support decisions'
+  },
+  {
+    id: 'immigration-detention',
+    name: 'Immigration Detention Complaint',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Complaints about detention conditions or decisions'
+  }
 ];
 
 const ESCALATION_ROUTE = ['Home Office', 'ICIBI', 'Parliamentary Ombudsman'];
@@ -58,12 +100,36 @@ const REQUIRED_DOCUMENTS = {
 };
 
 const HOME_OFFICE_CONTACTS = {
-  'visa-delay': { email: 'ukvisafree@fcdo.gov.uk', phone: '0300 123 2241', post: 'UK Visas and Immigration, PO Box 306, Liverpool, L2 8PJ' },
-  'brp-issue': { email: 'BRPcollection@homeoffice.gov.uk', phone: '0300 123 2241', post: 'Biometric Residence Permits, PO Box 583, Glasgow, G3 8HN' },
-  'sponsorship-complaint': { email: 'sponsorshipcomplaints@homeoffice.gov.uk', phone: '0300 123 2241', post: 'Sponsorship and Licensing, PO Box 306, Liverpool, L2 8PJ' },
-  'right-to-rent': { email: 'righttorent@homeoffice.gov.uk', phone: '0300 123 2241', post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ' },
-  'asylum-support': { email: 'asylumsupport@homeoffice.gov.uk', phone: '0808 801 0800', post: 'Asylum Support, PO Box 306, Liverpool, L2 8PJ' },
-  'immigration-detention': { email: 'irc@homeoffice.gov.uk', phone: '0808 801 0800', post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ' }
+  'visa-delay': {
+    email: 'ukvisafree@fcdo.gov.uk',
+    phone: '0300 123 2241',
+    post: 'UK Visas and Immigration, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'brp-issue': {
+    email: 'BRPcollection@homeoffice.gov.uk',
+    phone: '0300 123 2241',
+    post: 'Biometric Residence Permits, PO Box 583, Glasgow, G3 8HN'
+  },
+  'sponsorship-complaint': {
+    email: 'sponsorshipcomplaints@homeoffice.gov.uk',
+    phone: '0300 123 2241',
+    post: 'Sponsorship and Licensing, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'right-to-rent': {
+    email: 'righttorent@homeoffice.gov.uk',
+    phone: '0300 123 2241',
+    post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'asylum-support': {
+    email: 'asylumsupport@homeoffice.gov.uk',
+    phone: '0808 801 0800',
+    post: 'Asylum Support, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'immigration-detention': {
+    email: 'irc@homeoffice.gov.uk',
+    phone: '0808 801 0800',
+    post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ'
+  }
 };
 
 function typeById(id) {

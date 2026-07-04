@@ -38,8 +38,14 @@ function addMonths(value, months) {
   if (!parts) return null;
   let [, y, m, d] = parts.map(Number);
   m += months;
-  while (m > 12) { m -= 12; y += 1; }
-  while (m < 1) { m += 12; y -= 1; }
+  while (m > 12) {
+    m -= 12;
+    y += 1;
+  }
+  while (m < 1) {
+    m += 12;
+    y -= 1;
+  }
   return [y, String(m).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
 }
 
@@ -138,7 +144,6 @@ function parseComplaints(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -153,7 +158,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -231,7 +235,11 @@ function renderTimeline(complaint) {
     const stage = stages[i];
     const isComplete = i < currentIdx;
     const isCurrent = i === currentIdx;
-    const cls = isComplete ? 'timeline-complete' : isCurrent ? 'timeline-current' : 'timeline-future';
+    const cls = isComplete
+      ? 'timeline-complete'
+      : isCurrent
+        ? 'timeline-current'
+        : 'timeline-future';
     html += `<li class="${cls}" aria-current="${isCurrent ? 'step' : 'false'}">`;
     html += `<strong>${stage.name}</strong>`;
     html += `<span>${stage.description}</span>`;
@@ -331,13 +339,16 @@ export {
   parseComplaints
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -350,7 +361,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -740,7 +755,16 @@ function handleExport(format) {
     return;
   }
   if (format === 'csv') {
-    const headers = ['id', 'trustName', 'organisationType', 'stage', 'sentDate', 'reference', 'status', 'createdAt'];
+    const headers = [
+      'id',
+      'trustName',
+      'organisationType',
+      'stage',
+      'sentDate',
+      'reference',
+      'status',
+      'createdAt'
+    ];
     const rows = complaints.map((c) => [
       c.id,
       csvField(c.trustName),
@@ -754,7 +778,11 @@ function handleExport(format) {
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     downloadText(csv, 'nhs-complaints.csv', 'text/csv');
   } else {
-    downloadText(serializeComplaints(complaints.map((c) => createComplaintRecord(c))), 'nhs-complaints.json', 'application/json');
+    downloadText(
+      serializeComplaints(complaints.map((c) => createComplaintRecord(c))),
+      'nhs-complaints.json',
+      'application/json'
+    );
   }
 }
 
@@ -844,7 +872,8 @@ loadSampleBtn?.addEventListener('click', () => {
       stage: 'pals',
       sentDate: recent.toISOString().slice(0, 10),
       reference: 'RMP-PALS-2026-004',
-      description: 'Difficulty accessing repeat prescriptions and long wait times for appointments.',
+      description:
+        'Difficulty accessing repeat prescriptions and long wait times for appointments.',
       notes: 'PALS contacted, awaiting initial response.'
     })
   ];

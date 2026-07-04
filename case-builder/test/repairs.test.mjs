@@ -1,9 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  getRepairCategories,
-  getHousingOmbudsmanRoute
-} from '../src/repairs.js';
+import { getRepairCategories, getHousingOmbudsmanRoute } from '../src/repairs.js';
 
 test('getRepairCategories returns categories from shared module', () => {
   const categories = getRepairCategories();

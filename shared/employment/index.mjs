@@ -1,11 +1,42 @@
 import { calculateETDeadline } from '../deadlines/index.mjs';
 
 const CLAIM_TYPES = [
-  { id: 'unfair-dismissal', name: 'Unfair Dismissal', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Dismissal without fair reason or fair procedure. Deadline: 3 months less one day from effective date of termination. Early conciliation pauses the clock.' },
-  { id: 'discrimination', name: 'Discrimination', deadlineMonths: 3, source: 'equality-act-2010', description: 'Direct/indirect discrimination, harassment, victimisation' },
-  { id: 'wages', name: 'Unpaid Wages', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Wrongful deduction from wages' },
-  { id: 'breach-of-contract', name: 'Breach of Contract', deadlineMonths: 6, source: 'common-law', description: 'Breach of employment contract terms' },
-  { id: 'redundancy', name: 'Redundancy', deadlineMonths: 6, source: 'employment-rights-act-1996', description: 'Redundancy pay, consultation, or selection disputes' }
+  {
+    id: 'unfair-dismissal',
+    name: 'Unfair Dismissal',
+    deadlineMonths: 3,
+    source: 'employment-rights-act-1996',
+    description:
+      'Dismissal without fair reason or fair procedure. Deadline: 3 months less one day from effective date of termination. Early conciliation pauses the clock.'
+  },
+  {
+    id: 'discrimination',
+    name: 'Discrimination',
+    deadlineMonths: 3,
+    source: 'equality-act-2010',
+    description: 'Direct/indirect discrimination, harassment, victimisation'
+  },
+  {
+    id: 'wages',
+    name: 'Unpaid Wages',
+    deadlineMonths: 3,
+    source: 'employment-rights-act-1996',
+    description: 'Wrongful deduction from wages'
+  },
+  {
+    id: 'breach-of-contract',
+    name: 'Breach of Contract',
+    deadlineMonths: 6,
+    source: 'common-law',
+    description: 'Breach of employment contract terms'
+  },
+  {
+    id: 'redundancy',
+    name: 'Redundancy',
+    deadlineMonths: 6,
+    source: 'employment-rights-act-1996',
+    description: 'Redundancy pay, consultation, or selection disputes'
+  }
 ];
 
 function parseLocalDate(value) {
@@ -13,7 +44,11 @@ function parseLocalDate(value) {
   if (!match) return null;
   const [, year, month, day] = match.map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
-  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
     return null;
   }
   if (Number.isNaN(date.getTime())) return null;

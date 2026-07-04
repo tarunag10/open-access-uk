@@ -5,11 +5,36 @@
 const EVIDENCE_UPLOAD_KEY = 'open-access-uk:evidence-upload';
 
 const TRIBUNAL_FORMATS = {
-  SSCS: { name: 'Social Security and Child Support Tribunal', acceptedFormats: ['.pdf'], maxSizeMB: 10, source: 'hmcts-sscs-guidance' },
-  FTT: { name: 'First-tier Tribunal (Tax)', acceptedFormats: ['.pdf', '.docx'], maxSizeMB: 25, source: 'hmcts-tribunal-guidance' },
-  countyCourt: { name: 'County Court', acceptedFormats: ['.pdf'], maxSizeMB: 20, source: 'hmcts-county-court-guidance' },
-  employment: { name: 'Employment Tribunal', acceptedFormats: ['.pdf', '.docx'], maxSizeMB: 25, source: 'et-practice-direction' },
-  housing: { name: 'Housing Tribunal', acceptedFormats: ['.pdf'], maxSizeMB: 15, source: 'housing-tribunal-guidance' }
+  SSCS: {
+    name: 'Social Security and Child Support Tribunal',
+    acceptedFormats: ['.pdf'],
+    maxSizeMB: 10,
+    source: 'hmcts-sscs-guidance'
+  },
+  FTT: {
+    name: 'First-tier Tribunal (Tax)',
+    acceptedFormats: ['.pdf', '.docx'],
+    maxSizeMB: 25,
+    source: 'hmcts-tribunal-guidance'
+  },
+  countyCourt: {
+    name: 'County Court',
+    acceptedFormats: ['.pdf'],
+    maxSizeMB: 20,
+    source: 'hmcts-county-court-guidance'
+  },
+  employment: {
+    name: 'Employment Tribunal',
+    acceptedFormats: ['.pdf', '.docx'],
+    maxSizeMB: 25,
+    source: 'et-practice-direction'
+  },
+  housing: {
+    name: 'Housing Tribunal',
+    acceptedFormats: ['.pdf'],
+    maxSizeMB: 15,
+    source: 'housing-tribunal-guidance'
+  }
 };
 
 const REDACTION_CHECKLIST = [
@@ -19,11 +44,7 @@ const REDACTION_CHECKLIST = [
   "children's names"
 ];
 
-const METADATA_STRIPPING_CHECKLIST = [
-  'GPS coordinates',
-  'device info',
-  'author names'
-];
+const METADATA_STRIPPING_CHECKLIST = ['GPS coordinates', 'device info', 'author names'];
 
 function getTribunalFormats(tribunalType) {
   const t = TRIBUNAL_FORMATS[tribunalType];
@@ -53,7 +74,9 @@ function validateFileForUpload(fileData, tribunalType) {
   const ext = fileData.name ? '.' + fileData.name.split('.').pop().toLowerCase() : '';
 
   if (!tribunal.acceptedFormats.includes(ext)) {
-    errors.push(`File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`);
+    errors.push(
+      `File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`
+    );
   }
 
   const maxBytes = tribunal.maxSizeMB * 1024 * 1024;
@@ -73,7 +96,9 @@ function checkFileCompliance(fileData, tribunalType) {
   const ext = fileData.name ? '.' + fileData.name.split('.').pop().toLowerCase() : '';
 
   if (!tribunal.acceptedFormats.includes(ext)) {
-    errors.push(`File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`);
+    errors.push(
+      `File format ${ext || 'unknown'} not accepted. Accepted: ${tribunal.acceptedFormats.join(', ')}`
+    );
   }
 
   const maxBytes = tribunal.maxSizeMB * 1024 * 1024;
@@ -93,7 +118,7 @@ function generateEvidenceManifest(evidenceItems) {
     return { items: [], totalSize: 0 };
   }
 
-  const items = evidenceItems.map(item => ({
+  const items = evidenceItems.map((item) => ({
     filename: item.filename || '',
     description: item.description || '',
     category: item.category || '',
@@ -112,12 +137,14 @@ function serializeEvidenceUpload(value) {
 function parseEvidenceUpload(value) {
   try {
     const parsed = JSON.parse(value || '{}');
-    return { files: Array.isArray(parsed.files) ? parsed.files : [], tribunal: parsed.tribunal || '' };
+    return {
+      files: Array.isArray(parsed.files) ? parsed.files : [],
+      tribunal: parsed.tribunal || ''
+    };
   } catch {
     return { files: [], tribunal: '' };
   }
 }
-
 
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
@@ -133,7 +160,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -210,7 +236,8 @@ function renderEvidenceManifest(files) {
     return '<p class="empty-state">No evidence files checked yet.</p>';
   }
   const manifest = generateEvidenceManifest(files);
-  let html = '<table class="manifest-table"><thead><tr><th>Filename</th><th>Description</th><th>Size</th></tr></thead><tbody>';
+  let html =
+    '<table class="manifest-table"><thead><tr><th>Filename</th><th>Description</th><th>Size</th></tr></thead><tbody>';
   for (const item of manifest.items) {
     html += `<tr><td>${escapeHtml(item.filename)}</td><td>${escapeHtml(item.description || '-')}</td><td>${formatBytes(item.size)}</td></tr>`;
   }
@@ -257,13 +284,16 @@ export {
   parseEvidenceUpload
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -276,7 +306,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -305,7 +339,9 @@ function loadAll() {
 function saveAll(data) {
   try {
     localStorage.setItem(STORAGE_KEY, serializeEvidenceUpload(data));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function values() {
@@ -370,9 +406,27 @@ function handleCheck(event) {
 
 function handleLoadSample() {
   const sampleFiles = [
-    { filename: 'medical-evidence.pdf', description: 'GP letter', category: 'medical', size: 2.5 * 1024 * 1024, tribunal: 'SSCS' },
-    { filename: 'witness-statement.docx', description: 'Witness statement', category: 'statement', size: 1.2 * 1024 * 1024, tribunal: 'FTT' },
-    { filename: 'bank-statements.pdf', description: '3 months bank statements', category: 'financial', size: 5.8 * 1024 * 1024, tribunal: 'SSCS' }
+    {
+      filename: 'medical-evidence.pdf',
+      description: 'GP letter',
+      category: 'medical',
+      size: 2.5 * 1024 * 1024,
+      tribunal: 'SSCS'
+    },
+    {
+      filename: 'witness-statement.docx',
+      description: 'Witness statement',
+      category: 'statement',
+      size: 1.2 * 1024 * 1024,
+      tribunal: 'FTT'
+    },
+    {
+      filename: 'bank-statements.pdf',
+      description: '3 months bank statements',
+      category: 'financial',
+      size: 5.8 * 1024 * 1024,
+      tribunal: 'SSCS'
+    }
   ];
 
   const stored = loadAll();

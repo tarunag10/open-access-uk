@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <noscript><p>This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere. See <a href="https://www.gov.uk/">GOV.UK</a> or <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.</p></noscript>
+    <noscript
+      ><p>
+        This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere.
+        See <a href="https://www.gov.uk/">GOV.UK</a> or
+        <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.
+      </p></noscript
+    >
     <a class="skip-link" href="#tool">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="index.html">Open Access UK</a>
@@ -29,7 +35,8 @@
           <h1>UC Sanctions Challenge</h1>
           <p>
             Challenge Universal Credit sanctions and request hardship payments. Generate mandatory
-            reconsideration requests and hardship payment applications. Everything runs in your browser.
+            reconsideration requests and hardship payment applications. Everything runs in your
+            browser.
           </p>
           <div class="hero-actions">
             <a class="button" href="#tool">Start a challenge</a>
@@ -45,31 +52,25 @@
         </div>
       </section>
 
-
       <section id="tool" class="grid" aria-label="UC sanctions challenge form">
         <form id="challenge-form" class="panel" aria-describedby="form-status">
           <h2>Add a UC sanctions challenge</h2>
           <label for="sanctionType">Sanction type</label>
           <select id="sanctionType" name="sanctionType">
-            <option value="higher-level">Higher-Level Sanction (100% deduction, up to 26 weeks)</option>
-            <option value="standard" selected>Standard Sanction (20% deduction, up to 4 weeks)</option>
+            <option value="higher-level">
+              Higher-Level Sanction (100% deduction, up to 26 weeks)
+            </option>
+            <option value="standard" selected>
+              Standard Sanction (20% deduction, up to 4 weeks)
+            </option>
             <option value="lower-level">Lower-Level Sanction (missed appointment deduction)</option>
           </select>
 
           <label for="claimantName">Claimant name</label>
-          <input
-            id="claimantName"
-            name="claimantName"
-            placeholder="e.g. Jane Doe"
-            required
-          />
+          <input id="claimantName" name="claimantName" placeholder="e.g. Jane Doe" required />
 
           <label for="nino">National Insurance number (optional)</label>
-          <input
-            id="nino"
-            name="nino"
-            placeholder="e.g. QQ 12 34 56 C"
-          />
+          <input id="nino" name="nino" placeholder="e.g. QQ 12 34 56 C" />
 
           <label for="decisionDate">Date of sanction decision</label>
           <input id="decisionDate" name="decisionDate" type="date" />
@@ -109,7 +110,9 @@
           <div class="actions" aria-label="Form actions">
             <button type="submit">Save challenge</button>
             <button id="generateMr" type="button" class="secondary">Generate MR request</button>
-            <button id="generateHardship" type="button" class="secondary">Generate hardship request</button>
+            <button id="generateHardship" type="button" class="secondary">
+              Generate hardship request
+            </button>
             <button id="loadSample" type="button" class="secondary">Load sample</button>
             <button id="exportJson" type="button" class="secondary">Export JSON</button>
             <label class="button secondary" for="importJson">Import JSON</label>
@@ -123,7 +126,9 @@
           <section id="summary" class="summary-grid" aria-label="Challenge summary"></section>
           <section class="panel" aria-label="Output">
             <h3>Generated output</h3>
-            <pre id="output-window" class="code-window">Generate an MR request or hardship payment request to see output here.</pre>
+            <pre id="output-window" class="code-window">
+Generate an MR request or hardship payment request to see output here.</pre
+            >
             <div class="output-actions">
               <button id="copyOutput" type="button" class="secondary">Copy</button>
               <button id="downloadOutput" type="button" class="secondary">Download</button>
@@ -197,12 +202,16 @@
       <nav aria-label="Footer">
         <a href="index.html">Open Access UK</a>
         <a href="#tool">Tool</a>
-        <a href="https://www.gov.uk/universal-credit/sanctions" rel="noopener noreferrer">GOV.UK sanctions</a>
-        <a href="https://www.legislation.gov.uk/ukpga/2012/5/contents" rel="noopener noreferrer">Welfare Reform Act 2012</a>
+        <a href="https://www.gov.uk/universal-credit/sanctions" rel="noopener noreferrer"
+          >GOV.UK sanctions</a
+        >
+        <a href="https://www.legislation.gov.uk/ukpga/2012/5/contents" rel="noopener noreferrer"
+          >Welfare Reform Act 2012</a
+        >
       </nav>
       <p>
-        Open-source, privacy-first, and local to your browser. Not legal advice.
-        Source: Welfare Reform Act 2012 and DWP guidance.
+        Open-source, privacy-first, and local to your browser. Not legal advice. Source: Welfare
+        Reform Act 2012 and DWP guidance.
       </p>
     </footer>
     <script type="module" src="src/app.js"></script>

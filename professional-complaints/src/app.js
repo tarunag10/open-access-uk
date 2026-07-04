@@ -3,60 +3,240 @@
 
 // ===== ../../shared/professional-complaints/index.mjs =====
 const REGULATORS = [
-  { id: 'GMC', name: 'General Medical Council', profession: 'Doctors', source: 'gmc-complaints', website: 'https://www.gmc-uk.org', fitnessToPractise: true, deadlineNote: 'No statutory time limit but prompt action recommended' },
-  { id: 'SRA', name: 'Solicitors Regulation Authority', profession: 'Solicitors', source: 'sra-complaints', website: 'https://www.sra.org.uk', fitnessToPractise: true, deadlineNote: 'Within 6 years of the issue' },
-  { id: 'LeO', name: 'Legal Ombudsman', profession: 'Legal Services', source: 'leo-complaints', website: 'https://www.legalombudsman.org.uk', fitnessToPractise: false, deadlineNote: 'Within 6 months of final response from service provider' },
-  { id: 'ACCA', name: 'Association of Chartered Certified Accountants', profession: 'Accountants', source: 'acca-complaints', website: 'https://www.accaglobal.com', fitnessToPractise: true, deadlineNote: 'Within 5 years' },
-  { id: 'RICS', name: 'Royal Institution of Chartered Surveyors', profession: 'Surveyors', source: 'rics-complaints', website: 'https://www.rics.org', fitnessToPractise: true, deadlineNote: 'Within 6 years' },
-  { id: 'NMC', name: 'Nursing and Midwifery Council', profession: 'Nurses and Midwives', source: 'nmc-complaints', website: 'https://www.nmc.org.uk', fitnessToPractise: true, deadlineNote: 'No statutory time limit' },
-  { id: 'GPhC', name: 'General Pharmaceutical Council', profession: 'Pharmacists', source: 'gphc-complaints', website: 'https://www.pharmacyregulation.org', fitnessToPractise: true, deadlineNote: 'No statutory time limit' },
-  { id: 'BPS', name: 'British Psychological Society', profession: 'Psychologists', source: 'bps-complaints', website: 'https://www.bps.org.uk', fitnessToPractise: true, deadlineNote: 'Within 5 years' }
+  {
+    id: 'GMC',
+    name: 'General Medical Council',
+    profession: 'Doctors',
+    source: 'gmc-complaints',
+    website: 'https://www.gmc-uk.org',
+    fitnessToPractise: true,
+    deadlineNote: 'No statutory time limit but prompt action recommended'
+  },
+  {
+    id: 'SRA',
+    name: 'Solicitors Regulation Authority',
+    profession: 'Solicitors',
+    source: 'sra-complaints',
+    website: 'https://www.sra.org.uk',
+    fitnessToPractise: true,
+    deadlineNote: 'Within 6 years of the issue'
+  },
+  {
+    id: 'LeO',
+    name: 'Legal Ombudsman',
+    profession: 'Legal Services',
+    source: 'leo-complaints',
+    website: 'https://www.legalombudsman.org.uk',
+    fitnessToPractise: false,
+    deadlineNote: 'Within 6 months of final response from service provider'
+  },
+  {
+    id: 'ACCA',
+    name: 'Association of Chartered Certified Accountants',
+    profession: 'Accountants',
+    source: 'acca-complaints',
+    website: 'https://www.accaglobal.com',
+    fitnessToPractise: true,
+    deadlineNote: 'Within 5 years'
+  },
+  {
+    id: 'RICS',
+    name: 'Royal Institution of Chartered Surveyors',
+    profession: 'Surveyors',
+    source: 'rics-complaints',
+    website: 'https://www.rics.org',
+    fitnessToPractise: true,
+    deadlineNote: 'Within 6 years'
+  },
+  {
+    id: 'NMC',
+    name: 'Nursing and Midwifery Council',
+    profession: 'Nurses and Midwives',
+    source: 'nmc-complaints',
+    website: 'https://www.nmc.org.uk',
+    fitnessToPractise: true,
+    deadlineNote: 'No statutory time limit'
+  },
+  {
+    id: 'GPhC',
+    name: 'General Pharmaceutical Council',
+    profession: 'Pharmacists',
+    source: 'gphc-complaints',
+    website: 'https://www.pharmacyregulation.org',
+    fitnessToPractise: true,
+    deadlineNote: 'No statutory time limit'
+  },
+  {
+    id: 'BPS',
+    name: 'British Psychological Society',
+    profession: 'Psychologists',
+    source: 'bps-complaints',
+    website: 'https://www.bps.org.uk',
+    fitnessToPractise: true,
+    deadlineNote: 'Within 5 years'
+  }
 ];
 
 const FITNESS_TO_PRACTISE_PROCESSES = {
   GMC: [
-    { name: 'Initial assessment', description: 'The GMC assesses whether the concern raises a real possibility of a finding of impaired fitness to practise.' },
-    { name: 'Investigation', description: 'A thorough investigation is carried out, which may include gathering evidence, interviewing witnesses, and commissioning expert reports.' },
-    { name: 'Medical Practitioners Tribunal Service (MPTS) hearing', description: 'If the case proceeds, it is heard by an MPTS tribunal which determines whether fitness to practise is impaired.' },
-    { name: 'Sanction', description: 'The tribunal may impose sanctions ranging from no action through to erasure from the medical register.' }
+    {
+      name: 'Initial assessment',
+      description:
+        'The GMC assesses whether the concern raises a real possibility of a finding of impaired fitness to practise.'
+    },
+    {
+      name: 'Investigation',
+      description:
+        'A thorough investigation is carried out, which may include gathering evidence, interviewing witnesses, and commissioning expert reports.'
+    },
+    {
+      name: 'Medical Practitioners Tribunal Service (MPTS) hearing',
+      description:
+        'If the case proceeds, it is heard by an MPTS tribunal which determines whether fitness to practise is impaired.'
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The tribunal may impose sanctions ranging from no action through to erasure from the medical register.'
+    }
   ],
   SRA: [
-    { name: 'Initial assessment', description: 'The SRA assesses the information received to determine whether a formal investigation is required.' },
-    { name: 'Investigation', description: 'The SRA investigates the matter, which may include obtaining documents, instructing experts, and taking witness statements.' },
-    { name: 'Decision', description: 'The authorisation to practise committee decides whether to refer the matter to the Solicitors Disciplinary Tribunal (SDT).' },
-    { name: 'SDT hearing', description: 'The SDT hears the case and determines whether there is misconduct and whether the solicitor\'s fitness to practise is impaired.' },
-    { name: 'Sanction', description: 'The SDT may impose sanctions ranging from a rebuke through to striking off the roll.' }
+    {
+      name: 'Initial assessment',
+      description:
+        'The SRA assesses the information received to determine whether a formal investigation is required.'
+    },
+    {
+      name: 'Investigation',
+      description:
+        'The SRA investigates the matter, which may include obtaining documents, instructing experts, and taking witness statements.'
+    },
+    {
+      name: 'Decision',
+      description:
+        'The authorisation to practise committee decides whether to refer the matter to the Solicitors Disciplinary Tribunal (SDT).'
+    },
+    {
+      name: 'SDT hearing',
+      description:
+        "The SDT hears the case and determines whether there is misconduct and whether the solicitor's fitness to practise is impaired."
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The SDT may impose sanctions ranging from a rebuke through to striking off the roll.'
+    }
   ],
   LeO: [],
   ACCA: [
-    { name: 'Preliminary review', description: 'ACCA reviews the complaint to determine whether it falls within the conduct regulations and warrants investigation.' },
-    { name: 'Investigation', description: 'A formal investigation is conducted, which may involve gathering evidence and commissioning expert opinions.' },
-    { name: 'Disciplinary Committee hearing', description: 'If the case proceeds, it is heard by ACCA\'s Disciplinary Committee which determines whether the member\'s conduct was in breach of the regulations.' },
-    { name: 'Sanction', description: 'The Committee may impose sanctions ranging from a warning through to expulsion from membership.' }
+    {
+      name: 'Preliminary review',
+      description:
+        'ACCA reviews the complaint to determine whether it falls within the conduct regulations and warrants investigation.'
+    },
+    {
+      name: 'Investigation',
+      description:
+        'A formal investigation is conducted, which may involve gathering evidence and commissioning expert opinions.'
+    },
+    {
+      name: 'Disciplinary Committee hearing',
+      description:
+        "If the case proceeds, it is heard by ACCA's Disciplinary Committee which determines whether the member's conduct was in breach of the regulations."
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The Committee may impose sanctions ranging from a warning through to expulsion from membership.'
+    }
   ],
   RICS: [
-    { name: 'Preliminary assessment', description: 'RICS assesses whether the complaint warrants a formal investigation under its disciplinary regulations.' },
-    { name: 'Investigation', description: 'A formal investigation is carried out, which may include obtaining evidence and taking witness statements.' },
-    { name: 'Disciplinary Board hearing', description: 'If the case proceeds, it is heard by a Disciplinary Board panel which determines whether there is a breach of the rules of conduct.' },
-    { name: 'Sanction', description: 'The Board may impose sanctions ranging from a reprimand through to expulsion from membership.' }
+    {
+      name: 'Preliminary assessment',
+      description:
+        'RICS assesses whether the complaint warrants a formal investigation under its disciplinary regulations.'
+    },
+    {
+      name: 'Investigation',
+      description:
+        'A formal investigation is carried out, which may include obtaining evidence and taking witness statements.'
+    },
+    {
+      name: 'Disciplinary Board hearing',
+      description:
+        'If the case proceeds, it is heard by a Disciplinary Board panel which determines whether there is a breach of the rules of conduct.'
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The Board may impose sanctions ranging from a reprimand through to expulsion from membership.'
+    }
   ],
   NMC: [
-    { name: 'Initial assessment', description: 'The NMC assesses whether the concern is serious enough to warrant a fitness to practise investigation.' },
-    { name: 'Investigation', description: 'A thorough investigation is carried out, which may include gathering evidence, interviewing witnesses, and commissioning expert reports.' },
-    { name: 'Fitness to practise panel hearing', description: 'If the case proceeds, it is heard by an NMC fitness to practise panel which determines whether the registrant\'s fitness to practise is impaired.' },
-    { name: 'Sanction', description: 'The panel may impose sanctions ranging from no action through to removal from the register.' }
+    {
+      name: 'Initial assessment',
+      description:
+        'The NMC assesses whether the concern is serious enough to warrant a fitness to practise investigation.'
+    },
+    {
+      name: 'Investigation',
+      description:
+        'A thorough investigation is carried out, which may include gathering evidence, interviewing witnesses, and commissioning expert reports.'
+    },
+    {
+      name: 'Fitness to practise panel hearing',
+      description:
+        "If the case proceeds, it is heard by an NMC fitness to practise panel which determines whether the registrant's fitness to practise is impaired."
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The panel may impose sanctions ranging from no action through to removal from the register.'
+    }
   ],
   GPhC: [
-    { name: 'Initial assessment', description: 'The GPhC assesses whether the concern raises a question about a registrant\'s fitness to practise.' },
-    { name: 'Investigation', description: 'A formal investigation is carried out, which may include gathering evidence and commissioning expert reports.' },
-    { name: 'Fitness to practise committee hearing', description: 'If the case proceeds, it is heard by a fitness to practise committee which determines whether the registrant\'s fitness to practise is impaired.' },
-    { name: 'Sanction', description: 'The committee may impose sanctions ranging from no action through to removal from the register.' }
+    {
+      name: 'Initial assessment',
+      description:
+        "The GPhC assesses whether the concern raises a question about a registrant's fitness to practise."
+    },
+    {
+      name: 'Investigation',
+      description:
+        'A formal investigation is carried out, which may include gathering evidence and commissioning expert reports.'
+    },
+    {
+      name: 'Fitness to practise committee hearing',
+      description:
+        "If the case proceeds, it is heard by a fitness to practise committee which determines whether the registrant's fitness to practise is impaired."
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The committee may impose sanctions ranging from no action through to removal from the register.'
+    }
   ],
   BPS: [
-    { name: 'Preliminary assessment', description: 'BPS assesses whether the complaint falls within the conduct regulations and warrants a formal investigation.' },
-    { name: 'Investigation', description: 'A formal investigation is carried out, which may include obtaining evidence and taking witness statements.' },
-    { name: 'Professional Conduct Committee hearing', description: 'If the case proceeds, it is heard by the Professional Conduct Committee which determines whether there is a breach of the code of conduct.' },
-    { name: 'Sanction', description: 'The Committee may impose sanctions ranging from a reprimand through to expulsion from membership.' }
+    {
+      name: 'Preliminary assessment',
+      description:
+        'BPS assesses whether the complaint falls within the conduct regulations and warrants a formal investigation.'
+    },
+    {
+      name: 'Investigation',
+      description:
+        'A formal investigation is carried out, which may include obtaining evidence and taking witness statements.'
+    },
+    {
+      name: 'Professional Conduct Committee hearing',
+      description:
+        'If the case proceeds, it is heard by the Professional Conduct Committee which determines whether there is a breach of the code of conduct.'
+    },
+    {
+      name: 'Sanction',
+      description:
+        'The Committee may impose sanctions ranging from a reprimand through to expulsion from membership.'
+    }
   ]
 };
 
@@ -76,7 +256,7 @@ function getRegulators() {
 }
 
 function getRegulatorDetails(regulatorId) {
-  const regulator = REGULATORS.find(r => r.id === regulatorId);
+  const regulator = REGULATORS.find((r) => r.id === regulatorId);
   return regulator ? { ...regulator } : null;
 }
 
@@ -86,7 +266,11 @@ function generateComplaintText(data) {
 
   const regulator = getRegulatorDetails(data.regulator);
   const regulatorName = regulator ? regulator.name : 'Not specified';
-  const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const date = new Date().toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 
   const lines = [
     `Date: ${date}`,
@@ -119,7 +303,7 @@ function generateComplaintText(data) {
 }
 
 function getComplaintDeadlines(regulatorId) {
-  const regulator = REGULATORS.find(r => r.id === regulatorId);
+  const regulator = REGULATORS.find((r) => r.id === regulatorId);
   if (!regulator) return null;
   return {
     regulatorId: regulator.id,
@@ -150,7 +334,6 @@ function parseProfessionalComplaints(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -166,7 +349,6 @@ function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
 
-
 // ===== src/tracker.js (imports resolved) =====
 
 export {
@@ -180,13 +362,16 @@ export {
   parseProfessionalComplaints
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -199,7 +384,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -231,19 +420,21 @@ function renderSummary(complaints) {
   const total = complaints.length;
   const open = complaints.filter((c) => c.status === 'open').length;
 
-  const regulatorCounts = REGULATORS.map(r => ({
+  const regulatorCounts = REGULATORS.map((r) => ({
     label: r.id,
-    value: complaints.filter(c => c.regulator === r.id).length
+    value: complaints.filter((c) => c.regulator === r.id).length
   }));
 
   const cards = [
     { label: 'Total complaints', value: total, tone: 'default' },
     { label: 'Open', value: open, tone: 'default' },
-    ...regulatorCounts.filter(r => r.value > 0).map(r => ({
-      label: r.label,
-      value: r.value,
-      tone: 'default'
-    }))
+    ...regulatorCounts
+      .filter((r) => r.value > 0)
+      .map((r) => ({
+        label: r.label,
+        value: r.value,
+        tone: 'default'
+      }))
   ];
 
   summary.replaceChildren(
@@ -302,7 +493,10 @@ function renderDetail(complaint) {
   const grid = document.createElement('dl');
   grid.className = 'detail-grid';
   const fields = [
-    ['Regulator', regulator ? `${regulator.name} (${regulator.id})` : complaint.regulator || 'Not specified'],
+    [
+      'Regulator',
+      regulator ? `${regulator.name} (${regulator.id})` : complaint.regulator || 'Not specified'
+    ],
     ['Complainant', complaint.complainantName || 'Not provided'],
     ['Practice', complaint.practiceName || 'Not provided'],
     ['Address', complaint.practiceAddress || 'Not provided'],
@@ -521,7 +715,15 @@ function handleExport(format) {
     return;
   }
   if (format === 'csv') {
-    const headers = ['id', 'regulator', 'professionalName', 'practiceName', 'complaintType', 'status', 'createdAt'];
+    const headers = [
+      'id',
+      'regulator',
+      'professionalName',
+      'practiceName',
+      'complaintType',
+      'status',
+      'createdAt'
+    ];
     const rows = complaints.map((c) => [
       c.id,
       c.regulator || '',
@@ -534,7 +736,11 @@ function handleExport(format) {
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     downloadText(csv, 'professional-complaints.csv', 'text/csv');
   } else {
-    downloadText(serializeProfessionalComplaints(complaints), 'professional-complaints.json', 'application/json');
+    downloadText(
+      serializeProfessionalComplaints(complaints),
+      'professional-complaints.json',
+      'application/json'
+    );
   }
 }
 
@@ -595,7 +801,9 @@ const regulatorSelect = form?.querySelector('#regulator');
 const categorySelect = form?.querySelector('#complaintType');
 regulatorSelect?.addEventListener('change', () => {
   if (categorySelect) {
-    categorySelect.innerHTML = '<option value="">Select category</option>' + renderComplaintCategories(regulatorSelect.value);
+    categorySelect.innerHTML =
+      '<option value="">Select category</option>' +
+      renderComplaintCategories(regulatorSelect.value);
   }
 });
 

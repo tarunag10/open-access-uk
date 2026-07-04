@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <noscript><p>This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere. See <a href="https://www.gov.uk/">GOV.UK</a> or <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.</p></noscript>
+    <noscript
+      ><p>
+        This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere.
+        See <a href="https://www.gov.uk/">GOV.UK</a> or
+        <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.
+      </p></noscript
+    >
     <a class="skip-link" href="#tool">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="index.html">Open Access UK</a>
@@ -28,9 +34,9 @@
         <div>
           <h1>Deadline Cascade Visualizer</h1>
           <p>
-            See multi-step deadlines as a timeline with status indicators. Pick a process
-            template, set a start date, and watch every deadline cascade into view.
-            Everything runs in your browser.
+            See multi-step deadlines as a timeline with status indicators. Pick a process template,
+            set a start date, and watch every deadline cascade into view. Everything runs in your
+            browser.
           </p>
           <div class="hero-actions">
             <a class="button" href="#tool">Build a cascade</a>
@@ -45,7 +51,6 @@
           </div>
         </div>
       </section>
-
 
       <section id="tool" class="grid" aria-label="Cascade builder">
         <form id="cascade-form" class="panel" aria-describedby="form-status">
@@ -62,11 +67,7 @@
           <input id="startDate" name="startDate" type="date" required />
 
           <label for="cascadeName">Name (optional)</label>
-          <input
-            id="cascadeName"
-            name="cascadeName"
-            placeholder="e.g. My FOI request to Council"
-          />
+          <input id="cascadeName" name="cascadeName" placeholder="e.g. My FOI request to Council" />
 
           <div class="actions" aria-label="Form actions">
             <button type="submit">Build cascade</button>
@@ -108,23 +109,22 @@
           <article class="card">
             <h3>Set your start date</h3>
             <p>
-              Enter the date you submitted your request or complaint. The tool calculates
-              every subsequent deadline from this date, accounting for working days where
-              required.
+              Enter the date you submitted your request or complaint. The tool calculates every
+              subsequent deadline from this date, accounting for working days where required.
             </p>
           </article>
           <article class="card">
             <h3>Read the timeline</h3>
             <p>
-              Green steps are completed. Orange is your current step. Grey are upcoming.
-              Red means overdue. The progress bar shows overall completion.
+              Green steps are completed. Orange is your current step. Grey are upcoming. Red means
+              overdue. The progress bar shows overall completion.
             </p>
           </article>
           <article class="card warning">
             <h3>Not legal advice</h3>
             <p>
-              This is a tracking aid, not legal advice. Verify deadlines, routes, and rights
-              against the current legislation and guidance for your process.
+              This is a tracking aid, not legal advice. Verify deadlines, routes, and rights against
+              the current legislation and guidance for your process.
             </p>
           </article>
         </div>
@@ -134,12 +134,18 @@
       <nav aria-label="Footer">
         <a href="index.html">Open Access UK</a>
         <a href="#tool">Tool</a>
-        <a href="https://www.legislation.gov.uk/ukpga/2000/36/contents" rel="noopener noreferrer">FOIA 2000</a>
-        <a href="https://www.nhs.uk/using-the-nhs/about-the-nhs/how-to-make-a-complaint/" rel="noopener noreferrer">NHS complaints</a>
+        <a href="https://www.legislation.gov.uk/ukpga/2000/36/contents" rel="noopener noreferrer"
+          >FOIA 2000</a
+        >
+        <a
+          href="https://www.nhs.uk/using-the-nhs/about-the-nhs/how-to-make-a-complaint/"
+          rel="noopener noreferrer"
+          >NHS complaints</a
+        >
       </nav>
       <p>
-        Open-source, privacy-first, and local to your browser. Not legal advice.
-        Source: FOIA 2000, NHS England, Housing Ombudsman, and DWP guidance.
+        Open-source, privacy-first, and local to your browser. Not legal advice. Source: FOIA 2000,
+        NHS England, Housing Ombudsman, and DWP guidance.
       </p>
     </footer>
     <script type="module" src="src/app.js"></script>

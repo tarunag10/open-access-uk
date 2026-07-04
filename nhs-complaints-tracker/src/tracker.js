@@ -82,7 +82,11 @@ function renderTimeline(complaint) {
     const stage = stages[i];
     const isComplete = i < currentIdx;
     const isCurrent = i === currentIdx;
-    const cls = isComplete ? 'timeline-complete' : isCurrent ? 'timeline-current' : 'timeline-future';
+    const cls = isComplete
+      ? 'timeline-complete'
+      : isCurrent
+        ? 'timeline-current'
+        : 'timeline-future';
     html += `<li class="${cls}" aria-current="${isCurrent ? 'step' : 'false'}">`;
     html += `<strong>${stage.name}</strong>`;
     html += `<span>${stage.description}</span>`;

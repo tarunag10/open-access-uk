@@ -240,7 +240,9 @@ test('flags passive voice', () => {
 });
 
 test('flags jargon terms', () => {
-  const result = analyseReadability('Please find enclosed the aforementioned documentation herewith.');
+  const result = analyseReadability(
+    'Please find enclosed the aforementioned documentation herewith.'
+  );
   assert.ok(result.flags.some((f) => f.type === 'jargon'));
 });
 
@@ -279,7 +281,9 @@ const JARGON = [
 const PASSIVE = /\b(was|were|is|are|been|being|be)\b\s+\w+(ed|en)\b(\s+by\b)?/i;
 
 export function countSyllables(word) {
-  const w = String(word).toLowerCase().replace(/[^a-z]/g, '');
+  const w = String(word)
+    .toLowerCase()
+    .replace(/[^a-z]/g, '');
   if (!w) return 0;
   if (w.length <= 3) return 1;
   const groups = w
@@ -297,7 +301,11 @@ function splitSentences(text) {
 }
 
 function words(text) {
-  return String(text).trim().match(/[A-Za-z']+/g) || [];
+  return (
+    String(text)
+      .trim()
+      .match(/[A-Za-z']+/g) || []
+  );
 }
 
 export function analyseReadability(text = '') {
@@ -310,8 +318,7 @@ export function analyseReadability(text = '') {
   // Flesch–Kincaid grade level → approximate UK reading age (+5).
   let readingAge = 0;
   if (wordCount > 0 && sentenceCount > 0) {
-    const grade =
-      0.39 * (wordCount / sentenceCount) + 11.8 * (syllableCount / wordCount) - 15.59;
+    const grade = 0.39 * (wordCount / sentenceCount) + 11.8 * (syllableCount / wordCount) - 15.59;
     readingAge = Math.max(5, Math.round(grade + 5));
   }
 
@@ -319,7 +326,11 @@ export function analyseReadability(text = '') {
   sentences.forEach((sentence, index) => {
     const wc = words(sentence).length;
     if (wc > 25) {
-      flags.push({ type: 'long-sentence', index, detail: `Sentence ${index + 1} has ${wc} words.` });
+      flags.push({
+        type: 'long-sentence',
+        index,
+        detail: `Sentence ${index + 1} has ${wc} words.`
+      });
     }
     if (PASSIVE.test(sentence)) {
       flags.push({ type: 'passive', index, detail: `Sentence ${index + 1} may be passive.` });
@@ -367,7 +378,13 @@ import { suiteIndex, searchSuite } from './index.mjs';
 
 test('suiteIndex contains entries for all five tools', () => {
   const tools = new Set(suiteIndex.filter((e) => e.kind === 'tool').map((e) => e.id));
-  for (const id of ['letter-generator', 'accessible-forms', 'public-service-directory', 'legal-templates', 'design-system']) {
+  for (const id of [
+    'letter-generator',
+    'accessible-forms',
+    'public-service-directory',
+    'legal-templates',
+    'design-system'
+  ]) {
     assert.ok(tools.has(id), `missing tool ${id}`);
   }
 });
@@ -412,7 +429,16 @@ export const suiteIndex = [
     kind: 'tool',
     title: 'Public-Service Letter Generator',
     url: 'https://letter-generator-psi.vercel.app',
-    keywords: ['letter', 'foi', 'freedom of information', 'subject access', 'sar', 'adjustment', 'complaint', 'deadline']
+    keywords: [
+      'letter',
+      'foi',
+      'freedom of information',
+      'subject access',
+      'sar',
+      'adjustment',
+      'complaint',
+      'deadline'
+    ]
   },
   {
     id: 'accessible-forms',
@@ -459,7 +485,9 @@ export const suiteIndex = [
 ];
 
 export function searchSuite(query, index = suiteIndex) {
-  const q = String(query || '').trim().toLowerCase();
+  const q = String(query || '')
+    .trim()
+    .toLowerCase();
   if (!q) return [];
   const scored = [];
   for (const entry of index) {
@@ -516,7 +544,10 @@ test('handoff key is namespaced', () => {
 });
 
 test('createEvidencePack normalises items and source', () => {
-  const pack = createEvidencePack({ source: 'letter-generator', items: ['Receipt', '', '  Photos '] });
+  const pack = createEvidencePack({
+    source: 'letter-generator',
+    items: ['Receipt', '', '  Photos ']
+  });
   assert.equal(pack.source, 'letter-generator');
   assert.deepEqual(pack.items, ['Receipt', 'Photos']);
 });
@@ -798,7 +829,10 @@ export function initPrivacyCentre(mountSelector = '#privacy-centre') {
       const title = document.createElement('strong');
       title.textContent = `${item.label} (${item.tool})`;
       const detail = document.createElement('p');
-      detail.textContent = size === null ? `${item.contains} — nothing stored.` : `${item.contains} — ${size} characters stored.`;
+      detail.textContent =
+        size === null
+          ? `${item.contains} — nothing stored.`
+          : `${item.contains} — ${size} characters stored.`;
       li.append(title, detail);
       list.append(li);
     }
@@ -946,15 +980,38 @@ export function initCommandPalette({ root = document } = {}) {
 In `open-access-uk-site/index.html`, inside `<header class="site-header">`, immediately before the `#theme-toggle` button, add:
 
 ```html
-<button id="command-open" class="theme-toggle" type="button" aria-haspopup="dialog" aria-controls="command-palette">Search (⌘K)</button>
+<button
+  id="command-open"
+  class="theme-toggle"
+  type="button"
+  aria-haspopup="dialog"
+  aria-controls="command-palette"
+>
+  Search (⌘K)
+</button>
 ```
 
 And immediately after the opening `<main id="main">` tag, add:
 
 ```html
-<div id="command-palette" class="command-palette" role="dialog" aria-modal="true" aria-label="Search the suite" hidden>
+<div
+  id="command-palette"
+  class="command-palette"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search the suite"
+  hidden
+>
   <label for="command-input">Search tools and workflows</label>
-  <input id="command-input" type="text" role="combobox" aria-expanded="true" aria-controls="command-results" aria-autocomplete="list" autocomplete="off" />
+  <input
+    id="command-input"
+    type="text"
+    role="combobox"
+    aria-expanded="true"
+    aria-controls="command-results"
+    aria-autocomplete="list"
+    autocomplete="off"
+  />
   <ul id="command-results" role="listbox" aria-label="Search results"></ul>
 </div>
 ```
@@ -978,9 +1035,9 @@ initCommandPalette({ root: document });
 In `open-access-uk-site/test/dashboard.test.js`, the assertion currently expects 5 `aria-pressed` (4 workflow cards + theme toggle from Plan 2). The command-open button uses `aria-haspopup`, NOT `aria-pressed`, so the count stays 5 — no change needed. Instead, ADD a new assertion to the existing `'homepage accessibility controls are wired'` test:
 
 ```js
-  assert.match(html, /id="command-palette"/);
-  assert.match(html, /id="command-input"/);
-  assert.match(html, /role="listbox"/);
+assert.match(html, /id="command-palette"/);
+assert.match(html, /id="command-input"/);
+assert.match(html, /role="listbox"/);
 ```
 
 - [ ] **Step 5: Verify**
@@ -1062,7 +1119,12 @@ export function initContinue(mountSelector = '#continue') {
 In `open-access-uk-site/index.html`, immediately after the opening `<main id="main">` and after the command-palette div from Task B2, add:
 
 ```html
-<section id="continue" class="continue section-shell" aria-label="Continue where you left off" hidden></section>
+<section
+  id="continue"
+  class="continue section-shell"
+  aria-label="Continue where you left off"
+  hidden
+></section>
 ```
 
 - [ ] **Step 3: Wire it in app.js**
@@ -1127,7 +1189,11 @@ At the TOP of `letter-generator/src/app.js`, after the existing imports, add:
 ```js
 import { createIcsEvent } from '../../shared/calendar/ics.mjs';
 import { analyseReadability } from '../../shared/readability/index.mjs';
-import { createEvidencePack, serializeEvidence, EVIDENCE_HANDOFF_KEY } from '../../shared/evidence/index.mjs';
+import {
+  createEvidencePack,
+  serializeEvidence,
+  EVIDENCE_HANDOFF_KEY
+} from '../../shared/evidence/index.mjs';
 import { addWorkingDays } from '../../shared/deadlines/index.mjs';
 ```
 
@@ -1192,7 +1258,10 @@ checkToneBtn?.addEventListener('click', () => {
 
 sendEvidenceBtn?.addEventListener('click', () => {
   const raw = document.querySelector('#evidence')?.value || '';
-  const items = raw.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean);
+  const items = raw
+    .split(/[\n,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
   const pack = createEvidencePack({ source: 'letter-generator', items });
   try {
     window.localStorage.setItem(EVIDENCE_HANDOFF_KEY, serializeEvidence(pack));
@@ -1213,7 +1282,6 @@ NOTE: `status`, `preview`, and `form` are already declared in this file (confirm
 Append to `letter-generator/styles.css`:
 
 ```css
-
 .deadline-tracker,
 .tone-report {
   margin-top: var(--space-3);
@@ -1258,12 +1326,12 @@ import { addWorkingDays } from '../../shared/deadlines/index.mjs';
 In `public-service-directory/src/app.js`, the `renderActionPlan(plan)` function returns a card template. Inside that template string, immediately BEFORE the final `</article>`, insert this timeline + calendar markup (keeping all existing content):
 
 ```js
-    `<ol class="escalation-timeline" aria-label="Escalation journey">
+`<ol class="escalation-timeline" aria-label="Escalation journey">
       <li><span class="step-dot"></span>${plan.firstStep || 'Start the organisation complaint process'}</li>
       <li><span class="step-dot"></span>${plan.escalationPath || 'Escalate to the relevant ombudsman or regulator'}</li>
       <li><span class="step-dot"></span>Keep evidence and await the final decision</li>
     </ol>
-    <button id="add-escalation-deadline" type="button" class="secondary">Add 8-week reminder to calendar</button>`
+    <button id="add-escalation-deadline" type="button" class="secondary">Add 8-week reminder to calendar</button>`;
 ```
 
 Concretely: change the return so the timeline string is concatenated before `</article>`. Find the line ending the readiness `checklist-tools` div and the closing `</article>`, and insert the block above between them.
@@ -1273,27 +1341,32 @@ Concretely: change the return so the timeline string is concatenated before `</a
 In the `update()` function of `public-service-directory/src/app.js`, after the existing `copyContactLog` handler block, add:
 
 ```js
-  const addDeadline = document.querySelector('#add-escalation-deadline');
-  if (addDeadline) {
-    addDeadline.addEventListener('click', () => {
-      const today = new Date();
-      const start = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
-      const due = addWorkingDays(start, 40); // ~8 weeks
-      const ics = createIcsEvent({
-        title: `Escalation follow-up: ${currentPlan?.routeName || 'complaint'}`,
-        date: due,
-        description: 'Most ombudsman routes allow escalation around 8 weeks after the first complaint.',
-        uid: `oauk-escalation-${due}`
-      });
-      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'escalation-reminder.ics';
-      link.click();
-      URL.revokeObjectURL(url);
+const addDeadline = document.querySelector('#add-escalation-deadline');
+if (addDeadline) {
+  addDeadline.addEventListener('click', () => {
+    const today = new Date();
+    const start = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0')
+    ].join('-');
+    const due = addWorkingDays(start, 40); // ~8 weeks
+    const ics = createIcsEvent({
+      title: `Escalation follow-up: ${currentPlan?.routeName || 'complaint'}`,
+      date: due,
+      description:
+        'Most ombudsman routes allow escalation around 8 weeks after the first complaint.',
+      uid: `oauk-escalation-${due}`
     });
-  }
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'escalation-reminder.ics';
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+}
 ```
 
 NOTE: `new Date()` is allowed here — this runs in the browser, not in a workflow script. `currentPlan` is already declared in this file.
@@ -1303,7 +1376,6 @@ NOTE: `new Date()` is allowed here — this runs in the browser, not in a workfl
 Append to `public-service-directory/styles.css`:
 
 ```css
-
 .escalation-timeline {
   list-style: none;
   padding: 0;
@@ -1368,7 +1440,12 @@ In `legal-templates/index.html`, inside the `<fieldset class="bundle-panel">`, a
 At the TOP of `legal-templates/src/app.js`, after the existing imports, add:
 
 ```js
-import { addToCollection, parseCollections, serializeCollections, COLLECTIONS_KEY } from '../../shared/collections/index.mjs';
+import {
+  addToCollection,
+  parseCollections,
+  serializeCollections,
+  COLLECTIONS_KEY
+} from '../../shared/collections/index.mjs';
 ```
 
 At the BOTTOM of `legal-templates/src/app.js`, add:
@@ -1438,7 +1515,6 @@ NOTE: `status` and `values` are already declared in this file.
 Append to `legal-templates/styles.css`:
 
 ```css
-
 .collection-row {
   display: grid;
   gap: var(--space-2);
@@ -1498,7 +1574,9 @@ function renderLinter() {
   const filtered = filterForms(exampleForms, { topic, complexity });
   const rows = filtered.map((form) => {
     const readiness = assessFormReadiness(form);
-    const issues = readiness.issues.length ? readiness.issues.join('; ') : 'No blocking accessibility issues found.';
+    const issues = readiness.issues.length
+      ? readiness.issues.join('; ')
+      : 'No blocking accessibility issues found.';
     return `<li><strong>${escapeHtml(form.title)} — ${readiness.score}%:</strong> ${escapeHtml(issues)}</li>`;
   });
   linterMount.innerHTML = `<h2>Accessibility linter</h2><ul>${rows.join('')}</ul>`;
@@ -1515,7 +1593,6 @@ NOTE: `filterForms`, `exampleForms`, `assessFormReadiness`, `escapeHtml`, and `f
 Append to `accessible-forms/styles.css`:
 
 ```css
-
 .linter {
   margin-top: var(--space-5);
   padding: var(--space-5);
@@ -1594,7 +1671,6 @@ applyPlayground();
 Append to `design-system/styles.css`:
 
 ```css
-
 .token-playground {
   margin-top: var(--space-5);
   padding: var(--space-5);

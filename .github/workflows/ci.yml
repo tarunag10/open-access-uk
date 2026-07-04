@@ -25,7 +25,13 @@ jobs:
         run: npm ci
       - name: Verify suite
         run: node scripts/verify-suite.mjs
-      - name: Check bundle divergence
-        run: node scripts/bundle-tool.mjs --all --check
+      - name: Regenerate bundles, format, and check for divergence
+        run: |
+          node scripts/bundle-tool.mjs --all
+          npm run format
+          git diff --exit-code -- '*/src/app.js' || {
+            echo "FAIL: Bundles have diverged from shared modules. Regenerate with: node scripts/bundle-tool.mjs --all && npm run format"
+            exit 1
+          }
       - name: Validate storage keys
         run: node scripts/validate-storage-keys.mjs

@@ -27,7 +27,10 @@ test('getClaimTypes returns five claim types', () => {
 
 test('getACASDeadline returns 3 months minus 1 day from dismissal', () => {
   const deadline = getACASDeadline('2026-01-15');
-  assert.equal(deadline, '2026-04-14');
+  assert.ok(deadline);
+  assert.equal(typeof deadline, 'object');
+  assert.equal(deadline.targetDate, '2026-04-14');
+  assert.equal(deadline.months, 3);
 });
 
 test('getACASDeadline returns null for invalid date', () => {
@@ -113,7 +116,10 @@ test('generateACASText includes key fields', () => {
 });
 
 test('serializeEmployment and parseEmployment round-trip', () => {
-  const data = [{ id: '1', claimantName: 'A' }, { id: '2', claimantName: 'B' }];
+  const data = [
+    { id: '1', claimantName: 'A' },
+    { id: '2', claimantName: 'B' }
+  ];
   const serialized = serializeEmployment(data);
   const parsed = parseEmployment(serialized);
   assert.equal(parsed.length, 2);
@@ -128,7 +134,10 @@ test('parseEmployment handles invalid input', () => {
 });
 
 test('escapeHtml escapes special characters', () => {
-  assert.equal(escapeHtml('<script>alert("xss")</script>'), '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
+  assert.equal(
+    escapeHtml('<script>alert("xss")</script>'),
+    '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
+  );
   assert.equal(escapeHtml("it's a test"), 'it&#39;s a test');
   assert.equal(escapeHtml('a & b'), 'a &amp; b');
 });

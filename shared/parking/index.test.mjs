@@ -8,7 +8,7 @@ import {
   getTribunalRoute,
   checkNoticeValidity,
   serializeParking,
-  parseParking,
+  parseParking
 } from './index.mjs';
 
 describe('getParkingOperators', () => {
@@ -57,7 +57,7 @@ describe('generateAppealText', () => {
       penaltyNoticeNumber: 'PCN123456',
       dateOfViolation: '2026-01-15',
       grounds: 'No clear signage',
-      evidence: 'Photographs of the location',
+      evidence: 'Photographs of the location'
     });
     assert.ok(text.includes('PCN123456'));
     assert.ok(text.includes('2026-01-15'));
@@ -94,7 +94,7 @@ describe('checkNoticeValidity', () => {
     recent.setDate(recent.getDate() - 30);
     const result = checkNoticeValidity({
       noticeDate: recent.toISOString().split('T')[0],
-      pcnNumber: 'PCN123456',
+      pcnNumber: 'PCN123456'
     });
     assert.equal(result.valid, true);
   });
@@ -104,7 +104,7 @@ describe('checkNoticeValidity', () => {
     old.setMonth(old.getMonth() - 7);
     const result = checkNoticeValidity({
       noticeDate: old.toISOString().split('T')[0],
-      pcnNumber: 'PCN123456',
+      pcnNumber: 'PCN123456'
     });
     assert.equal(result.valid, false);
   });
@@ -112,7 +112,7 @@ describe('checkNoticeValidity', () => {
   it('invalid PCN format fails', () => {
     const result = checkNoticeValidity({
       noticeDate: '2026-06-01',
-      pcnNumber: 'INVALID',
+      pcnNumber: 'INVALID'
     });
     assert.equal(result.valid, false);
   });

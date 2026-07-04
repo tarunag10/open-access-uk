@@ -19,7 +19,14 @@ import {
 
 test('COMPLAINT_TYPES includes all expected types', () => {
   const ids = COMPLAINT_TYPES.map((t) => t.id);
-  for (const expected of ['visa-delay', 'brp-issue', 'sponsorship-complaint', 'right-to-rent', 'asylum-support', 'immigration-detention']) {
+  for (const expected of [
+    'visa-delay',
+    'brp-issue',
+    'sponsorship-complaint',
+    'right-to-rent',
+    'asylum-support',
+    'immigration-detention'
+  ]) {
     assert.ok(ids.includes(expected), `missing complaint type ${expected}`);
   }
 });

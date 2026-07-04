@@ -110,7 +110,10 @@ function bundleJs(entryFile, outputFile) {
     const defaultMatch = source.match(/^export\s+default\s+/m);
     if (defaultMatch) exportNames.add('default');
     // Remove `export` keyword from declarations (we'll re-export via IIFE return)
-    source = source.replace(/^export\s+(?=(const|let|var|function|class|async\s+function|default\s+))/gm, '');
+    source = source.replace(
+      /^export\s+(?=(const|let|var|function|class|async\s+function|default\s+))/gm,
+      ''
+    );
     // Remove `export { ... };` clauses
     source = source.replace(/^export\s*\{[^}]*\};\s*$/gm, '');
     modules.set(file, { body: source, exports: exportNames });
@@ -124,10 +127,7 @@ function bundleJs(entryFile, outputFile) {
   // Precompute names so the entry can destructure imports after dependencies are emitted.
   for (let i = 1; i < allFiles.length; i++) {
     const file = allFiles[i];
-    moduleVarNames.set(
-      file,
-      `__m${i}_${file.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`
-    );
+    moduleVarNames.set(file, `__m${i}_${file.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`);
   }
 
   function importBindings(file) {

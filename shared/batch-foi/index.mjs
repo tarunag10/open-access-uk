@@ -5,8 +5,18 @@ const AUTHORITY_TYPES = [
   { id: 'nhs-trust', name: 'NHS Trust', deadlineWorkingDays: 20, source: 'foia-2000' },
   { id: 'police', name: 'Police Force', deadlineWorkingDays: 20, source: 'foia-2000' },
   { id: 'university', name: 'University', deadlineWorkingDays: 20, source: 'foia-2000' },
-  { id: 'government-department', name: 'Government Department', deadlineWorkingDays: 20, source: 'foia-2000' },
-  { id: 'police-fire-authority', name: 'Police and Fire Authority', deadlineWorkingDays: 20, source: 'foia-2000' }
+  {
+    id: 'government-department',
+    name: 'Government Department',
+    deadlineWorkingDays: 20,
+    source: 'foia-2000'
+  },
+  {
+    id: 'police-fire-authority',
+    name: 'Police and Fire Authority',
+    deadlineWorkingDays: 20,
+    source: 'foia-2000'
+  }
 ];
 
 const DEFAULT_AUTHORITIES = {
@@ -83,7 +93,9 @@ export function generateBatchCoverLetter(data) {
   }
   lines.push(`Date of request: ${data.sentDate || ''}`);
   lines.push('');
-  lines.push('Please respond within 20 working days as required by the Freedom of Information Act 2000.');
+  lines.push(
+    'Please respond within 20 working days as required by the Freedom of Information Act 2000.'
+  );
   lines.push('');
   lines.push('This request was generated locally. Nothing was sent to a server.');
   return lines.join('\n');

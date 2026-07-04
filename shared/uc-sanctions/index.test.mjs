@@ -170,9 +170,7 @@ test('generateHardshipPaymentRequest produces request text', () => {
 
 test('serializeUCSanctions and parseUCSanctions round-trip', () => {
   const data = {
-    'My Sanction Case': [
-      { type: 'standard', decisionDate: '2026-01-15', status: 'mr_submitted' }
-    ]
+    'My Sanction Case': [{ type: 'standard', decisionDate: '2026-01-15', status: 'mr_submitted' }]
   };
   const serialized = serializeUCSanctions(data);
   const parsed = parseUCSanctions(serialized);

@@ -10,6 +10,7 @@ legal-templates/
 letter-generator/
 public-service-directory/
 open-access-uk-site/.vercel/
+**/src/app.js
 *.png
 *.jpg
 *.jpeg

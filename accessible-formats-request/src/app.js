@@ -3,14 +3,70 @@
 
 // ===== ../../shared/accessible-formats/index.mjs =====
 const FORMATS = [
-  { id: 'braille', name: 'Braille', description: 'Grade 2 (Contracted) Braille', supplier: 'RNIB', source: 'rnib-braille-standards', minLeadTime: '2 weeks' },
-  { id: 'large-print', name: 'Large Print', description: 'Minimum 16pt font, sans-serif, high contrast', supplier: 'RNIB', source: 'rnib-large-print', minLeadTime: '1 week' },
-  { id: 'audio', name: 'Audio Format', description: 'MP3 or DAISY format with clear narration', supplier: 'RNIB', source: 'rnib-audio', minLeadTime: '1 week' },
-  { id: 'easy-read', name: 'Easy Read', description: 'Simplified language, images, Mencap standards', supplier: 'Mencap', source: 'mencap-easy-read', minLeadTime: '2 weeks' },
-  { id: 'email', name: 'Email', description: 'Electronic format via email', supplier: 'Self', source: 'accessibility-act', minLeadTime: 'Immediate' },
-  { id: 'telephone', name: 'Telephone', description: 'Information provided over the phone', supplier: 'Self', source: 'accessibility-act', minLeadTime: 'Immediate' },
-  { id: 'bsl', name: 'British Sign Language', description: 'BSL interpreter or video relay', supplier: 'RNID', source: 'rnid-bsl', minLeadTime: '1 week' },
-  { id: 'welsh', name: 'Welsh Language', description: 'Cymraeg / Welsh language format', supplier: 'Welsh Language Commissioner', source: 'welsh-language-standards', minLeadTime: '1 week' }
+  {
+    id: 'braille',
+    name: 'Braille',
+    description: 'Grade 2 (Contracted) Braille',
+    supplier: 'RNIB',
+    source: 'rnib-braille-standards',
+    minLeadTime: '2 weeks'
+  },
+  {
+    id: 'large-print',
+    name: 'Large Print',
+    description: 'Minimum 16pt font, sans-serif, high contrast',
+    supplier: 'RNIB',
+    source: 'rnib-large-print',
+    minLeadTime: '1 week'
+  },
+  {
+    id: 'audio',
+    name: 'Audio Format',
+    description: 'MP3 or DAISY format with clear narration',
+    supplier: 'RNIB',
+    source: 'rnib-audio',
+    minLeadTime: '1 week'
+  },
+  {
+    id: 'easy-read',
+    name: 'Easy Read',
+    description: 'Simplified language, images, Mencap standards',
+    supplier: 'Mencap',
+    source: 'mencap-easy-read',
+    minLeadTime: '2 weeks'
+  },
+  {
+    id: 'email',
+    name: 'Email',
+    description: 'Electronic format via email',
+    supplier: 'Self',
+    source: 'accessibility-act',
+    minLeadTime: 'Immediate'
+  },
+  {
+    id: 'telephone',
+    name: 'Telephone',
+    description: 'Information provided over the phone',
+    supplier: 'Self',
+    source: 'accessibility-act',
+    minLeadTime: 'Immediate'
+  },
+  {
+    id: 'bsl',
+    name: 'British Sign Language',
+    description: 'BSL interpreter or video relay',
+    supplier: 'RNID',
+    source: 'rnid-bsl',
+    minLeadTime: '1 week'
+  },
+  {
+    id: 'welsh',
+    name: 'Welsh Language',
+    description: 'Cymraeg / Welsh language format',
+    supplier: 'Welsh Language Commissioner',
+    source: 'welsh-language-standards',
+    minLeadTime: '1 week'
+  }
 ];
 
 const FORMAT_REQUIREMENTS = {
@@ -124,7 +180,9 @@ function generateRequestText(data) {
   lines.push(`Address: ${data.requestorAddress}`);
   lines.push('');
   lines.push(`Requested Format: ${data.format}`);
-  lines.push(`Documents: ${Array.isArray(data.documents) ? data.documents.join(', ') : data.documents}`);
+  lines.push(
+    `Documents: ${Array.isArray(data.documents) ? data.documents.join(', ') : data.documents}`
+  );
   lines.push(`Deadline: ${data.deadline}`);
   lines.push('');
   if (data.reason) {
@@ -132,7 +190,9 @@ function generateRequestText(data) {
   }
   lines.push('');
   lines.push('This request is made under the Equality Act 2010, which requires public');
-  lines.push('authorities to provide information in accessible formats as a reasonable adjustment.');
+  lines.push(
+    'authorities to provide information in accessible formats as a reasonable adjustment.'
+  );
   lines.push('');
   lines.push('Please confirm receipt of this request and provide a timeline for delivery.');
   return lines.join('\n');
@@ -151,7 +211,8 @@ function getOrganisationRoutes(formatId) {
 function getEqualityActRights() {
   return {
     title: 'Equality Act 2010 - Reasonable Adjustments',
-    description: 'Under the Equality Act 2010, public authorities must make reasonable adjustments to ensure disabled people are not placed at a substantial disadvantage.',
+    description:
+      'Under the Equality Act 2010, public authorities must make reasonable adjustments to ensure disabled people are not placed at a substantial disadvantage.',
     rights: [
       'Right to request information in an accessible format',
       'Right to reasonable adjustments without charge',
@@ -164,9 +225,11 @@ function getEqualityActRights() {
 function getMonitoringInfo() {
   return {
     name: 'Equality and Human Rights Commission',
-    description: 'The Equality and Human Rights Commission (EHRC) monitors and enforces equality legislation in England, Scotland and Wales.',
+    description:
+      'The Equality and Human Rights Commission (EHRC) monitors and enforces equality legislation in England, Scotland and Wales.',
     website: 'https://www.equalityhumanrights.com',
-    complaintProcess: 'You can contact the EHRC if your reasonable adjustment rights under the Equality Act 2010 are not being met.'
+    complaintProcess:
+      'You can contact the EHRC if your reasonable adjustment rights under the Equality Act 2010 are not being met.'
   };
 }
 
@@ -184,7 +247,6 @@ function parseAccessibleFormats(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -199,7 +261,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -297,13 +358,16 @@ export {
   parseAccessibleFormats
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -316,7 +380,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -498,7 +566,16 @@ function handleExport(format) {
     return;
   }
   if (format === 'csv') {
-    const headers = ['id', 'requestorName', 'organisationName', 'organisationType', 'format', 'documents', 'deadline', 'createdAt'];
+    const headers = [
+      'id',
+      'requestorName',
+      'organisationName',
+      'organisationType',
+      'format',
+      'documents',
+      'deadline',
+      'createdAt'
+    ];
     const rows = requests.map((r) => [
       r.id,
       csvField(r.requestorName),
@@ -512,7 +589,11 @@ function handleExport(format) {
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     downloadText(csv, 'accessible-format-requests.csv', 'text/csv');
   } else {
-    downloadText(serializeAccessibleFormats(requests), 'accessible-format-requests.json', 'application/json');
+    downloadText(
+      serializeAccessibleFormats(requests),
+      'accessible-format-requests.json',
+      'application/json'
+    );
   }
 }
 
@@ -545,7 +626,8 @@ function deleteRequest(id) {
   saveAll(remaining);
   if (activeId === id) {
     activeId = null;
-    outputContent.innerHTML = '<div class="empty-state">Select a request to view its details.</div>';
+    outputContent.innerHTML =
+      '<div class="empty-state">Select a request to view its details.</div>';
   }
   statusEl.textContent = 'Request deleted locally.';
   renderAll();
@@ -560,7 +642,8 @@ function handleClearAll() {
   if (!confirm(`Delete all ${requests.length} request(s) from this browser?`)) return;
   localStorage.removeItem(STORAGE_KEY);
   activeId = null;
-  outputContent.innerHTML = '<div class="empty-state">Fill in the form and click "Generate request" to create your letter.</div>';
+  outputContent.innerHTML =
+    '<div class="empty-state">Fill in the form and click "Generate request" to create your letter.</div>';
   statusEl.textContent = 'All requests cleared from this browser.';
   renderAll();
 }

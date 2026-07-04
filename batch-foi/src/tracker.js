@@ -78,8 +78,7 @@ function renderBatches(batches, container) {
   if (batches.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent =
-      'No FOI batches yet. Create one using the form to start tracking.';
+    empty.textContent = 'No FOI batches yet. Create one using the form to start tracking.';
     container.append(empty);
     return;
   }

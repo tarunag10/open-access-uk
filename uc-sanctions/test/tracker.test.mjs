@@ -16,9 +16,9 @@ import {
   renderChallenges
 } from '../src/tracker.js';
 
-test('getSanctionTypes returns higher-level, standard, lower-level', () => {
+test('getSanctionTypes returns higher-level, medium-level, standard, lower-level', () => {
   const types = getSanctionTypes();
-  assert.equal(types.length, 3);
+  assert.equal(types.length, 4);
   const ids = types.map((t) => t.id);
   assert.ok(ids.includes('higher-level'));
   assert.ok(ids.includes('standard'));
@@ -164,9 +164,7 @@ test('generateHardshipPaymentRequest produces request text', () => {
 
 test('serializeUCSanctions and parseUCSanctions round-trip', () => {
   const data = {
-    'My Sanction Case': [
-      { type: 'standard', decisionDate: '2026-01-15', status: 'mr_submitted' }
-    ]
+    'My Sanction Case': [{ type: 'standard', decisionDate: '2026-01-15', status: 'mr_submitted' }]
   };
   const serialized = serializeUCSanctions(data);
   const parsed = parseUCSanctions(serialized);
@@ -204,7 +202,10 @@ test('createChallengeRecord throws on missing claimantName', () => {
 });
 
 test('createChallengeRecord throws on invalid sanction type', () => {
-  assert.throws(() => createChallengeRecord({ claimantName: 'Test', sanctionType: 'invalid' }), /Invalid sanction type/);
+  assert.throws(
+    () => createChallengeRecord({ claimantName: 'Test', sanctionType: 'invalid' }),
+    /Invalid sanction type/
+  );
 });
 
 test('renderChallengeCard returns HTML string with key elements', () => {

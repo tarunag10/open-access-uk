@@ -38,25 +38,33 @@ const FEE_BANDS = {
     { min: 10000.01, max: 50000, fee: 455 },
     { min: 50000.01, max: 100000, fee: 10000 }
   ],
-  'employment-tribunal': [
-    { min: 0, max: Infinity, fee: 0 }
-  ],
-  'family-court': [
-    { min: 0, max: Infinity, fee: 335 }
-  ],
-  'immigration-tribunal': [
-    { min: 0, max: Infinity, fee: 140 }
-  ],
-  'property-tribunal': [
-    { min: 0, max: Infinity, fee: 0 }
-  ]
+  'employment-tribunal': [{ min: 0, max: Infinity, fee: 0 }],
+  'family-court': [{ min: 0, max: Infinity, fee: 335 }],
+  'immigration-tribunal': [{ min: 0, max: Infinity, fee: 140 }],
+  'property-tribunal': [{ min: 0, max: Infinity, fee: 0 }]
 };
 
 const EXEMPTIONS = [
-  { id: 'domestic-violence', name: 'Domestic Violence', description: 'Fee waiver for victims of domestic violence' },
-  { id: 'asylum', name: 'Asylum Seekers', description: 'Fee exemption for asylum seekers and refugees' },
-  { id: 'benefits', name: 'Benefits Recipients', description: 'Fee waiver for those receiving qualifying benefits' },
-  { id: 'low-income', name: 'Low Income', description: 'Fee reduction or waiver based on low income' }
+  {
+    id: 'domestic-violence',
+    name: 'Domestic Violence',
+    description: 'Fee waiver for victims of domestic violence'
+  },
+  {
+    id: 'asylum',
+    name: 'Asylum Seekers',
+    description: 'Fee exemption for asylum seekers and refugees'
+  },
+  {
+    id: 'benefits',
+    name: 'Benefits Recipients',
+    description: 'Fee waiver for those receiving qualifying benefits'
+  },
+  {
+    id: 'low-income',
+    name: 'Low Income',
+    description: 'Fee reduction or waiver based on low income'
+  }
 ];
 
 export function getFeeCategories() {
@@ -90,7 +98,8 @@ export function getHelpWithFeesEligibility(income, savings, benefits) {
   if (receivingBenefits) {
     return {
       eligible: true,
-      reason: 'Eligible: receiving qualifying benefits (Universal Credit, income-based JSA, income-based ESA, Income Support, Pension Guarantee Credit, Working Tax Credit, 24+ Advanced Learning Loan)'
+      reason:
+        'Eligible: receiving qualifying benefits (Universal Credit, income-based JSA, income-based ESA, Income Support, Pension Guarantee Credit, Working Tax Credit, 24+ Advanced Learning Loan)'
     };
   }
 
@@ -111,7 +120,7 @@ export function getHelpWithFeesEligibility(income, savings, benefits) {
 }
 
 export function getExemptions() {
-  return EXEMPTIONS.map(e => e.id);
+  return EXEMPTIONS.map((e) => e.id);
 }
 
 export function generateFeeEstimate(category, claimAmount, extras = {}) {

@@ -52,18 +52,26 @@ describe('validateFileForUpload', () => {
     const fileData = { name: 'evidence.pdf', size: 15 * 1024 * 1024, type: 'application/pdf' };
     const result = validateFileForUpload(fileData, 'SSCS');
     assert.equal(result.valid, false);
-    assert.ok(result.errors.some(e => e.includes('10MB')));
+    assert.ok(result.errors.some((e) => e.includes('10MB')));
   });
 
   it('rejects unsupported format', () => {
-    const fileData = { name: 'evidence.xlsx', size: 1 * 1024 * 1024, type: 'application/vnd.ms-excel' };
+    const fileData = {
+      name: 'evidence.xlsx',
+      size: 1 * 1024 * 1024,
+      type: 'application/vnd.ms-excel'
+    };
     const result = validateFileForUpload(fileData, 'SSCS');
     assert.equal(result.valid, false);
-    assert.ok(result.errors.some(e => e.includes('format') || e.includes('.pdf')));
+    assert.ok(result.errors.some((e) => e.includes('format') || e.includes('.pdf')));
   });
 
   it('allows DOCX for FTT', () => {
-    const fileData = { name: 'evidence.docx', size: 1 * 1024 * 1024, type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+    const fileData = {
+      name: 'evidence.docx',
+      size: 1 * 1024 * 1024,
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    };
     const result = validateFileForUpload(fileData, 'FTT');
     assert.equal(result.valid, true);
   });

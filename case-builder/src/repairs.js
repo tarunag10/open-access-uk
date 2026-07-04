@@ -95,7 +95,11 @@ function buildInitialEvidence(data) {
 export function renderRepairTimeline(repair) {
   const events = [];
   if (repair.sentDate) {
-    events.push({ date: repair.sentDate, label: 'Repair reported', detail: `To ${repair.organisation || 'landlord'}` });
+    events.push({
+      date: repair.sentDate,
+      label: 'Repair reported',
+      detail: `To ${repair.organisation || 'landlord'}`
+    });
   }
   if (repair.deadline) {
     events.push({ date: repair.deadline, label: 'Deadline', detail: 'Expected completion' });
@@ -118,9 +122,10 @@ export function getRepairEvidenceChecklist(category) {
     id: item.id,
     name: item.name,
     description: item.description,
-    required: category === 'emergency'
-      ? ['photos', 'dates', 'correspondence'].includes(item.id)
-      : ['photos', 'dates', 'correspondence', 'impact'].includes(item.id)
+    required:
+      category === 'emergency'
+        ? ['photos', 'dates', 'correspondence'].includes(item.id)
+        : ['photos', 'dates', 'correspondence', 'impact'].includes(item.id)
   }));
 }
 

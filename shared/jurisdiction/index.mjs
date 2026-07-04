@@ -10,33 +10,125 @@
 
 // Jurisdiction metadata per tool — maps tool IDs to applicable jurisdictions
 export const TOOL_JURISDICTIONS = {
-  'eviction-notice-validator': { label: 'England only', jurisdiction: 'england', note: 'Wales uses Renting Homes (Wales) Act 2016 section 173. Scotland and Northern Ireland have separate regimes.' },
-  'nhs-complaints-tracker': { label: 'England', jurisdiction: 'england', note: 'Scotland has SPSO, Wales PSOW, NI NIPSO.' },
-  'employment-tribunal': { label: 'Great Britain', jurisdiction: 'england-wales-scotland', note: 'Northern Ireland has separate industrial tribunals.' },
-  'send-helper': { label: 'England', jurisdiction: 'england', note: 'Wales has ALN, Scotland ASL.' },
-  'fee-calculator': { label: 'England & Wales', jurisdiction: 'england-wales', note: 'Scotland and NI have separate court systems.' },
-  'uc-sanctions': { label: 'Great Britain', jurisdiction: 'england-wales-scotland', note: 'Universal Credit is a GB-wide benefit.' },
-  'benefits-appeals': { label: 'Great Britain', jurisdiction: 'england-wales-scotland', note: 'Social security is reserved to UK Parliament.' },
-  'foi-tracker': { label: 'UK-wide', jurisdiction: 'uk', note: 'Scotland has FOISA and the Scottish Information Commissioner.' },
-  'batch-foi': { label: 'UK-wide', jurisdiction: 'uk', note: 'Scotland has FOISA; NI has its own FOI framework.' },
-  'deadline-cascade': { label: 'UK-wide', jurisdiction: 'uk', note: 'Deadlines may differ by jurisdiction — check each process.' },
-  'evidence-checker': { label: 'England & Wales', jurisdiction: 'england-wales', note: 'Tribunal rules differ in Scotland and NI.' },
-  'letter-generator': { label: 'UK-wide', jurisdiction: 'uk', note: 'Law differs across England, Wales, Scotland, NI.' },
-  'legal-templates': { label: 'UK-wide', jurisdiction: 'uk', note: 'Templates reference UK-wide law where applicable.' },
-  'public-service-directory': { label: 'UK-wide', jurisdiction: 'uk', note: 'Ombudsman routes differ by nation.' },
-  'accessible-forms': { label: 'UK-wide', jurisdiction: 'uk', note: 'Equality Act 2010 applies across GB.' },
-  'design-system': { label: 'UK-wide', jurisdiction: 'uk', note: 'Design patterns are jurisdiction-neutral.' },
-  'case-builder': { label: 'UK-wide', jurisdiction: 'uk', note: 'Case law and deadlines may be jurisdiction-specific.' },
-  'immigration-complaints': { label: 'UK-wide', jurisdiction: 'uk', note: 'Immigration is reserved to UK Parliament.' },
-  'professional-complaints': { label: 'UK-wide', jurisdiction: 'uk', note: 'Regulators vary by profession and nation.' },
-  'ombudsman-outcomes': { label: 'UK-wide', jurisdiction: 'uk', note: 'Ombudsman jurisdiction varies by body.' },
-  'accessible-formats-request': { label: 'UK-wide', jurisdiction: 'uk', note: 'Equality Act 2010 applies across GB.' },
-  'send-helper': { label: 'England', jurisdiction: 'england', note: 'Wales has ALN system, Scotland has ASL.' }
+  'eviction-notice-validator': {
+    label: 'England only',
+    jurisdiction: 'england',
+    note: 'Wales uses Renting Homes (Wales) Act 2016 section 173. Scotland and Northern Ireland have separate regimes.'
+  },
+  'nhs-complaints-tracker': {
+    label: 'England',
+    jurisdiction: 'england',
+    note: 'Scotland has SPSO, Wales PSOW, NI NIPSO.'
+  },
+  'employment-tribunal': {
+    label: 'Great Britain',
+    jurisdiction: 'england-wales-scotland',
+    note: 'Northern Ireland has separate industrial tribunals.'
+  },
+  'send-helper': {
+    label: 'England',
+    jurisdiction: 'england',
+    note: 'Wales has ALN, Scotland ASL.'
+  },
+  'fee-calculator': {
+    label: 'England & Wales',
+    jurisdiction: 'england-wales',
+    note: 'Scotland and NI have separate court systems.'
+  },
+  'uc-sanctions': {
+    label: 'Great Britain',
+    jurisdiction: 'england-wales-scotland',
+    note: 'Universal Credit is a GB-wide benefit.'
+  },
+  'benefits-appeals': {
+    label: 'Great Britain',
+    jurisdiction: 'england-wales-scotland',
+    note: 'Social security is reserved to UK Parliament.'
+  },
+  'foi-tracker': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Scotland has FOISA and the Scottish Information Commissioner.'
+  },
+  'batch-foi': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Scotland has FOISA; NI has its own FOI framework.'
+  },
+  'deadline-cascade': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Deadlines may differ by jurisdiction — check each process.'
+  },
+  'evidence-checker': {
+    label: 'England & Wales',
+    jurisdiction: 'england-wales',
+    note: 'Tribunal rules differ in Scotland and NI.'
+  },
+  'letter-generator': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Law differs across England, Wales, Scotland, NI.'
+  },
+  'legal-templates': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Templates reference UK-wide law where applicable.'
+  },
+  'public-service-directory': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Ombudsman routes differ by nation.'
+  },
+  'accessible-forms': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Equality Act 2010 applies across GB.'
+  },
+  'design-system': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Design patterns are jurisdiction-neutral.'
+  },
+  'case-builder': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Case law and deadlines may be jurisdiction-specific.'
+  },
+  'immigration-complaints': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Immigration is reserved to UK Parliament.'
+  },
+  'professional-complaints': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Regulators vary by profession and nation.'
+  },
+  'ombudsman-outcomes': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Ombudsman jurisdiction varies by body.'
+  },
+  'accessible-formats-request': {
+    label: 'UK-wide',
+    jurisdiction: 'uk',
+    note: 'Equality Act 2010 applies across GB.'
+  },
+  'send-helper': {
+    label: 'England',
+    jurisdiction: 'england',
+    note: 'Wales has ALN system, Scotland has ASL.'
+  }
 };
 
 // Remove duplicate send-helper entry
 delete TOOL_JURISDICTIONS['send-helper'];
-TOOL_JURISDICTIONS['send-helper'] = { label: 'England', jurisdiction: 'england', note: 'Wales has ALN system, Scotland has ASL.' };
+TOOL_JURISDICTIONS['send-helper'] = {
+  label: 'England',
+  jurisdiction: 'england',
+  note: 'Wales has ALN system, Scotland has ASL.'
+};
 
 /**
  * Returns the jurisdiction metadata for a given tool ID.

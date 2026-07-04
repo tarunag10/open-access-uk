@@ -43,6 +43,7 @@ All features must adhere to:
 ### Features
 
 #### 1. NHS Complaints Tracker
+
 - **Effort:** 6 dev-weeks
 - **Purpose:** Multi-stage complaint tracking (PALS → complaint → PHSO)
 - **Deliverables:**
@@ -54,6 +55,7 @@ All features must adhere to:
 - **Success Metrics:** 500+ complaints tracked in first 3 months
 
 #### 2. Benefits Appeals System
+
 - **Effort:** 8 dev-weeks
 - **Purpose:** SSCS1 form builder with benefit-specific guidance
 - **Deliverables:**
@@ -65,6 +67,7 @@ All features must adhere to:
 - **Success Metrics:** 300+ appeals filed in first quarter
 
 #### 3. Parking Ticket Appeal Generator
+
 - **Effort:** 5 dev-weeks
 - **Purpose:** Council and private parking challenge automation
 - **Deliverables:**
@@ -76,6 +79,7 @@ All features must adhere to:
 - **Success Metrics:** 1,000+ appeals in first 3 months, 60%+ success rate
 
 #### 4. School Exclusions & SEND Helper
+
 - **Effort:** 7 dev-weeks
 - **Purpose:** Challenge school exclusions and navigate SEND system
 - **Deliverables:**
@@ -87,6 +91,7 @@ All features must adhere to:
 - **Success Metrics:** 200+ families supported in first quarter
 
 #### 5. Right to Repair Tracker
+
 - **Effort:** 4 dev-weeks
 - **Purpose:** Social housing repair request and escalation manager
 - **Deliverables:**
@@ -125,6 +130,7 @@ All features must adhere to:
 ### Features
 
 #### 6. Employment Tribunal Case Builder
+
 - **Effort:** 10 dev-weeks
 - **Purpose:** ET1 form builder for unfair dismissal, discrimination, unpaid wages
 - **Deliverables:**
@@ -137,6 +143,7 @@ All features must adhere to:
 - **Success Metrics:** 150+ ET1 forms filed, 70%+ conciliation outcomes
 
 #### 7. Section 21/8 Notice Validator
+
 - **Effort:** 6 dev-weeks
 - **Purpose:** Check eviction notice validity and generate challenges
 - **Deliverables:**
@@ -148,6 +155,7 @@ All features must adhere to:
 - **Success Metrics:** 800+ notices validated, 40%+ found defective
 
 #### 8. Pre-Action Protocol Generator
+
 - **Effort:** 7 dev-weeks
 - **Purpose:** Generate court-compliant pre-action letters (housing disrepair, debt, personal injury)
 - **Deliverables:**
@@ -159,6 +167,7 @@ All features must adhere to:
 - **Success Metrics:** 300+ pre-action letters sent, 60%+ resolved pre-litigation
 
 #### 9. Universal Credit Sanctions Challenge
+
 - **Effort:** 6 dev-weeks
 - **Purpose:** Challenge UC sanctions and conditionality decisions
 - **Deliverables:**
@@ -170,6 +179,7 @@ All features must adhere to:
 - **Success Metrics:** 250+ sanction challenges, 55%+ overturned
 
 #### 10. Welsh Language Integration
+
 - **Effort:** 6 dev-weeks
 - **Purpose:** Full Welsh-language support for all features
 - **Deliverables:**
@@ -208,6 +218,7 @@ All features must adhere to:
 ### Features
 
 #### 11. Multi-Authority FOI Batch Tool
+
 - **Effort:** 8 dev-weeks
 - **Purpose:** Send identical FOI to multiple authorities simultaneously
 - **Deliverables:**
@@ -220,6 +231,7 @@ All features must adhere to:
 - **Success Metrics:** 100+ batch requests, avg 8 authorities per batch
 
 #### 12. Deadline Cascade Visualizer
+
 - **Effort:** 7 dev-weeks
 - **Purpose:** Visual timeline showing all deadlines across multiple cases
 - **Deliverables:**
@@ -231,6 +243,7 @@ All features must adhere to:
 - **Success Metrics:** 500+ users managing 3+ concurrent cases
 
 #### 13. Evidence Upload Readiness Checker
+
 - **Effort:** 9 dev-weeks
 - **Purpose:** Validate evidence bundles before tribunal/court submission
 - **Deliverables:**
@@ -243,6 +256,7 @@ All features must adhere to:
 - **Success Metrics:** 400+ bundles validated, 30%+ reduction in rejected submissions
 
 #### 14. Email-to-Case Parser
+
 - **Effort:** 10 dev-weeks
 - **Purpose:** Auto-import case updates from email correspondence
 - **Deliverables:**
@@ -255,6 +269,7 @@ All features must adhere to:
 - **Success Metrics:** 300+ cases using email import, 80%+ parse accuracy
 
 #### 15. Multi-Case Management Enhancement
+
 - **Effort:** 8 dev-weeks
 - **Purpose:** Dashboard for users managing multiple concurrent cases
 - **Deliverables:**
@@ -294,6 +309,7 @@ All features must adhere to:
 ### Features
 
 #### 16. Immigration & Visa Complaint Tool
+
 - **Effort:** 9 dev-weeks
 - **Purpose:** Challenge UKVI decisions, navigate immigration complaint process
 - **Deliverables:**
@@ -306,6 +322,7 @@ All features must adhere to:
 - **Success Metrics:** 200+ challenges filed, legal partnership with immigration charity
 
 #### 17. Regulated Professional Complaints Router
+
 - **Effort:** 7 dev-weeks
 - **Purpose:** Route complaints to correct regulator (GMC, SRA, HCPC, etc.)
 - **Deliverables:**
@@ -317,6 +334,7 @@ All features must adhere to:
 - **Success Metrics:** 300+ complaints routed correctly, 95%+ routing accuracy
 
 #### 18. Court & Tribunal Fees Calculator
+
 - **Effort:** 5 dev-weeks
 - **Purpose:** Calculate fees and assess fee remission eligibility (EX160)
 - **Deliverables:**
@@ -328,6 +346,7 @@ All features must adhere to:
 - **Success Metrics:** 1,200+ fee calculations, 400+ remission applications
 
 #### 19. Accessible Formats Request Specialist
+
 - **Effort:** 6 dev-weeks
 - **Purpose:** Request documents in accessible formats under Equality Act duty
 - **Deliverables:**
@@ -339,6 +358,7 @@ All features must adhere to:
 - **Success Metrics:** 150+ format requests, 90%+ compliance from authorities
 
 #### 20. Ombudsman Outcomes Database
+
 - **Effort:** 11 dev-weeks
 - **Purpose:** Searchable database of ombudsman decisions for case research
 - **Deliverables:**
@@ -378,6 +398,7 @@ All features must adhere to:
 ### Features
 
 #### 21. Local Authority Performance Lookup
+
 - **Effort:** 8 dev-weeks
 - **Purpose:** Compare LA performance on FOI, complaints, housing, social care
 - **Deliverables:**
@@ -389,6 +410,7 @@ All features must adhere to:
 - **Success Metrics:** 150+ LAs with performance data, 800+ comparisons per month
 
 #### 22. Community Contribution Platform
+
 - **Effort:** 10 dev-weeks
 - **Purpose:** Users submit anonymized case outcomes to improve success rates
 - **Deliverables:**
@@ -400,6 +422,7 @@ All features must adhere to:
 - **Success Metrics:** 500+ outcomes submitted, 300+ published
 
 #### 23. Advanced Search & Filtering
+
 - **Effort:** 7 dev-weeks
 - **Purpose:** Cross-feature search for content, sources, templates, decisions
 - **Deliverables:**
@@ -411,6 +434,7 @@ All features must adhere to:
 - **Success Metrics:** 1,000+ searches per month, 70%+ search success rate
 
 #### 24. Performance Optimization
+
 - **Effort:** 6 dev-weeks
 - **Purpose:** Improve load times, reduce bundle size, enhance mobile experience
 - **Deliverables:**
@@ -422,6 +446,7 @@ All features must adhere to:
 - **Success Metrics:** <2s page load on 3G, <50ms interaction latency, Lighthouse score 90+
 
 #### 25. Analytics & Impact Measurement
+
 - **Effort:** 4 dev-weeks
 - **Purpose:** Measure feature adoption, user outcomes, platform impact
 - **Deliverables:**
@@ -455,6 +480,7 @@ All features must adhere to:
 ### Throughout All Phases
 
 #### Source Provenance System
+
 - **Timeline:** Months 1-6 (foundation), ongoing maintenance
 - **Effort:** 8 dev-weeks initial, 1 dev-week/month maintenance
 - **Deliverables:**
@@ -465,6 +491,7 @@ All features must adhere to:
 - **Success Metrics:** 100% of claims cited, 95%+ source freshness
 
 #### Accessibility Validation
+
 - **Timeline:** Months 1-3 (framework), ongoing validation per feature
 - **Effort:** 4 dev-weeks initial, 0.5 dev-weeks per feature
 - **Deliverables:**
@@ -475,6 +502,7 @@ All features must adhere to:
 - **Success Metrics:** Zero WCAG AA violations in production
 
 #### Testing Strategy
+
 - **Timeline:** Months 1-3 (framework), ongoing per feature
 - **Effort:** 6 dev-weeks initial, 1 dev-week per feature
 - **Deliverables:**
@@ -486,6 +514,7 @@ All features must adhere to:
 - **Success Metrics:** 80%+ test coverage, zero post-launch legal inaccuracies
 
 #### Release Process
+
 - **Timeline:** Month 1 (setup), ongoing
 - **Effort:** 3 dev-weeks setup, 0.5 dev-weeks per release
 - **Deliverables:**
@@ -502,14 +531,14 @@ All features must adhere to:
 
 ### Development Effort by Phase
 
-| Phase | Duration | Dev-Weeks | Features |
-|-------|----------|-----------|----------|
-| Phase 1 | 12 weeks | 30 | 5 |
-| Phase 2 | 12 weeks | 35 | 5 |
-| Phase 3 | 24 weeks | 42 | 5 |
-| Phase 4 | 24 weeks | 38 | 5 |
-| Phase 5 | 24 weeks | 35 | 5 |
-| **Total** | **24 months** | **180** | **25** |
+| Phase     | Duration      | Dev-Weeks | Features |
+| --------- | ------------- | --------- | -------- |
+| Phase 1   | 12 weeks      | 30        | 5        |
+| Phase 2   | 12 weeks      | 35        | 5        |
+| Phase 3   | 24 weeks      | 42        | 5        |
+| Phase 4   | 24 weeks      | 38        | 5        |
+| Phase 5   | 24 weeks      | 35        | 5        |
+| **Total** | **24 months** | **180**   | **25**   |
 
 ### Team Composition (Recommended)
 
@@ -528,6 +557,7 @@ All features must adhere to:
 ### High-Risk Areas
 
 #### 1. Legal Accuracy
+
 - **Risk:** Inaccurate legal guidance leads to user harm, reputational damage
 - **Mitigation:**
   - External legal review for all legal content
@@ -536,6 +566,7 @@ All features must adhere to:
   - Partnership with advice agencies for validation
 
 #### 2. Source Freshness
+
 - **Risk:** Legislative changes invalidate content without notification
 - **Mitigation:**
   - Automated monitoring of legislation.gov.uk
@@ -544,6 +575,7 @@ All features must adhere to:
   - Version control on all legal content
 
 #### 3. Accessibility Compliance
+
 - **Risk:** WCAG violations exclude disabled users, breach PSED
 - **Mitigation:**
   - Automated testing in CI/CD
@@ -552,6 +584,7 @@ All features must adhere to:
   - Third-party accessibility audit annually
 
 #### 4. User Data Privacy
+
 - **Risk:** Data breach, GDPR violation, loss of user trust
 - **Mitigation:**
   - Local-first architecture (minimal server-side storage)
@@ -561,6 +594,7 @@ All features must adhere to:
   - Transparent privacy policy
 
 #### 5. Technical Debt
+
 - **Risk:** Rapid feature development leads to unmaintainable codebase
 - **Mitigation:**
   - 20% time allocation for refactoring
@@ -573,36 +607,42 @@ All features must adhere to:
 ## Success Metrics by Phase
 
 ### Phase 1 (Months 1-3)
+
 - 2,400+ users across 5 features
 - 60%+ appeal success rate (parking, benefits)
 - WCAG AA compliance validated
 - Zero legal inaccuracies reported
 
 ### Phase 2 (Months 4-6)
+
 - 1,500+ users for employment/housing features
 - Legal review approval: 95%+
 - 10%+ Welsh-language usage in Wales
 - 70%+ early conciliation success rate (ET)
 
 ### Phase 3 (Months 7-12)
+
 - 1,800+ users of workflow tools
 - 80%+ email parsing accuracy
 - 30%+ reduction in evidence bundle rejections
 - 90%+ user satisfaction with multi-case management
 
 ### Phase 4 (Months 13-18)
+
 - 1,850+ users of specialized tools
 - 10,000+ ombudsman decisions indexed
 - 3+ charity partnerships established
 - 95%+ routing accuracy (professional complaints)
 
 ### Phase 5 (Months 19-24)
+
 - 150+ LAs with performance data
 - 500+ community outcomes contributed
 - <2s page load time, 90+ Lighthouse score
 - Annual impact report published
 
 ### Overall (Month 24)
+
 - **20,000+ registered users**
 - **50,000+ cases managed**
 - **80%+ coverage of common UK civic scenarios**
@@ -634,22 +674,27 @@ All features must adhere to:
 ## Go/No-Go Decision Points
 
 ### After Phase 1 (Month 3)
+
 - **Criteria:** 2,000+ users, 60%+ success rates, zero legal issues
 - **Decision:** Proceed to Phase 2 or iterate on Phase 1 features
 
 ### After Phase 2 (Month 6)
+
 - **Criteria:** 3,500+ total users, legal review approval, Welsh language functional
 - **Decision:** Proceed to Phase 3 or consolidate Phase 1-2
 
 ### After Phase 3 (Month 12)
+
 - **Criteria:** 5,000+ users, workflow tools adopted by 30%+ multi-case users
 - **Decision:** Proceed to Phase 4 or optimize Phase 1-3
 
 ### After Phase 4 (Month 18)
+
 - **Criteria:** 7,000+ users, 3+ charity partnerships, ombudsman DB operational
 - **Decision:** Proceed to Phase 5 or deepen Phase 4 features
 
 ### After Phase 5 (Month 24)
+
 - **Criteria:** 20,000+ users, 80%+ scenario coverage, measurable impact
 - **Decision:** Sustain & scale or expand to new domains
 
@@ -660,16 +705,19 @@ All features must adhere to:
 ### Post-Launch Sustainability Plan
 
 #### Ongoing Maintenance (Post-Month 24)
+
 - **0.5 FTE Engineer:** Bug fixes, security patches, dependency updates
 - **0.25 FTE Legal Reviewer:** Quarterly source freshness review
 - **0.1 FTE Product:** User feedback monitoring, roadmap adjustments
 
 #### Content Updates
+
 - **Quarterly:** Legislation review, source freshness audit
 - **Annual:** Major case law review, ombudsman database refresh
 - **Ad-hoc:** Emergency updates for breaking legal changes
 
 #### Community Governance
+
 - **User Advisory Group:** Quarterly meetings with power users, advice agencies
 - **Open Source Contributions:** Accept community PRs for templates, sources
 - **Transparency Reports:** Annual impact reports, quarterly metrics
@@ -681,6 +729,7 @@ All features must adhere to:
 This 24-month roadmap delivers 25 features across 5 phases, targeting 80%+ coverage of common UK civic scenarios. By maintaining static-first, source-backed, accessible design throughout, Open Access UK will become the trusted digital companion for navigating UK public services, legal processes, and civic challenges.
 
 **Next Steps:**
+
 1. Secure funding and team for 24-month commitment
 2. Establish legal review partnership
 3. Initiate Phase 1 planning and infrastructure buildout
@@ -688,6 +737,7 @@ This 24-month roadmap delivers 25 features across 5 phases, targeting 80%+ cover
 5. Iterate based on user feedback and success metrics
 
 **Review & Approval:**
+
 - Product Lead: [Pending]
 - Engineering Lead: [Pending]
 - Legal Advisor: [Pending]
@@ -695,4 +745,4 @@ This 24-month roadmap delivers 25 features across 5 phases, targeting 80%+ cover
 
 ---
 
-*This roadmap is a living document and will be updated quarterly based on user feedback, legal developments, and technical constraints.*
+_This roadmap is a living document and will be updated quarterly based on user feedback, legal developments, and technical constraints._

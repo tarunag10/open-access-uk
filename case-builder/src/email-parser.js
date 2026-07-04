@@ -22,11 +22,12 @@ export function parseEmailToCase(emailText) {
   }
   const keyInfo = extractKeyInformation(emailText);
   const authorityInfo = parseAuthorityInfo(emailText);
-  const title = keyInfo.references.length > 0
-    ? `Email correspondence — ${keyInfo.references[0]}`
-    : keyInfo.authority
-      ? `Email correspondence with ${keyInfo.authority}`
-      : 'Imported email correspondence';
+  const title =
+    keyInfo.references.length > 0
+      ? `Email correspondence — ${keyInfo.references[0]}`
+      : keyInfo.authority
+        ? `Email correspondence with ${keyInfo.authority}`
+        : 'Imported email correspondence';
   const deadline = resolveDeadline(keyInfo.deadlines);
   const description = formatParsedEmail(keyInfo);
   return createCase({
@@ -80,9 +81,9 @@ export function renderParsedData(parsedData) {
     sections.push(`<dt>References</dt><dd>${parsedData.references.join(', ')}</dd>`);
   }
   if (parsedData.deadlines && parsedData.deadlines.length > 0) {
-    const dl = parsedData.deadlines.map((d) =>
-      d.type === 'working_days' ? `${d.days} working days` : d.date
-    ).join(', ');
+    const dl = parsedData.deadlines
+      .map((d) => (d.type === 'working_days' ? `${d.days} working days` : d.date))
+      .join(', ');
     sections.push(`<dt>Deadlines</dt><dd>${dl}</dd>`);
   }
   if (parsedData.authority) {
@@ -93,9 +94,9 @@ export function renderParsedData(parsedData) {
     sections.push(`<dt>Next steps</dt><dd><ul>${steps}</ul></dd>`);
   }
   if (parsedData.dates && parsedData.dates.length > 0) {
-    const dates = parsedData.dates.map((d) =>
-      `<li><strong>${escapeHtml(d.date)}</strong> — ${escapeHtml(d.event)}</li>`
-    ).join('');
+    const dates = parsedData.dates
+      .map((d) => `<li><strong>${escapeHtml(d.date)}</strong> — ${escapeHtml(d.event)}</li>`)
+      .join('');
     sections.push(`<dt>Timeline</dt><dd><ul>${dates}</ul></dd>`);
   }
   if (sections.length === 0) {
@@ -120,9 +121,7 @@ export function addToCaseFromEmail(parsedData, existingCase) {
   }
   if (parsedData.references.length > 0) {
     const refNote = `Email refs: ${parsedData.references.join(', ')}`;
-    merged.notes = merged.notes
-      ? `${merged.notes}\n${refNote}`
-      : refNote;
+    merged.notes = merged.notes ? `${merged.notes}\n${refNote}` : refNote;
   }
   const deadline = resolveDeadline(parsedData.deadlines);
   if (deadline && !merged.deadline) {
@@ -161,7 +160,9 @@ export function generateCaseSummaryFromEmail(parsedData) {
     '',
     `Deadlines: ${
       parsedData.deadlines.length > 0
-        ? parsedData.deadlines.map((d) => d.type === 'working_days' ? `${d.days} working days` : d.date).join(', ')
+        ? parsedData.deadlines
+            .map((d) => (d.type === 'working_days' ? `${d.days} working days` : d.date))
+            .join(', ')
         : 'None identified'
     }`,
     '',

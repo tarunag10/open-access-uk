@@ -22,7 +22,10 @@ test('DEPOSIT_SCHEMES includes all three schemes', () => {
 });
 
 test('escapeHtml escapes special characters', () => {
-  assert.equal(escapeHtml('<script>alert("xss")</script>'), '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
+  assert.equal(
+    escapeHtml('<script>alert("xss")</script>'),
+    '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
+  );
   assert.equal(escapeHtml("O'Brien"), 'O&#39;Brien');
   assert.equal(escapeHtml('a & b'), 'a &amp; b');
 });
@@ -30,7 +33,7 @@ test('escapeHtml escapes special characters', () => {
 test('getNoticeTypes returns all 6 notice types', () => {
   const types = getNoticeTypes();
   assert.ok(Array.isArray(types));
-  assert.equal(types.length, 6);
+  assert.equal(types.length, 9);
 });
 
 test('getNoticeTypes includes section21', () => {
@@ -50,10 +53,10 @@ test('getNoticeTypes includes all section 8 grounds', () => {
   assert.ok(ids.includes('section8-ground14'));
 });
 
-test('getGroundsOfSection8 returns 5 grounds', () => {
+test('getGroundsOfSection8 returns 8 grounds', () => {
   const grounds = getGroundsOfSection8();
   assert.ok(Array.isArray(grounds));
-  assert.equal(grounds.length, 5);
+  assert.equal(grounds.length, 8);
 });
 
 test('getGroundsOfSection8 ground 8 is mandatory', () => {
@@ -79,9 +82,9 @@ test('getDepositProtectionChecklist each item has id and description', () => {
   }
 });
 
-test('validateSection21 valid notice returns no errors', () => {
+test('validateSection21 valid pre-abolition notice returns no errors', () => {
   const result = validateSection21({
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     prescribedForm: true,
     depositProtected: true,
     hmoLicense: true,
@@ -106,8 +109,8 @@ test('validateSection21 missing noticeServedDate returns error', () => {
 
 test('validateSection21 notice period less than 62 days returns error', () => {
   const result = validateSection21({
-    noticeServedDate: '2026-06-25',
-    possessionDate: '2026-07-10',
+    noticeServedDate: '2026-04-15',
+    possessionDate: '2026-05-10',
     prescribedForm: true,
     depositProtected: true,
     hmoLicense: true,
@@ -115,12 +118,14 @@ test('validateSection21 notice period less than 62 days returns error', () => {
     gasSafetyCertificate: true
   });
   assert.equal(result.valid, false);
-  assert.ok(result.errors.some((e) => e.includes('period') || e.includes('days') || e.includes('2 month')));
+  assert.ok(
+    result.errors.some((e) => e.includes('period') || e.includes('days') || e.includes('month'))
+  );
 });
 
 test('validateSection21 missing prescribed form returns error', () => {
   const result = validateSection21({
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     prescribedForm: false,
     depositProtected: true,
     hmoLicense: true,
@@ -133,7 +138,7 @@ test('validateSection21 missing prescribed form returns error', () => {
 
 test('validateSection21 deposit not protected returns error', () => {
   const result = validateSection21({
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     prescribedForm: true,
     depositProtected: false,
     hmoLicense: true,
@@ -147,7 +152,7 @@ test('validateSection21 deposit not protected returns error', () => {
 test('validateSection8 valid ground 8 returns no errors', () => {
   const result = validateSection8({
     ground: 'ground8',
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     rentArrearsMonths: 3,
     serviceMethod: 'personal'
   });
@@ -157,7 +162,7 @@ test('validateSection8 valid ground 8 returns no errors', () => {
 
 test('validateSection8 missing ground returns error', () => {
   const result = validateSection8({
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     rentArrearsMonths: 3,
     serviceMethod: 'personal'
   });
@@ -168,18 +173,22 @@ test('validateSection8 missing ground returns error', () => {
 test('validateSection8 ground 8 with insufficient arrears returns error', () => {
   const result = validateSection8({
     ground: 'ground8',
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     rentArrearsMonths: 1,
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, false);
-  assert.ok(result.errors.some((e) => e.toLowerCase().includes('arrears') || e.toLowerCase().includes('rent')));
+  assert.ok(
+    result.errors.some(
+      (e) => e.toLowerCase().includes('arrears') || e.toLowerCase().includes('rent')
+    )
+  );
 });
 
 test('validateSection8 missing service method returns error', () => {
   const result = validateSection8({
     ground: 'ground8',
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     rentArrearsMonths: 3
   });
   assert.equal(result.valid, false);
@@ -189,21 +198,29 @@ test('validateSection8 missing service method returns error', () => {
 test('validateSection8 ground 12 with no breach details returns error', () => {
   const result = validateSection8({
     ground: 'ground12',
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, false);
-  assert.ok(result.errors.some((e) => e.toLowerCase().includes('breach') || e.toLowerCase().includes('obligation')));
+  assert.ok(
+    result.errors.some(
+      (e) => e.toLowerCase().includes('breach') || e.toLowerCase().includes('obligation')
+    )
+  );
 });
 
 test('validateSection8 ground 14 with no nuisance details returns error', () => {
   const result = validateSection8({
     ground: 'ground14',
-    noticeServedDate: '2026-05-01',
+    noticeServedDate: '2026-04-15',
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, false);
-  assert.ok(result.errors.some((e) => e.toLowerCase().includes('nuisance') || e.toLowerCase().includes('anti-social')));
+  assert.ok(
+    result.errors.some(
+      (e) => e.toLowerCase().includes('nuisance') || e.toLowerCase().includes('anti-social')
+    )
+  );
 });
 
 test('generateChallengeText returns a string', () => {
@@ -271,7 +288,9 @@ test('getCourtTimeline section21 first stage is notice period', () => {
 
 test('getCourtTimeline section21 includes possession hearing', () => {
   const timeline = getCourtTimeline('section21');
-  const hearing = timeline.find((s) => s.name.toLowerCase().includes('hearing') || s.name.toLowerCase().includes('court'));
+  const hearing = timeline.find(
+    (s) => s.name.toLowerCase().includes('hearing') || s.name.toLowerCase().includes('court')
+  );
   assert.ok(hearing);
 });
 

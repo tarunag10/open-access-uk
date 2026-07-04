@@ -12,13 +12,33 @@ import {
 const APPEAL_STATUSES = [
   { value: 'mr_draft', label: 'MR draft', description: 'Mandatory reconsideration not yet sent.' },
   { value: 'mr_sent', label: 'MR sent', description: 'MR request sent to DWP.' },
-  { value: 'mr_refused', label: 'MR refused', description: 'DWP refused the mandatory reconsideration.' },
-  { value: 'mr_allowed', label: 'MR allowed', description: 'DWP changed the decision at MR stage.' },
+  {
+    value: 'mr_refused',
+    label: 'MR refused',
+    description: 'DWP refused the mandatory reconsideration.'
+  },
+  {
+    value: 'mr_allowed',
+    label: 'MR allowed',
+    description: 'DWP changed the decision at MR stage.'
+  },
   { value: 'tribunal_draft', label: 'Tribunal draft', description: 'SSCS1 form not yet sent.' },
-  { value: 'tribunal_submitted', label: 'Tribunal submitted', description: 'Appeal submitted to HMCTS.' },
+  {
+    value: 'tribunal_submitted',
+    label: 'Tribunal submitted',
+    description: 'Appeal submitted to HMCTS.'
+  },
   { value: 'tribunal_hearing', label: 'Hearing listed', description: 'Tribunal hearing date set.' },
-  { value: 'tribunal_allowed', label: 'Tribunal allowed', description: 'Appeal allowed by tribunal.' },
-  { value: 'tribunal_refused', label: 'Tribunal refused', description: 'Appeal refused by tribunal.' },
+  {
+    value: 'tribunal_allowed',
+    label: 'Tribunal allowed',
+    description: 'Appeal allowed by tribunal.'
+  },
+  {
+    value: 'tribunal_refused',
+    label: 'Tribunal refused',
+    description: 'Appeal refused by tribunal.'
+  },
   { value: 'closed', label: 'Closed', description: 'Appeal concluded or withdrawn.' }
 ];
 
@@ -75,7 +95,8 @@ function renderAppeals(appeals, container) {
   if (appeals.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent = 'No appeals tracked yet. Use the form to generate an MR or tribunal letter.';
+    empty.textContent =
+      'No appeals tracked yet. Use the form to generate an MR or tribunal letter.';
     container.append(empty);
     return;
   }

@@ -20,15 +20,26 @@ const registeredKeys = new Set(registryModule.storageRegistry.map((e) => e.key))
 
 // Known non-storage key patterns that contain "open-access-uk:" but aren't localStorage
 const NON_STORAGE_PATTERNS = new Set([
-  'open-access-uk:case:v1'  // JSON schema marker for case import/export
+  'open-access-uk:case:v1' // JSON schema marker for case import/export
 ]);
 
 const TOOL_DIRS = [
-  'accessible-formats-request', 'batch-foi', 'benefits-appeals',
-  'deadline-cascade', 'employment-tribunal', 'eviction-notice-validator',
-  'evidence-checker', 'fee-calculator', 'foi-tracker', 'immigration-complaints',
-  'nhs-complaints-tracker', 'ombudsman-outcomes', 'professional-complaints',
-  'send-helper', 'uc-sanctions', 'case-builder'
+  'accessible-formats-request',
+  'batch-foi',
+  'benefits-appeals',
+  'deadline-cascade',
+  'employment-tribunal',
+  'eviction-notice-validator',
+  'evidence-checker',
+  'fee-calculator',
+  'foi-tracker',
+  'immigration-complaints',
+  'nhs-complaints-tracker',
+  'ombudsman-outcomes',
+  'professional-complaints',
+  'send-helper',
+  'uc-sanctions',
+  'case-builder'
 ];
 
 let allKeysFound = new Set();

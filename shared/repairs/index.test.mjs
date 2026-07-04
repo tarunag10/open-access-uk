@@ -21,21 +21,21 @@ describe('getRepairCategories', () => {
 
   it('includes emergency category', () => {
     const categories = getRepairCategories();
-    const emergency = categories.find(c => c.id === 'emergency');
+    const emergency = categories.find((c) => c.id === 'emergency');
     assert.ok(emergency);
     assert.equal(emergency.name, 'Emergency Repair');
   });
 
   it('includes urgent category', () => {
     const categories = getRepairCategories();
-    const urgent = categories.find(c => c.id === 'urgent');
+    const urgent = categories.find((c) => c.id === 'urgent');
     assert.ok(urgent);
     assert.equal(urgent.name, 'Urgent Repair');
   });
 
   it('includes routine category', () => {
     const categories = getRepairCategories();
-    const routine = categories.find(c => c.id === 'routine');
+    const routine = categories.find((c) => c.id === 'routine');
     assert.ok(routine);
     assert.equal(routine.name, 'Routine Repair');
   });
@@ -162,31 +162,31 @@ describe('getDisrepairEvidence', () => {
 
   it('includes photos', () => {
     const evidence = getDisrepairEvidence();
-    const photos = evidence.find(e => e.id === 'photos');
+    const photos = evidence.find((e) => e.id === 'photos');
     assert.ok(photos);
   });
 
   it('includes dates', () => {
     const evidence = getDisrepairEvidence();
-    const dates = evidence.find(e => e.id === 'dates');
+    const dates = evidence.find((e) => e.id === 'dates');
     assert.ok(dates);
   });
 
   it('includes correspondence', () => {
     const evidence = getDisrepairEvidence();
-    const correspondence = evidence.find(e => e.id === 'correspondence');
+    const correspondence = evidence.find((e) => e.id === 'correspondence');
     assert.ok(correspondence);
   });
 
   it('includes medical evidence', () => {
     const evidence = getDisrepairEvidence();
-    const medical = evidence.find(e => e.id === 'medical');
+    const medical = evidence.find((e) => e.id === 'medical');
     assert.ok(medical);
   });
 
   it('includes impact statement', () => {
     const evidence = getDisrepairEvidence();
-    const impact = evidence.find(e => e.id === 'impact');
+    const impact = evidence.find((e) => e.id === 'impact');
     assert.ok(impact);
   });
 });
@@ -200,21 +200,21 @@ describe('getHousingOmbudsmanRoute', () => {
 
   it('includes stage 1', () => {
     const route = getHousingOmbudsmanRoute();
-    const stage1 = route.find(s => s.id === 'stage-1');
+    const stage1 = route.find((s) => s.id === 'stage-1');
     assert.ok(stage1);
     assert.equal(stage1.deadlineWorkingDays, 56);
   });
 
   it('includes stage 2', () => {
     const route = getHousingOmbudsmanRoute();
-    const stage2 = route.find(s => s.id === 'stage-2');
+    const stage2 = route.find((s) => s.id === 'stage-2');
     assert.ok(stage2);
     assert.equal(stage2.deadlineWorkingDays, 56);
   });
 
   it('includes housing ombudsman', () => {
     const route = getHousingOmbudsmanRoute();
-    const ombudsman = route.find(s => s.id === 'ombudsman');
+    const ombudsman = route.find((s) => s.id === 'ombudsman');
     assert.ok(ombudsman);
   });
 });

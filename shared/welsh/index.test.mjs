@@ -115,22 +115,33 @@ describe('Welsh language support', () => {
       if (originalNavigator) {
         Object.defineProperty(globalThis, 'navigator', originalNavigator);
       } else {
-        try { delete globalThis.navigator; } catch {}
+        try {
+          delete globalThis.navigator;
+        } catch {}
       }
     });
 
     it('returns cy when navigator.language starts with cy', () => {
-      Object.defineProperty(globalThis, 'navigator', { value: { language: 'cy-GB' }, configurable: true });
+      Object.defineProperty(globalThis, 'navigator', {
+        value: { language: 'cy-GB' },
+        configurable: true
+      });
       assert.equal(detectBrowserLanguage(), 'cy');
     });
 
     it('returns en when navigator.language starts with en', () => {
-      Object.defineProperty(globalThis, 'navigator', { value: { language: 'en-US' }, configurable: true });
+      Object.defineProperty(globalThis, 'navigator', {
+        value: { language: 'en-US' },
+        configurable: true
+      });
       assert.equal(detectBrowserLanguage(), 'en');
     });
 
     it('returns en as default fallback', () => {
-      Object.defineProperty(globalThis, 'navigator', { value: { language: 'fr-FR' }, configurable: true });
+      Object.defineProperty(globalThis, 'navigator', {
+        value: { language: 'fr-FR' },
+        configurable: true
+      });
       assert.equal(detectBrowserLanguage(), 'en');
     });
 
@@ -147,8 +158,12 @@ describe('Welsh language support', () => {
       store = {};
       globalThis.localStorage = {
         getItem: (key) => store[key] ?? null,
-        setItem: (key, val) => { store[key] = String(val); },
-        removeItem: (key) => { delete store[key]; }
+        setItem: (key, val) => {
+          store[key] = String(val);
+        },
+        removeItem: (key) => {
+          delete store[key];
+        }
       };
     });
 
@@ -180,7 +195,7 @@ describe('Welsh language support', () => {
 
     it('includes Welsh Government', () => {
       const authorities = getWelshAuthorities();
-      const wg = authorities.find(a => a.id === 'welsh-government');
+      const wg = authorities.find((a) => a.id === 'welsh-government');
       assert.ok(wg, 'should include welsh-government');
       assert.equal(wg.type, 'government');
       assert.equal(wg.subjectToWelshStandards, true);
@@ -188,7 +203,7 @@ describe('Welsh language support', () => {
 
     it('includes NHS Wales', () => {
       const authorities = getWelshAuthorities();
-      const nhs = authorities.find(a => a.id === 'nhs-wales');
+      const nhs = authorities.find((a) => a.id === 'nhs-wales');
       assert.ok(nhs, 'should include nhs-wales');
       assert.equal(nhs.type, 'health');
     });
@@ -196,7 +211,11 @@ describe('Welsh language support', () => {
     it('all authorities are subject to Welsh standards', () => {
       const authorities = getWelshAuthorities();
       for (const a of authorities) {
-        assert.equal(a.subjectToWelshStandards, true, `${a.id} should be subject to Welsh standards`);
+        assert.equal(
+          a.subjectToWelshStandards,
+          true,
+          `${a.id} should be subject to Welsh standards`
+        );
         assert.equal(typeof a.id, 'string');
         assert.equal(typeof a.name, 'string');
         assert.equal(typeof a.type, 'string');

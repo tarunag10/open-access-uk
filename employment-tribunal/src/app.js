@@ -4,11 +4,42 @@
 // ===== ../../shared/employment/index.mjs =====
 
 const CLAIM_TYPES = [
-  { id: 'unfair-dismissal', name: 'Unfair Dismissal', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Dismissal without fair reason or fair procedure. Deadline: 3 months less one day from effective date of termination. Early conciliation pauses the clock.' },
-  { id: 'discrimination', name: 'Discrimination', deadlineMonths: 3, source: 'equality-act-2010', description: 'Direct/indirect discrimination, harassment, victimisation' },
-  { id: 'wages', name: 'Unpaid Wages', deadlineMonths: 3, source: 'employment-rights-act-1996', description: 'Wrongful deduction from wages' },
-  { id: 'breach-of-contract', name: 'Breach of Contract', deadlineMonths: 6, source: 'common-law', description: 'Breach of employment contract terms' },
-  { id: 'redundancy', name: 'Redundancy', deadlineMonths: 6, source: 'employment-rights-act-1996', description: 'Redundancy pay, consultation, or selection disputes' }
+  {
+    id: 'unfair-dismissal',
+    name: 'Unfair Dismissal',
+    deadlineMonths: 3,
+    source: 'employment-rights-act-1996',
+    description:
+      'Dismissal without fair reason or fair procedure. Deadline: 3 months less one day from effective date of termination. Early conciliation pauses the clock.'
+  },
+  {
+    id: 'discrimination',
+    name: 'Discrimination',
+    deadlineMonths: 3,
+    source: 'equality-act-2010',
+    description: 'Direct/indirect discrimination, harassment, victimisation'
+  },
+  {
+    id: 'wages',
+    name: 'Unpaid Wages',
+    deadlineMonths: 3,
+    source: 'employment-rights-act-1996',
+    description: 'Wrongful deduction from wages'
+  },
+  {
+    id: 'breach-of-contract',
+    name: 'Breach of Contract',
+    deadlineMonths: 6,
+    source: 'common-law',
+    description: 'Breach of employment contract terms'
+  },
+  {
+    id: 'redundancy',
+    name: 'Redundancy',
+    deadlineMonths: 6,
+    source: 'employment-rights-act-1996',
+    description: 'Redundancy pay, consultation, or selection disputes'
+  }
 ];
 
 function parseLocalDate(value) {
@@ -16,7 +47,11 @@ function parseLocalDate(value) {
   if (!match) return null;
   const [, year, month, day] = match.map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
-  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
     return null;
   }
   if (Number.isNaN(date.getTime())) return null;
@@ -130,7 +165,6 @@ function parseEmployment(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -145,7 +179,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -243,13 +276,16 @@ export {
   renderTimeline
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -262,7 +298,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -493,7 +533,15 @@ function renderDetail(claim) {
   );
 
   actions.append(copyEt1, copyAcas, downloadEt1);
-  detailContent.append(header, grid, timelineSection, groundsSection, et1Section, acasSection, actions);
+  detailContent.append(
+    header,
+    grid,
+    timelineSection,
+    groundsSection,
+    et1Section,
+    acasSection,
+    actions
+  );
 }
 
 function deleteClaim(id) {
@@ -600,7 +648,15 @@ function handleExport(format) {
     return;
   }
   if (format === 'csv') {
-    const headers = ['id', 'claimType', 'claimantName', 'employerName', 'dismissalDate', 'weeklyPay', 'createdAt'];
+    const headers = [
+      'id',
+      'claimType',
+      'claimantName',
+      'employerName',
+      'dismissalDate',
+      'weeklyPay',
+      'createdAt'
+    ];
     const rows = claims.map((c) => [
       c.id,
       c.claimType || '',
@@ -690,7 +746,8 @@ loadSampleBtn?.addEventListener('click', () => {
       employmentEndDate: '2026-05-30',
       dismissalDate: '2026-05-30',
       weeklyPay: '500',
-      grounds: 'I was dismissed without a fair reason. My employer did not follow a fair procedure. I was not given proper notice or an opportunity to respond to the allegations.'
+      grounds:
+        'I was dismissed without a fair reason. My employer did not follow a fair procedure. I was not given proper notice or an opportunity to respond to the allegations.'
     }),
     createClaimRecord({
       claimType: 'discrimination',
@@ -701,13 +758,16 @@ loadSampleBtn?.addEventListener('click', () => {
       employmentEndDate: '2026-04-15',
       dismissalDate: '2026-04-15',
       weeklyPay: '650',
-      grounds: 'I was discriminated against on the grounds of disability. Reasonable adjustments were not made for my condition.'
+      grounds:
+        'I was discriminated against on the grounds of disability. Reasonable adjustments were not made for my condition.'
     })
   ];
   const existing = loadAll();
   const merged = [...existing];
   for (const s of sample) {
-    if (!merged.find((e) => e.employerName === s.employerName && e.claimantName === s.claimantName)) {
+    if (
+      !merged.find((e) => e.employerName === s.employerName && e.claimantName === s.claimantName)
+    ) {
       merged.push(s);
     }
   }

@@ -4,18 +4,76 @@
 // ===== ../../shared/uc-sanctions/index.mjs =====
 
 const SANCTION_TYPES = [
-  { id: 'higher-level', name: 'Higher-Level Sanction', deductionRate: 1.0, maxWeeks: 26, deductionDurationDays: 91, description: 'Serious failure to comply — 91-day fixed period for first failure, 182 days for repeat failures within 365 days. Deduction continues until compliance or end of fixed period.', source: 'welfare-reform-act-2012' },
-  { id: 'medium-level', name: 'Medium-Level Sanction', deductionRate: 0.4, maxWeeks: 13, description: 'Medium-level failure — 14-day open period, deduction continues until compliance. Applies to failures such as not taking up an employment placement.', source: 'welfare-reform-act-2012' },
-  { id: 'standard', name: 'Standard Sanction', deductionRate: 0.2, maxWeeks: 4, description: 'Failure to comply with claimant commitment — 7-day open period, deduction continues until compliance.', source: 'welfare-reform-act-2012' },
-  { id: 'lower-level', name: 'Lower-Level Sanction', deductionRate: 0, deductionAmount: 'equivalent-to-missed-appointment', description: 'Failure to attend mandatory appointment without good reason — deduction equal to the missed appointment amount.', source: 'welfare-reform-act-2012' }
+  {
+    id: 'higher-level',
+    name: 'Higher-Level Sanction',
+    deductionRate: 1.0,
+    maxWeeks: 26,
+    deductionDurationDays: 91,
+    description:
+      'Serious failure to comply — 91-day fixed period for first failure, 182 days for repeat failures within 365 days. Deduction continues until compliance or end of fixed period.',
+    source: 'welfare-reform-act-2012'
+  },
+  {
+    id: 'medium-level',
+    name: 'Medium-Level Sanction',
+    deductionRate: 0.4,
+    maxWeeks: 13,
+    description:
+      'Medium-level failure — 14-day open period, deduction continues until compliance. Applies to failures such as not taking up an employment placement.',
+    source: 'welfare-reform-act-2012'
+  },
+  {
+    id: 'standard',
+    name: 'Standard Sanction',
+    deductionRate: 0.2,
+    maxWeeks: 4,
+    description:
+      'Failure to comply with claimant commitment — 7-day open period, deduction continues until compliance.',
+    source: 'welfare-reform-act-2012'
+  },
+  {
+    id: 'lower-level',
+    name: 'Lower-Level Sanction',
+    deductionRate: 0,
+    deductionAmount: 'equivalent-to-missed-appointment',
+    description:
+      'Failure to attend mandatory appointment without good reason — deduction equal to the missed appointment amount.',
+    source: 'welfare-reform-act-2012'
+  }
 ];
 
 const GOOD_REASONS = [
-  { id: 'hospital-appointment', label: 'Hospital or medical appointment', description: 'You had a hospital appointment, GP visit, or other medical commitment that you could not rearrange.' },
-  { id: 'caring-responsibility', label: 'Caring responsibility', description: 'You had to care for a child, vulnerable adult, or family member and there was no alternative care available.' },
-  { id: 'interview-running-late', label: 'Interview running late', description: 'Your previous appointment ran over or you were kept waiting, causing you to miss the next one.' },
-  { id: 'transport-failure', label: 'Transport failure', description: 'Your transport was cancelled, broke down, or was severely delayed through no fault of your own.' },
-  { id: 'mental-health-episode', label: 'Mental health episode', description: 'You experienced a mental health crisis, severe anxiety episode, or other mental health condition that prevented you attending.' }
+  {
+    id: 'hospital-appointment',
+    label: 'Hospital or medical appointment',
+    description:
+      'You had a hospital appointment, GP visit, or other medical commitment that you could not rearrange.'
+  },
+  {
+    id: 'caring-responsibility',
+    label: 'Caring responsibility',
+    description:
+      'You had to care for a child, vulnerable adult, or family member and there was no alternative care available.'
+  },
+  {
+    id: 'interview-running-late',
+    label: 'Interview running late',
+    description:
+      'Your previous appointment ran over or you were kept waiting, causing you to miss the next one.'
+  },
+  {
+    id: 'transport-failure',
+    label: 'Transport failure',
+    description:
+      'Your transport was cancelled, broke down, or was severely delayed through no fault of your own.'
+  },
+  {
+    id: 'mental-health-episode',
+    label: 'Mental health episode',
+    description:
+      'You experienced a mental health crisis, severe anxiety episode, or other mental health condition that prevented you attending.'
+  }
 ];
 
 function formatDate(dateStr) {
@@ -23,7 +81,12 @@ function formatDate(dateStr) {
   const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return dateStr;
   const d = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC'
+  }).format(d);
 }
 
 function findSanctionType(id) {
@@ -49,7 +112,14 @@ function getTribunalDeadline() {
 }
 
 function generateMRText(data) {
-  const { claimantName, sanctionType, decisionDate, reasonForSanction, groundsForChallenge, goodReasons } = data;
+  const {
+    claimantName,
+    sanctionType,
+    decisionDate,
+    reasonForSanction,
+    groundsForChallenge,
+    goodReasons
+  } = data;
   const sanction = findSanctionType(sanctionType);
   const sanctionName = sanction ? sanction.name : sanctionType;
   const formattedDate = formatDate(decisionDate);
@@ -84,13 +154,23 @@ function getGoodReasonsLibrary() {
 function getHardshipPaymentEligibility(data) {
   const { isUCClaimant, sanctionInForce, cannotMeetBasicNeeds } = data;
   if (!isUCClaimant) {
-    return { eligible: false, reason: 'You must be a Universal Credit claimant to apply for a hardship payment.' };
+    return {
+      eligible: false,
+      reason: 'You must be a Universal Credit claimant to apply for a hardship payment.'
+    };
   }
   if (!sanctionInForce) {
-    return { eligible: false, reason: 'A hardship payment requires an active sanction to be in force.' };
+    return {
+      eligible: false,
+      reason: 'A hardship payment requires an active sanction to be in force.'
+    };
   }
   if (!cannotMeetBasicNeeds) {
-    return { eligible: false, reason: 'You must demonstrate that you cannot meet your basic needs (rent, food, heating) due to the sanction.' };
+    return {
+      eligible: false,
+      reason:
+        'You must demonstrate that you cannot meet your basic needs (rent, food, heating) due to the sanction.'
+    };
   }
   return { eligible: true, reason: '' };
 }
@@ -133,7 +213,6 @@ function parseUCSanctions(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -148,7 +227,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -173,7 +251,9 @@ function createChallengeRecord(data) {
   const validTypes = getSanctionTypes().map((t) => t.id);
   const sanctionType = data.sanctionType || 'standard';
   if (!validTypes.includes(sanctionType)) {
-    throw new Error(`Invalid sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`);
+    throw new Error(
+      `Invalid sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`
+    );
   }
   return {
     id: 'uc-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8),
@@ -216,11 +296,14 @@ function renderChallenges(challenges, container) {
   if (challenges.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent = 'No UC sanctions challenges yet. Add one using the form to start building your MR request.';
+    empty.textContent =
+      'No UC sanctions challenges yet. Add one using the form to start building your MR request.';
     container.append(empty);
     return;
   }
-  const sorted = [...challenges].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  const sorted = [...challenges].sort((a, b) =>
+    (b.createdAt || '').localeCompare(a.createdAt || '')
+  );
   for (const challenge of sorted) {
     const item = document.createElement('article');
     item.className = 'complaint-item';
@@ -246,13 +329,16 @@ export {
   renderChallenges
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -265,7 +351,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -443,7 +533,8 @@ function renderDetail(challenge) {
       claimantName: challenge.claimantName,
       sanctionType: challenge.sanctionType,
       decisionDate: challenge.decisionDate,
-      reasonForHardship: challenge.hardshipReason || 'I cannot meet my basic needs due to the sanction.'
+      reasonForHardship:
+        challenge.hardshipReason || 'I cannot meet my basic needs due to the sanction.'
     });
     copyText(text, 'Hardship request copied.');
   });
@@ -608,7 +699,11 @@ function handleExport() {
     statusEl.textContent = 'No challenges to export.';
     return;
   }
-  downloadText(serializeUCSanctions(challenges), 'uc-sanctions-challenges.json', 'application/json');
+  downloadText(
+    serializeUCSanctions(challenges),
+    'uc-sanctions-challenges.json',
+    'application/json'
+  );
 }
 
 function handleImport(event) {
@@ -706,16 +801,19 @@ loadSampleBtn?.addEventListener('click', () => {
       sanctionType: 'higher-level',
       decisionDate: '2026-05-15',
       reasonForSanction: 'Failed to attend mandatory work-focused interview on 15 May 2026',
-      groundsForChallenge: 'I was not notified of the interview date. The letter was sent to my old address.',
+      groundsForChallenge:
+        'I was not notified of the interview date. The letter was sent to my old address.',
       goodReasons: 'I had informed DWP of my address change on 1 May 2026.',
-      hardshipReason: 'I cannot pay my rent or buy food because my entire standard allowance has been sanctioned.'
+      hardshipReason:
+        'I cannot pay my rent or buy food because my entire standard allowance has been sanctioned.'
     }),
     createChallengeRecord({
       claimantName: 'John Smith',
       sanctionType: 'standard',
       decisionDate: '2026-06-01',
       reasonForSanction: 'Failure to accept a voluntary job opportunity',
-      groundsForChallenge: 'The job was 40 miles away with no public transport. I applied for 3 jobs closer to home.',
+      groundsForChallenge:
+        'The job was 40 miles away with no public transport. I applied for 3 jobs closer to home.',
       goodReasons: 'Transport failure - no bus route available to the location.'
     })
   ];

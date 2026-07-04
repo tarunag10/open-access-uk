@@ -42,25 +42,33 @@ const FEE_BANDS = {
     { min: 10000.01, max: 50000, fee: 455 },
     { min: 50000.01, max: 100000, fee: 10000 }
   ],
-  'employment-tribunal': [
-    { min: 0, max: Infinity, fee: 0 }
-  ],
-  'family-court': [
-    { min: 0, max: Infinity, fee: 335 }
-  ],
-  'immigration-tribunal': [
-    { min: 0, max: Infinity, fee: 140 }
-  ],
-  'property-tribunal': [
-    { min: 0, max: Infinity, fee: 0 }
-  ]
+  'employment-tribunal': [{ min: 0, max: Infinity, fee: 0 }],
+  'family-court': [{ min: 0, max: Infinity, fee: 335 }],
+  'immigration-tribunal': [{ min: 0, max: Infinity, fee: 140 }],
+  'property-tribunal': [{ min: 0, max: Infinity, fee: 0 }]
 };
 
 const EXEMPTIONS = [
-  { id: 'domestic-violence', name: 'Domestic Violence', description: 'Fee waiver for victims of domestic violence' },
-  { id: 'asylum', name: 'Asylum Seekers', description: 'Fee exemption for asylum seekers and refugees' },
-  { id: 'benefits', name: 'Benefits Recipients', description: 'Fee waiver for those receiving qualifying benefits' },
-  { id: 'low-income', name: 'Low Income', description: 'Fee reduction or waiver based on low income' }
+  {
+    id: 'domestic-violence',
+    name: 'Domestic Violence',
+    description: 'Fee waiver for victims of domestic violence'
+  },
+  {
+    id: 'asylum',
+    name: 'Asylum Seekers',
+    description: 'Fee exemption for asylum seekers and refugees'
+  },
+  {
+    id: 'benefits',
+    name: 'Benefits Recipients',
+    description: 'Fee waiver for those receiving qualifying benefits'
+  },
+  {
+    id: 'low-income',
+    name: 'Low Income',
+    description: 'Fee reduction or waiver based on low income'
+  }
 ];
 
 function getFeeCategories() {
@@ -94,7 +102,8 @@ function getHelpWithFeesEligibility(income, savings, benefits) {
   if (receivingBenefits) {
     return {
       eligible: true,
-      reason: 'Eligible: receiving qualifying benefits (Universal Credit, income-based JSA, income-based ESA, Income Support, Pension Guarantee Credit, Working Tax Credit, 24+ Advanced Learning Loan)'
+      reason:
+        'Eligible: receiving qualifying benefits (Universal Credit, income-based JSA, income-based ESA, Income Support, Pension Guarantee Credit, Working Tax Credit, 24+ Advanced Learning Loan)'
     };
   }
 
@@ -115,7 +124,7 @@ function getHelpWithFeesEligibility(income, savings, benefits) {
 }
 
 function getExemptions() {
-  return EXEMPTIONS.map(e => e.id);
+  return EXEMPTIONS.map((e) => e.id);
 }
 
 function generateFeeEstimate(category, claimAmount, extras = {}) {
@@ -172,7 +181,6 @@ function parseFeesCalculator(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -187,7 +195,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -296,13 +303,16 @@ export {
   parseFeesCalculator
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -315,7 +325,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -375,7 +389,9 @@ function saveFormDraft() {
   if (!form) return;
   try {
     localStorage.setItem(FORM_KEY, JSON.stringify(values()));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function restoreFormDraft() {
@@ -388,7 +404,9 @@ function restoreFormDraft() {
       const field = form.elements.namedItem(name);
       if (field && value) field.value = value;
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function clearFormDraft() {
@@ -408,8 +426,15 @@ function handleCalculate(event) {
 
   const estimate = generateFeeEstimate(category, claimAmount);
   let eligibility = null;
-  if (data.benefitsStatus === 'yes' || (Number(data.monthlyIncome) < 3000 && Number(data.savingsAmount) < 16000)) {
-    eligibility = getHelpWithFeesEligibility(data.monthlyIncome || 0, data.savingsAmount || 0, data.benefitsStatus === 'yes');
+  if (
+    data.benefitsStatus === 'yes' ||
+    (Number(data.monthlyIncome) < 3000 && Number(data.savingsAmount) < 16000)
+  ) {
+    eligibility = getHelpWithFeesEligibility(
+      data.monthlyIncome || 0,
+      data.savingsAmount || 0,
+      data.benefitsStatus === 'yes'
+    );
   }
 
   resultEl.innerHTML = renderFeeResult(estimate, eligibility);
@@ -435,7 +460,8 @@ function handleCalculate(event) {
 function handleClear() {
   form.reset();
   clearFormDraft();
-  resultEl.innerHTML = '<p class="empty-state">Enter a claim amount and click Calculate to see the fee estimate.</p>';
+  resultEl.innerHTML =
+    '<p class="empty-state">Enter a claim amount and click Calculate to see the fee estimate.</p>';
   statusEl.textContent = '';
 }
 

@@ -4,12 +4,54 @@
 // ===== ../../shared/immigration/index.mjs =====
 
 const COMPLAINT_TYPES = [
-  { id: 'visa-delay', name: 'Visa Processing Delay', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Delay in processing visa applications' },
-  { id: 'brp-issue', name: 'Biometric Residence Permit Issue', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Issues with BRP card (incorrect details, not received, damaged)' },
-  { id: 'sponsorship-complaint', name: 'Sponsorship Complaint', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Complaints about sponsor licence decisions' },
-  { id: 'right-to-rent', name: 'Right to Rent Dispute', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Disputes about right to rent checks' },
-  { id: 'asylum-support', name: 'Asylum Support Complaint', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Complaints about asylum support decisions' },
-  { id: 'immigration-detention', name: 'Immigration Detention Complaint', deadlineWorkingDays: 20, escalationLevel: 1, source: 'home-office-complaints', description: 'Complaints about detention conditions or decisions' }
+  {
+    id: 'visa-delay',
+    name: 'Visa Processing Delay',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Delay in processing visa applications'
+  },
+  {
+    id: 'brp-issue',
+    name: 'Biometric Residence Permit Issue',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Issues with BRP card (incorrect details, not received, damaged)'
+  },
+  {
+    id: 'sponsorship-complaint',
+    name: 'Sponsorship Complaint',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Complaints about sponsor licence decisions'
+  },
+  {
+    id: 'right-to-rent',
+    name: 'Right to Rent Dispute',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Disputes about right to rent checks'
+  },
+  {
+    id: 'asylum-support',
+    name: 'Asylum Support Complaint',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Complaints about asylum support decisions'
+  },
+  {
+    id: 'immigration-detention',
+    name: 'Immigration Detention Complaint',
+    deadlineWorkingDays: 20,
+    escalationLevel: 1,
+    source: 'home-office-complaints',
+    description: 'Complaints about detention conditions or decisions'
+  }
 ];
 
 const ESCALATION_ROUTE = ['Home Office', 'ICIBI', 'Parliamentary Ombudsman'];
@@ -61,12 +103,36 @@ const REQUIRED_DOCUMENTS = {
 };
 
 const HOME_OFFICE_CONTACTS = {
-  'visa-delay': { email: 'ukvisafree@fcdo.gov.uk', phone: '0300 123 2241', post: 'UK Visas and Immigration, PO Box 306, Liverpool, L2 8PJ' },
-  'brp-issue': { email: 'BRPcollection@homeoffice.gov.uk', phone: '0300 123 2241', post: 'Biometric Residence Permits, PO Box 583, Glasgow, G3 8HN' },
-  'sponsorship-complaint': { email: 'sponsorshipcomplaints@homeoffice.gov.uk', phone: '0300 123 2241', post: 'Sponsorship and Licensing, PO Box 306, Liverpool, L2 8PJ' },
-  'right-to-rent': { email: 'righttorent@homeoffice.gov.uk', phone: '0300 123 2241', post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ' },
-  'asylum-support': { email: 'asylumsupport@homeoffice.gov.uk', phone: '0808 801 0800', post: 'Asylum Support, PO Box 306, Liverpool, L2 8PJ' },
-  'immigration-detention': { email: 'irc@homeoffice.gov.uk', phone: '0808 801 0800', post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ' }
+  'visa-delay': {
+    email: 'ukvisafree@fcdo.gov.uk',
+    phone: '0300 123 2241',
+    post: 'UK Visas and Immigration, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'brp-issue': {
+    email: 'BRPcollection@homeoffice.gov.uk',
+    phone: '0300 123 2241',
+    post: 'Biometric Residence Permits, PO Box 583, Glasgow, G3 8HN'
+  },
+  'sponsorship-complaint': {
+    email: 'sponsorshipcomplaints@homeoffice.gov.uk',
+    phone: '0300 123 2241',
+    post: 'Sponsorship and Licensing, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'right-to-rent': {
+    email: 'righttorent@homeoffice.gov.uk',
+    phone: '0300 123 2241',
+    post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'asylum-support': {
+    email: 'asylumsupport@homeoffice.gov.uk',
+    phone: '0808 801 0800',
+    post: 'Asylum Support, PO Box 306, Liverpool, L2 8PJ'
+  },
+  'immigration-detention': {
+    email: 'irc@homeoffice.gov.uk',
+    phone: '0808 801 0800',
+    post: 'Immigration Enforcement, PO Box 306, Liverpool, L2 8PJ'
+  }
 };
 
 function typeById(id) {
@@ -183,7 +249,6 @@ function parseImmigration(value) {
   }
 }
 
-
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -198,7 +263,6 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
-
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -274,8 +338,7 @@ function renderComplaints(complaints, container) {
   if (complaints.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent =
-      'No immigration complaints yet. Add one using the form to start tracking.';
+    empty.textContent = 'No immigration complaints yet. Add one using the form to start tracking.';
     container.append(empty);
     return;
   }
@@ -317,13 +380,16 @@ export {
   parseImmigration
 };
 
-
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
   const toggle = document.querySelector(toggleSelector);
   let stored;
-  try { stored = window.localStorage.getItem(THEME_STORAGE_KEY); } catch { /* ignore */ }
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
   let theme = resolveInitialTheme({ stored, prefersDark });
   document.documentElement.setAttribute('data-theme', theme);
   if (toggle) {
@@ -336,7 +402,11 @@ function initTheme(toggleSelector = '#theme-toggle') {
     document.documentElement.setAttribute('data-theme', theme);
     toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
   });
 }
 
@@ -679,7 +749,15 @@ function handleExport(format) {
     return;
   }
   if (format === 'csv') {
-    const headers = ['id', 'complainantName', 'complaintType', 'applicationReference', 'dateSubmitted', 'status', 'createdAt'];
+    const headers = [
+      'id',
+      'complainantName',
+      'complaintType',
+      'applicationReference',
+      'dateSubmitted',
+      'status',
+      'createdAt'
+    ];
     const rows = complaints.map((c) => [
       c.id,
       csvField(c.complainantName),
@@ -692,7 +770,11 @@ function handleExport(format) {
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     downloadText(csv, 'immigration-complaints.csv', 'text/csv');
   } else {
-    downloadText(serializeImmigration(complaints), 'immigration-complaints.json', 'application/json');
+    downloadText(
+      serializeImmigration(complaints),
+      'immigration-complaints.json',
+      'application/json'
+    );
   }
 }
 
@@ -765,22 +847,29 @@ loadSampleBtn?.addEventListener('click', () => {
       complaintType: 'visa-delay',
       applicationReference: 'GWF987654321',
       dateSubmitted: '2026-05-15',
-      description: 'Visitor visa application submitted over 8 weeks ago, no decision received. Travel booked for 1 July 2026.',
-      desiredOutcome: 'Immediate decision on application or expedited processing due to travel dates.'
+      description:
+        'Visitor visa application submitted over 8 weeks ago, no decision received. Travel booked for 1 July 2026.',
+      desiredOutcome:
+        'Immediate decision on application or expedited processing due to travel dates.'
     }),
     createImmigrationComplaint({
       complainantName: 'Ahmed Khan',
       complaintType: 'brp-issue',
       applicationReference: 'BRP-2026-555123',
       dateSubmitted: '2026-06-10',
-      description: 'BRP card received with incorrect name spelling. Collection appointment missed due to post office delay.',
+      description:
+        'BRP card received with incorrect name spelling. Collection appointment missed due to post office delay.',
       desiredOutcome: 'Corrected BRP card issued with accurate details.'
     })
   ];
   const existing = loadAll();
   const merged = [...existing];
   for (const s of sample) {
-    if (!merged.find((e) => e.complainantName === s.complainantName && e.description === s.description)) {
+    if (
+      !merged.find(
+        (e) => e.complainantName === s.complainantName && e.description === s.description
+      )
+    ) {
       merged.push(s);
     }
   }

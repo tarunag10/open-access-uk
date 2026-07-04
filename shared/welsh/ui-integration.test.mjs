@@ -1,6 +1,11 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { initLanguageToggle, applyTranslations, createLanguageBanner, getTranslations } from './ui-integration.js';
+import {
+  initLanguageToggle,
+  applyTranslations,
+  createLanguageBanner,
+  getTranslations
+} from './ui-integration.js';
 
 function createMockDocument() {
   const elements = [];
@@ -21,14 +26,18 @@ function createMockDocument() {
       textContent: '',
       style: { cssText: '' },
       _listeners: {},
-      addEventListener: (ev, fn) => { mockBtn._listeners[ev] = fn; },
+      addEventListener: (ev, fn) => {
+        mockBtn._listeners[ev] = fn;
+      },
       setAttribute: () => {},
-      getAttribute: () => null,
-    }),
+      getAttribute: () => null
+    })
   };
   let containerEl = {
-    appendChild: (child) => { containerEl._child = child; },
-    _child: null,
+    appendChild: (child) => {
+      containerEl._child = child;
+    },
+    _child: null
   };
   doc._container = containerEl;
   doc._elements = elements;
@@ -47,8 +56,12 @@ function setupMocks() {
   originalLocalStorage = globalThis.localStorage;
   globalThis.localStorage = {
     getItem: (key) => store[key] ?? null,
-    setItem: (key, val) => { store[key] = String(val); },
-    removeItem: (key) => { delete store[key]; },
+    setItem: (key, val) => {
+      store[key] = String(val);
+    },
+    removeItem: (key) => {
+      delete store[key];
+    }
   };
 
   globalThis.document = {
@@ -70,16 +83,20 @@ function setupMocks() {
         textContent: '',
         style: {},
         _listeners: {},
-        addEventListener: (ev, fn) => { el._listeners[ev] = fn; },
+        addEventListener: (ev, fn) => {
+          el._listeners[ev] = fn;
+        },
         setAttribute: () => {},
-        getAttribute: () => null,
+        getAttribute: () => null
       };
       return el;
-    },
+    }
   };
   globalThis._mockContainer = {
-    appendChild: (child) => { globalThis._mockContainer._child = child; },
-    _child: null,
+    appendChild: (child) => {
+      globalThis._mockContainer._child = child;
+    },
+    _child: null
   };
   globalThis._mockElements = [];
 }
@@ -142,8 +159,8 @@ describe('Welsh UI integration', () => {
 
     it('updates textContent of data-i18n elements', () => {
       const mockEl = {
-        getAttribute: (attr) => attr === 'data-i18n' ? 'save' : null,
-        textContent: '',
+        getAttribute: (attr) => (attr === 'data-i18n' ? 'save' : null),
+        textContent: ''
       };
       globalThis._mockElements = [mockEl];
       applyTranslations('cy');
@@ -152,8 +169,8 @@ describe('Welsh UI integration', () => {
 
     it('leaves key as textContent for unknown keys', () => {
       const mockEl = {
-        getAttribute: (attr) => attr === 'data-i18n' ? 'nonexistent.key' : null,
-        textContent: '',
+        getAttribute: (attr) => (attr === 'data-i18n' ? 'nonexistent.key' : null),
+        textContent: ''
       };
       globalThis._mockElements = [mockEl];
       applyTranslations('en');
@@ -166,7 +183,7 @@ describe('Welsh UI integration', () => {
       delete globalThis.document;
       globalThis.document = {
         querySelector: () => null,
-        createElement: () => ({ textContent: '', style: {} }),
+        createElement: () => ({ textContent: '', style: {} })
       };
       const result = initLanguageToggle('#nonexistent');
       assert.equal(result, null);

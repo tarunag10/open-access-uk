@@ -8,10 +8,10 @@ A **Case** is a local-first, client-side representation of a user's public-servi
 interface CaseV1 {
   schemaVersion: '1';
   id: string;
-  createdAt: string;       // ISO 8601
-  updatedAt: string;       // ISO 8601
+  createdAt: string; // ISO 8601
+  updatedAt: string; // ISO 8601
   title: string;
-  jurisdiction: string;    // 'england' | 'wales' | 'scotland' | 'northern-ireland' | 'uk'
+  jurisdiction: string; // 'england' | 'wales' | 'scotland' | 'northern-ireland' | 'uk'
   parties: Party[];
   events: TimelineEvent[];
   deadlines: Deadline[];
@@ -21,18 +21,18 @@ interface CaseV1 {
 }
 
 interface Party {
-  role: string;            // 'claimant', 'tenant', 'landlord', 'authority', 'adviser', 'solicitor'
+  role: string; // 'claimant', 'tenant', 'landlord', 'authority', 'adviser', 'solicitor'
   name?: string;
   org?: string;
   contact?: string;
 }
 
 interface TimelineEvent {
-  date: string;            // YYYY-MM-DD
-  type: string;            // 'notice-served', 'request-sent', 'response-received', 'hearing', 'deadline'
+  date: string; // YYYY-MM-DD
+  type: string; // 'notice-served', 'request-sent', 'response-received', 'hearing', 'deadline'
   summary: string;
   toolId?: string;
-  refs?: string[];         // IDs linking to other entities
+  refs?: string[]; // IDs linking to other entities
 }
 
 interface Deadline {
@@ -45,7 +45,7 @@ interface Deadline {
 
 interface Document {
   name: string;
-  kind: string;            // 'letter', 'evidence', 'form', 'checklist'
+  kind: string; // 'letter', 'evidence', 'form', 'checklist'
   addedAt: string;
   note?: string;
 }
@@ -72,6 +72,7 @@ interface Route {
 ## Merge strategy (v1)
 
 Two tools writing concurrently: last-write-wins per field group. A merge function `mergeCases(existing, incoming)` handles:
+
 - `events`: concatenate, deduplicate by date + type + summary
 - `deadlines`: latest status wins per ruleId
 - `documents`: deduplicate by name + addedAt

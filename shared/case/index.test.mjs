@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createCase, addEvent, addDeadline, addParty, mergeCases, exportCase, importCase, findCase } from './index.mjs';
+import {
+  createCase,
+  addEvent,
+  addDeadline,
+  addParty,
+  mergeCases,
+  exportCase,
+  importCase,
+  findCase
+} from './index.mjs';
 
 test('createCase returns a case with required fields', () => {
   const c = createCase('My case');
@@ -26,7 +35,12 @@ test('addEvent adds an event and updates updatedAt', () => {
 
 test('addDeadline adds a deadline', () => {
   const c = createCase('Test');
-  addDeadline(c, { ruleId: 'foi-response', startDate: '2026-06-01', targetDate: '2026-06-29', status: 'pending' });
+  addDeadline(c, {
+    ruleId: 'foi-response',
+    startDate: '2026-06-01',
+    targetDate: '2026-06-29',
+    status: 'pending'
+  });
   assert.equal(c.deadlines.length, 1);
   assert.equal(c.deadlines[0].ruleId, 'foi-response');
 });
@@ -42,9 +56,13 @@ test('mergeCases merges events and parties', () => {
   const existing = createCase('Test');
   addEvent(existing, { date: '2026-06-01', type: 'notice', summary: 'Served' });
 
-  const incoming = { events: [
-    { date: '2026-06-15', type: 'response', summary: 'Received' }
-  ], parties: [{ role: 'tenant', name: 'Alice' }], deadlines: [], documents: [], letters: [] };
+  const incoming = {
+    events: [{ date: '2026-06-15', type: 'response', summary: 'Received' }],
+    parties: [{ role: 'tenant', name: 'Alice' }],
+    deadlines: [],
+    documents: [],
+    letters: []
+  };
 
   const merged = mergeCases(existing, incoming);
   assert.ok(merged.events.length >= 1);

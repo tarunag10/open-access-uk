@@ -61,9 +61,7 @@ test('createBatchRequest returns valid batch object', () => {
   const batch = createBatchRequest({
     subject: 'FOI Request',
     description: 'Test description',
-    authorities: [
-      { name: 'Westminster City Council', type: 'council' }
-    ],
+    authorities: [{ name: 'Westminster City Council', type: 'council' }],
     sentDate: '2026-06-01'
   });
   assert.ok(batch.id);
@@ -77,45 +75,49 @@ test('createBatchRequest returns valid batch object', () => {
 
 test('createBatchRequest throws on missing subject', () => {
   assert.throws(
-    () => createBatchRequest({
-      description: 'Test',
-      authorities: [{ name: 'A', type: 'council' }],
-      sentDate: '2026-06-01'
-    }),
+    () =>
+      createBatchRequest({
+        description: 'Test',
+        authorities: [{ name: 'A', type: 'council' }],
+        sentDate: '2026-06-01'
+      }),
     /subject/i
   );
 });
 
 test('createBatchRequest throws on missing authorities', () => {
   assert.throws(
-    () => createBatchRequest({
-      subject: 'FOI Request',
-      description: 'Test',
-      sentDate: '2026-06-01'
-    }),
+    () =>
+      createBatchRequest({
+        subject: 'FOI Request',
+        description: 'Test',
+        sentDate: '2026-06-01'
+      }),
     /authorities/i
   );
 });
 
 test('createBatchRequest throws on empty authorities array', () => {
   assert.throws(
-    () => createBatchRequest({
-      subject: 'FOI Request',
-      description: 'Test',
-      authorities: [],
-      sentDate: '2026-06-01'
-    }),
+    () =>
+      createBatchRequest({
+        subject: 'FOI Request',
+        description: 'Test',
+        authorities: [],
+        sentDate: '2026-06-01'
+      }),
     /authorities/i
   );
 });
 
 test('createBatchRequest throws on missing sentDate', () => {
   assert.throws(
-    () => createBatchRequest({
-      subject: 'FOI Request',
-      description: 'Test',
-      authorities: [{ name: 'A', type: 'council' }]
-    }),
+    () =>
+      createBatchRequest({
+        subject: 'FOI Request',
+        description: 'Test',
+        authorities: [{ name: 'A', type: 'council' }]
+      }),
     /sentDate/i
   );
 });

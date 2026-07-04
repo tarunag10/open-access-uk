@@ -32,7 +32,9 @@ function createChallengeRecord(data) {
   const validTypes = getSanctionTypes().map((t) => t.id);
   const sanctionType = data.sanctionType || 'standard';
   if (!validTypes.includes(sanctionType)) {
-    throw new Error(`Invalid sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`);
+    throw new Error(
+      `Invalid sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`
+    );
   }
   return {
     id: 'uc-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8),
@@ -75,11 +77,14 @@ function renderChallenges(challenges, container) {
   if (challenges.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
-    empty.textContent = 'No UC sanctions challenges yet. Add one using the form to start building your MR request.';
+    empty.textContent =
+      'No UC sanctions challenges yet. Add one using the form to start building your MR request.';
     container.append(empty);
     return;
   }
-  const sorted = [...challenges].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  const sorted = [...challenges].sort((a, b) =>
+    (b.createdAt || '').localeCompare(a.createdAt || '')
+  );
   for (const challenge of sorted) {
     const item = document.createElement('article');
     item.className = 'complaint-item';

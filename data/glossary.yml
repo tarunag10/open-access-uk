@@ -1,78 +1,113 @@
 # Open Access UK Glossary
-
-Each term: plain-English definition, source link, jurisdiction notes.
+# Each term: plain-English definition, source link, jurisdiction notes.
 
 - term: Mandatory reconsideration
-  definition: A formal request asking the Department for Work and Pensions to review its own decision about your benefit. You must usually request this within 1 month of the decision date before you can appeal to a tribunal.
+  definition: >
+    A formal request asking the Department for Work and Pensions to review its own
+    decision about your benefit. You must usually request this within 1 month of the
+    decision date before you can appeal to a tribunal.
   source: GOV.UK benefit appeals
   jurisdiction: Great Britain
 
 - term: Early conciliation
-  definition: A free service provided by ACAS that gives employers and employees a chance to resolve a workplace dispute without going to an employment tribunal. Since 1 December 2025, the early conciliation period may last up to 12 weeks. The statutory time limit is paused while you are in early conciliation.
+  definition: >
+    A free service provided by ACAS that gives employers and employees a chance to
+    resolve a workplace dispute without going to an employment tribunal. Since 1 December 2025,
+    the early conciliation period may last up to 12 weeks. The statutory time limit is paused
+    while you are in early conciliation.
   source: ACAS
   jurisdiction: Great Britain
 
 - term: Section 21 notice
-  definition: A no-fault eviction notice that landlords in England could use to evict tenants without giving a reason. Abolished on 1 May 2026 by the Renters' Rights Act 2025. Any Section 21 notice served on or after this date is invalid.
+  definition: >
+    A no-fault eviction notice that landlords in England could use to evict tenants without
+    giving a reason. Abolished on 1 May 2026 by the Renters' Rights Act 2025. Any Section 21
+    notice served on or after this date is invalid.
   source: GOV.UK eviction guidance
   jurisdiction: England only
 
 - term: Section 8 notice
-  definition: A notice seeking possession of a property on specific grounds, such as rent arrears, anti-social behaviour, or breach of tenancy. Under the Renters' Rights Act 2025, Section 8 is now the only route for possession in England.
+  definition: >
+    A notice seeking possession of a property on specific grounds, such as rent arrears,
+    anti-social behaviour, or breach of tenancy. Under the Renters' Rights Act 2025,
+    Section 8 is now the only route for possession in England.
   source: Shelter
   jurisdiction: England only
 
 - term: Working day
-  definition: Monday to Friday, excluding public (bank) holidays. FOI response deadlines and many complaint stages are measured in working days.
+  definition: Monday to Friday, excluding public (bank) holidays.
   source: GOV.UK
   jurisdiction: England and Wales
 
 - term: Subject access request (SAR)
-  definition: A request under UK GDPR to obtain a copy of personal data held about you by an organisation. Organisations must usually respond within 1 month, using the corresponding-date rule (e.g. 15 Jan → 15 Feb).
+  definition: >
+    A request under UK GDPR to obtain a copy of personal data held about you by an
+    organisation. Organisations must usually respond within 1 month.
   source: ICO
   jurisdiction: UK
 
 - term: Local Government and Social Care Ombudsman (LGSCO)
-  definition: Investigates complaints about council services in England, including social care, housing, planning, and education. Scotland has SPSO, Wales has PSOW.
+  definition: >
+    Investigates complaints about council services in England, including social care, housing,
+    planning, and education. Scotland has SPSO, Wales has PSOW.
   source: LGSCO
   jurisdiction: England
 
 - term: Parliamentary and Health Service Ombudsman (PHSO)
-  definition: Investigates complaints about UK government departments and the NHS in England. Scotland has SPSO, Wales has PSOW, Northern Ireland has NIPSO.
+  definition: >
+    Investigates complaints about UK government departments and the NHS in England.
+    Scotland has SPSO, Wales has PSOW, Northern Ireland has NIPSO.
   source: PHSO
-  jurisdiction: England / UK Government
+  jurisdiction: England
 
 - term: Help with Fees (EX160)
-  definition: A scheme that can waive or reduce court and tribunal fees if you are on a low income or receive certain benefits. Apply using form EX160.
+  definition: >
+    A scheme that can waive or reduce court and tribunal fees if you are on a low income
+    or receive certain benefits. Apply using form EX160.
   source: GOV.UK
   jurisdiction: England and Wales
 
 - term: Prescribed information (deposit)
-  definition: Information that landlords must give tenants within 30 days of receiving a deposit, including the scheme name, deposit amount, and how to resolve disputes. Failure to provide prescribed information can affect possession claims.
+  definition: >
+    Information that landlords must give tenants within 30 days of receiving a deposit,
+    including the scheme name, deposit amount, and how to resolve disputes.
   source: Shelter
   jurisdiction: England and Wales
 
 - term: Renters' Rights Act 2025 (RRA)
-  definition: Major housing law reform that abolished Section 21 no-fault evictions in England, introduced new mandatory grounds for possession, and raised the serious-arrears threshold from 2 to 3 months. Came into force 1 May 2026.
+  definition: >
+    Major housing law reform that abolished Section 21 no-fault evictions in England,
+    introduced new mandatory grounds for possession, and raised the serious-arrears threshold
+    from 2 to 3 months. Came into force 1 May 2026.
   source: legislation.gov.uk
   jurisdiction: England
 
 - term: Employment Rights Act 2025 (ERA)
-  definition: Employment law reform extending the unfair dismissal time limit from 3 months to 6 months for most claims (expected from October 2026), and introducing day-one rights on unfair dismissal, parental leave, and flexible working.
+  definition: >
+    Employment law reform extending the unfair dismissal time limit from 3 months to 6 months
+    for most claims (expected from October 2026), and introducing day-one rights on unfair
+    dismissal, parental leave, and flexible working.
   source: legislation.gov.uk
   jurisdiction: Great Britain
 
 - term: Awaab's Law
-  definition: Requires social housing landlords in England to investigate and fix serious hazards (damp, mould, excess cold) within fixed timescales. Comes into force October 2026.
+  definition: >
+    Requires social housing landlords in England to investigate and fix serious hazards
+    (damp, mould, excess cold) within fixed timescales. Comes into force October 2026.
   source: GOV.UK
   jurisdiction: England
 
 - term: Mandatory possession ground
-  definition: A ground for eviction where the court must grant a possession order if the landlord proves the ground. Examples: serious rent arrears, landlord intends to sell, landlord or family need to live in the property.
+  definition: >
+    A ground for eviction where the court must grant a possession order if the landlord
+    proves the ground. Examples: serious rent arrears, landlord intends to sell, landlord
+    or family need to live in the property.
   source: Shelter
   jurisdiction: England
 
 - term: Discretionary possession ground
-  definition: A ground for eviction where the court has discretion to decide whether it is reasonable to grant a possession order. Examples: breach of tenancy, nuisance, persistent late payment.
+  definition: >
+    A ground for eviction where the court has discretion to decide whether it is reasonable
+    to grant a possession order.
   source: Shelter
   jurisdiction: England

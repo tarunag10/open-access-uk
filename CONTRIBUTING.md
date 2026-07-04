@@ -85,6 +85,7 @@ Good first sources to review: `shared/eviction/index.mjs` (RRA 2025 accuracy), `
 The suite uses shared CSS custom properties and components defined in `shared/claude/`. See [docs/css-architecture.md](./docs/css-architecture.md) for the full guide.
 
 Key points:
+
 - Design tokens live in `shared/claude/tokens.css` — colours, spacing, fonts, radii
 - Shared components in `shared/claude/components.css` — buttons, cards, forms, header, footer
 - Each tool inlines the full shared CSS stack into its `styles.css` then adds tool-specific overrides

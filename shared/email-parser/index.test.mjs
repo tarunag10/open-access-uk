@@ -104,7 +104,9 @@ describe('parseAuthorityInfo', () => {
 
 describe('parseCaseTimeline', () => {
   it('extracts dated events', () => {
-    const timeline = parseCaseTimeline('15/03/2026 - Complaint submitted\n20/03/2026 - Acknowledged');
+    const timeline = parseCaseTimeline(
+      '15/03/2026 - Complaint submitted\n20/03/2026 - Acknowledged'
+    );
     assert.equal(timeline.length, 2);
     assert.ok(timeline[0].date.includes('15'));
     assert.ok(timeline[1].date.includes('20'));
@@ -118,7 +120,9 @@ describe('parseCaseTimeline', () => {
 
 describe('extractKeyInformation', () => {
   it('returns all fields', () => {
-    const result = extractKeyInformation('REF/12345 within 20 working days\nKind regards,\nNHS Trust');
+    const result = extractKeyInformation(
+      'REF/12345 within 20 working days\nKind regards,\nNHS Trust'
+    );
     assert.ok(result.references);
     assert.ok(result.deadlines);
     assert.ok(result.authority);
@@ -172,7 +176,13 @@ describe('formatParsedEmail', () => {
 
 describe('serializeEmailParser / parseEmailParser', () => {
   it('round-trips data', () => {
-    const data = { references: ['REF/111'], deadlines: [], authority: '', nextSteps: [], dates: [] };
+    const data = {
+      references: ['REF/111'],
+      deadlines: [],
+      authority: '',
+      nextSteps: [],
+      dates: []
+    };
     const serialized = serializeEmailParser(data);
     const parsed = parseEmailParser(serialized);
     assert.deepStrictEqual(parsed, data);
@@ -180,11 +190,23 @@ describe('serializeEmailParser / parseEmailParser', () => {
 
   it('returns default on invalid input', () => {
     const result = parseEmailParser('not json');
-    assert.deepStrictEqual(result, { references: [], deadlines: [], authority: '', nextSteps: [], dates: [] });
+    assert.deepStrictEqual(result, {
+      references: [],
+      deadlines: [],
+      authority: '',
+      nextSteps: [],
+      dates: []
+    });
   });
 
   it('returns default on null', () => {
     const result = parseEmailParser(null);
-    assert.deepStrictEqual(result, { references: [], deadlines: [], authority: '', nextSteps: [], dates: [] });
+    assert.deepStrictEqual(result, {
+      references: [],
+      deadlines: [],
+      authority: '',
+      nextSteps: [],
+      dates: []
+    });
   });
 });

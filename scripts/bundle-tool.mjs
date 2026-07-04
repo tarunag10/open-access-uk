@@ -21,11 +21,20 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const root = join(__dirname, '..');
 
 const TOOL_DIRS = [
-  'accessible-formats-request', 'batch-foi', 'benefits-appeals',
-  'deadline-cascade', 'employment-tribunal', 'eviction-notice-validator',
-  'evidence-checker', 'fee-calculator', 'immigration-complaints',
-  'nhs-complaints-tracker', 'ombudsman-outcomes', 'professional-complaints',
-  'send-helper', 'uc-sanctions'
+  'accessible-formats-request',
+  'batch-foi',
+  'benefits-appeals',
+  'deadline-cascade',
+  'employment-tribunal',
+  'eviction-notice-validator',
+  'evidence-checker',
+  'fee-calculator',
+  'immigration-complaints',
+  'nhs-complaints-tracker',
+  'ombudsman-outcomes',
+  'professional-complaints',
+  'send-helper',
+  'uc-sanctions'
 ];
 
 /**
@@ -86,17 +95,16 @@ function bundleApp(toolDir) {
   //    The marker is typically "// ===== App logic =====" or the first section after tracker.js
   //    Look for the first line that isn't a comment or whitespace after the inlined section
   const appLogicStart = currentApp.search(/\n\/\/ ===== (?:App logic|Theme init)/);
-  const appLogic = appLogicStart >= 0
-    ? currentApp.slice(appLogicStart + 1)
-    : currentApp;
+  const appLogic = appLogicStart >= 0 ? currentApp.slice(appLogicStart + 1) : currentApp;
 
   // 4. Build the banner and assemble
-  const banner = `// ${toolDir}/src/app.js — generated bundle (all shared modules inlined)\n` +
+  const banner =
+    `// ${toolDir}/src/app.js — generated bundle (all shared modules inlined)\n` +
     `// Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs ${toolDir}\n\n`;
 
   // Add theme module inline if not already covered by imports
   const themeSrc = [];
-  if (!importPaths.some(p => p.includes('theme'))) {
+  if (!importPaths.some((p) => p.includes('theme'))) {
     const themePath = join(root, 'shared', 'theme', 'index.mjs');
     if (existsSync(themePath)) {
       const themeModule = readFileSync(themePath, 'utf8')
@@ -108,11 +116,12 @@ function bundleApp(toolDir) {
   }
 
   // Build the tracker inline (with escapeHtml and other helpers)
-  const trackerHelpers = trackerSrc
-    .replace(/^import\s+[^;]+;\n?/gm, '');
+  const trackerHelpers = trackerSrc.replace(/^import\s+[^;]+;\n?/gm, '');
 
-  const bundled = banner +
-    inlinedModules.join('\n\n') + '\n\n' +
+  const bundled =
+    banner +
+    inlinedModules.join('\n\n') +
+    '\n\n' +
     (themeSrc.length > 0 ? themeSrc.join('\n\n') + '\n\n' : '') +
     `// ===== src/tracker.js (imports resolved) =====\n${trackerHelpers}\n\n` +
     appLogic;
@@ -125,9 +134,7 @@ const args = process.argv.slice(2);
 const checkMode = args.includes('--check');
 const allMode = args.includes('--all');
 
-const targets = allMode
-  ? TOOL_DIRS
-  : args.filter(a => !a.startsWith('--'));
+const targets = allMode ? TOOL_DIRS : args.filter((a) => !a.startsWith('--'));
 
 if (targets.length === 0) {
   console.error('Usage: node scripts/bundle-tool.mjs <tool-dir> [--check] [--all]');
@@ -160,6 +167,8 @@ for (const target of targets) {
 }
 
 if (checkMode && failures > 0) {
-  console.error(`\n${failures} divergence(s) found. Run node scripts/bundle-tool.mjs --all to regenerate.`);
+  console.error(
+    `\n${failures} divergence(s) found. Run node scripts/bundle-tool.mjs --all to regenerate.`
+  );
   process.exit(1);
 }

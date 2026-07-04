@@ -17,7 +17,7 @@ test('getOmbudsmen returns all 11 ombudsmen', () => {
   const list = getOmbudsmen();
   assert.ok(Array.isArray(list));
   assert.equal(list.length, 11);
-  const ids = list.map(o => o.id);
+  const ids = list.map((o) => o.id);
   assert.ok(ids.includes('PHSO'));
   assert.ok(ids.includes('housing'));
 });

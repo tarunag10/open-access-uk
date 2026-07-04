@@ -1,12 +1,9 @@
 // Core logic for Case Aggregator tool.
 // Re-exports and extends shared/case for this UI. Provides example packs from the suite.
 
-import {
-  buildCaseFile,
-  composeFromPacks
-} from '../../shared/case/index.mjs';
+import { createCase, exportCase, mergeCases, importCase } from '../../shared/case/index.mjs';
 
-export { buildCaseFile, composeFromPacks };
+export { createCase, exportCase, mergeCases, importCase };
 
 export const examplePacks = [
   {
@@ -89,16 +86,21 @@ Templates: 2
 ];
 
 export function getExampleById(id) {
-  return examplePacks.find(p => p.id === id);
+  return examplePacks.find((p) => p.id === id);
 }
 
 export function buildAggregatorPack(selectedIds = [], customPacks = [], options = {}) {
   const selectedExamples = selectedIds
-    .map(id => getExampleById(id))
+    .map((id) => getExampleById(id))
     .filter(Boolean)
-    .map(p => ({ title: p.title, markdown: p.content }));
+    .map((p) => ({ title: p.title, markdown: p.content }));
 
-  const allPacks = [...selectedExamples, ...customPacks.filter(p => p && p.content).map(p => ({ title: p.title, markdown: p.content }))];
+  const allPacks = [
+    ...selectedExamples,
+    ...customPacks
+      .filter((p) => p && p.content)
+      .map((p) => ({ title: p.title, markdown: p.content }))
+  ];
 
   if (allPacks.length === 0) {
     return buildCaseFile({
@@ -112,9 +114,15 @@ export function buildAggregatorPack(selectedIds = [], customPacks = [], options 
 
   return composeFromPacks(allPacks, {
     title: options.title || 'Combined local case file',
-    context: options.context || 'Aggregated from letter-generator, public-service-directory, accessible-forms, legal-templates and design-system exports.',
+    context:
+      options.context ||
+      'Aggregated from letter-generator, public-service-directory, accessible-forms, legal-templates and design-system exports.',
     sources: options.sources || [
-      { title: 'Open Access UK shared case foundations', detail: 'Pure browser composition of local packs.', url: 'https://github.com/tarunag10/open-access-uk' }
+      {
+        title: 'Open Access UK shared case foundations',
+        detail: 'Pure browser composition of local packs.',
+        url: 'https://github.com/tarunag10/open-access-uk'
+      }
     ]
   });
 }

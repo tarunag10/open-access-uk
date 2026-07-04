@@ -503,8 +503,8 @@ button.secondary {
 
 .product-panel {
   background:
-    radial-gradient(circle, color-mix(in srgb, var(--line) 48%, transparent) 1px, transparent 1px)
-      0 0 / 14px 14px,
+    radial-gradient(circle, color-mix(in srgb, var(--line) 48%, transparent) 1px, transparent 1px) 0
+      0 / 14px 14px,
     var(--paper);
 }
 

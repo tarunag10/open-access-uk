@@ -1,23 +1,69 @@
 import { addWorkingDays } from '../deadlines/index.mjs';
 
 const REPAIR_CATEGORIES = [
-  { id: 'emergency', name: 'Emergency Repair', deadlineHours: 24, description: 'Serious risk to health or safety (gas leak, exposed wiring, flooding, insecure property)', source: 'housing-ombudsman-guidance' },
-  { id: 'urgent', name: 'Urgent Repair', deadlineWorkingDays: 5, description: 'Significant impact on daily living (broken heating, toilet not working, minor leaks)', source: 'decents-homes-standard' },
-  { id: 'routine', name: 'Routine Repair', deadlineCalendarDays: 28, description: 'Planned maintenance and non-urgent fixes', source: 'housing-ombudsman-guidance' }
+  {
+    id: 'emergency',
+    name: 'Emergency Repair',
+    deadlineHours: 24,
+    description:
+      'Serious risk to health or safety (gas leak, exposed wiring, flooding, insecure property)',
+    source: 'housing-ombudsman-guidance'
+  },
+  {
+    id: 'urgent',
+    name: 'Urgent Repair',
+    deadlineWorkingDays: 5,
+    description:
+      'Significant impact on daily living (broken heating, toilet not working, minor leaks)',
+    source: 'decents-homes-standard'
+  },
+  {
+    id: 'routine',
+    name: 'Routine Repair',
+    deadlineCalendarDays: 28,
+    description: 'Planned maintenance and non-urgent fixes',
+    source: 'housing-ombudsman-guidance'
+  }
 ];
 
 const OMBUDSMAN_STAGES = [
-  { id: 'stage-1', name: 'Stage 1: Investigation', deadlineWorkingDays: 56, description: 'Landlord investigates and responds' },
-  { id: 'stage-2', name: 'Stage 2: Review', deadlineWorkingDays: 56, description: 'Independent review of Stage 1 response' },
-  { id: 'ombudsman', name: 'Housing Ombudsman', description: 'Escalation after completing landlord process' }
+  {
+    id: 'stage-1',
+    name: 'Stage 1: Investigation',
+    deadlineWorkingDays: 56,
+    description: 'Landlord investigates and responds'
+  },
+  {
+    id: 'stage-2',
+    name: 'Stage 2: Review',
+    deadlineWorkingDays: 56,
+    description: 'Independent review of Stage 1 response'
+  },
+  {
+    id: 'ombudsman',
+    name: 'Housing Ombudsman',
+    description: 'Escalation after completing landlord process'
+  }
 ];
 
 const EVIDENCE_CHECKLIST = [
   { id: 'photos', name: 'Photographs', description: 'Clear photos of the disrepair issue' },
   { id: 'dates', name: 'Dates of Issues', description: 'When each issue started and occurred' },
-  { id: 'correspondence', name: 'Correspondence', description: 'Letters, emails, and records of communication with landlord' },
-  { id: 'medical', name: 'Medical Evidence', description: 'GP letters or medical reports linking health issues to disrepair' },
-  { id: 'impact', name: 'Impact Statement', description: 'How the disrepair affects daily life and wellbeing' }
+  {
+    id: 'correspondence',
+    name: 'Correspondence',
+    description: 'Letters, emails, and records of communication with landlord'
+  },
+  {
+    id: 'medical',
+    name: 'Medical Evidence',
+    description: 'GP letters or medical reports linking health issues to disrepair'
+  },
+  {
+    id: 'impact',
+    name: 'Impact Statement',
+    description: 'How the disrepair affects daily life and wellbeing'
+  }
 ];
 
 export function getRepairCategories() {
@@ -25,16 +71,24 @@ export function getRepairCategories() {
 }
 
 export function getRepairDeadlines(category) {
-  const cat = REPAIR_CATEGORIES.find(c => c.id === category);
+  const cat = REPAIR_CATEGORIES.find((c) => c.id === category);
   return cat || null;
 }
 
 export function createRepairRecord(data) {
-  if (!data.propertyAddress || !data.landlordName || !data.category || !data.description || !data.reportedDate) {
-    throw new Error('Missing required fields: propertyAddress, landlordName, category, description, reportedDate');
+  if (
+    !data.propertyAddress ||
+    !data.landlordName ||
+    !data.category ||
+    !data.description ||
+    !data.reportedDate
+  ) {
+    throw new Error(
+      'Missing required fields: propertyAddress, landlordName, category, description, reportedDate'
+    );
   }
 
-  const category = REPAIR_CATEGORIES.find(c => c.id === data.category);
+  const category = REPAIR_CATEGORIES.find((c) => c.id === data.category);
   if (!category) {
     throw new Error(`Invalid category: ${data.category}`);
   }
@@ -54,7 +108,7 @@ export function createRepairRecord(data) {
 }
 
 export function getDeadlineStatus(repair, currentDate) {
-  const category = REPAIR_CATEGORIES.find(c => c.id === repair.category);
+  const category = REPAIR_CATEGORIES.find((c) => c.id === repair.category);
   if (!category) return 'unknown';
 
   const reported = new Date(repair.reportedDate);

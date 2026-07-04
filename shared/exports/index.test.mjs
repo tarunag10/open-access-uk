@@ -13,7 +13,9 @@ test('generateAdviserPack produces HTML with case data', () => {
     jurisdiction: 'england',
     parties: [{ role: 'tenant', name: 'Alice' }],
     events: [{ date: '2026-06-01', type: 'notice-served', summary: 'Section 21 notice' }],
-    deadlines: [{ ruleId: 'et-claim', startDate: '2026-06-01', targetDate: '2026-09-01', status: 'pending' }],
+    deadlines: [
+      { ruleId: 'et-claim', startDate: '2026-06-01', targetDate: '2026-09-01', status: 'pending' }
+    ],
     documents: [{ name: 'Photo', kind: 'evidence', addedAt: '2026-06-02' }],
     letters: [{ toolId: 'eviction', templateId: 'challenge', renderedAt: '2026-06-03', fields: {} }]
   };
@@ -28,7 +30,13 @@ test('generateAdviserPack returns null for no case', () => {
 });
 
 test('generateCaseSummary includes case title', () => {
-  const s = generateCaseSummary({ title: 'Test', events: [], deadlines: [], documents: [], letters: [] });
+  const s = generateCaseSummary({
+    title: 'Test',
+    events: [],
+    deadlines: [],
+    documents: [],
+    letters: []
+  });
   assert.ok(s.includes('Test'));
   assert.ok(s.includes('Not legal advice'));
 });

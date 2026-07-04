@@ -260,7 +260,11 @@ test('validateSection8 ground 14 with no nuisance details returns error', () => 
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, false);
-  assert.ok(result.errors.some((e) => e.toLowerCase().includes('nuisance') || e.toLowerCase().includes('anti-social')));
+  assert.ok(
+    result.errors.some(
+      (e) => e.toLowerCase().includes('nuisance') || e.toLowerCase().includes('anti-social')
+    )
+  );
 });
 
 // --- generateChallengeText ---

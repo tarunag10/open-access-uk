@@ -19,56 +19,56 @@ describe('getRegulators', () => {
 
   it('includes GMC for doctors', () => {
     const regulators = getRegulators();
-    const gmc = regulators.find(r => r.id === 'GMC');
+    const gmc = regulators.find((r) => r.id === 'GMC');
     assert.ok(gmc);
     assert.equal(gmc.profession, 'Doctors');
   });
 
   it('includes SRA for solicitors', () => {
     const regulators = getRegulators();
-    const sra = regulators.find(r => r.id === 'SRA');
+    const sra = regulators.find((r) => r.id === 'SRA');
     assert.ok(sra);
     assert.equal(sra.profession, 'Solicitors');
   });
 
   it('includes LeO for legal ombudsman', () => {
     const regulators = getRegulators();
-    const leo = regulators.find(r => r.id === 'LeO');
+    const leo = regulators.find((r) => r.id === 'LeO');
     assert.ok(leo);
     assert.equal(leo.profession, 'Legal Services');
   });
 
   it('includes ACCA for accountants', () => {
     const regulators = getRegulators();
-    const acca = regulators.find(r => r.id === 'ACCA');
+    const acca = regulators.find((r) => r.id === 'ACCA');
     assert.ok(acca);
     assert.equal(acca.profession, 'Accountants');
   });
 
   it('includes RICS for surveyors', () => {
     const regulators = getRegulators();
-    const rics = regulators.find(r => r.id === 'RICS');
+    const rics = regulators.find((r) => r.id === 'RICS');
     assert.ok(rics);
     assert.equal(rics.profession, 'Surveyors');
   });
 
   it('includes NMC for nurses', () => {
     const regulators = getRegulators();
-    const nmc = regulators.find(r => r.id === 'NMC');
+    const nmc = regulators.find((r) => r.id === 'NMC');
     assert.ok(nmc);
     assert.equal(nmc.profession, 'Nurses and Midwives');
   });
 
   it('includes GPhC for pharmacists', () => {
     const regulators = getRegulators();
-    const gphc = regulators.find(r => r.id === 'GPhC');
+    const gphc = regulators.find((r) => r.id === 'GPhC');
     assert.ok(gphc);
     assert.equal(gphc.profession, 'Pharmacists');
   });
 
   it('includes BPS for psychologists', () => {
     const regulators = getRegulators();
-    const bps = regulators.find(r => r.id === 'BPS');
+    const bps = regulators.find((r) => r.id === 'BPS');
     assert.ok(bps);
     assert.equal(bps.profession, 'Psychologists');
   });
@@ -265,7 +265,7 @@ describe('getFitnessToPractiseProcess', () => {
     const process = getFitnessToPractiseProcess('GMC');
     assert.ok(Array.isArray(process));
     assert.ok(process.length > 0);
-    assert.ok(process.every(s => s.name && s.description));
+    assert.ok(process.every((s) => s.name && s.description));
   });
 
   it('returns process steps for SRA', () => {

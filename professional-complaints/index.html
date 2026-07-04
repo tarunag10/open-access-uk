@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <noscript><p>This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere. See <a href="https://www.gov.uk/">GOV.UK</a> or <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.</p></noscript>
+    <noscript
+      ><p>
+        This tool requires JavaScript. Everything runs in your browser — no data is sent anywhere.
+        See <a href="https://www.gov.uk/">GOV.UK</a> or
+        <a href="https://www.citizensadvice.org.uk/">Citizens Advice</a> for guidance.
+      </p></noscript
+    >
     <a class="skip-link" href="#tool">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="index.html">Open Access UK</a>
@@ -28,9 +34,9 @@
         <div>
           <h1>Professional Complaints Router</h1>
           <p>
-            Complain about doctors, solicitors, accountants, and other regulated professionals.
-            Find the right regulator, generate a complaint letter, and track fitness-to-practise processes.
-            Everything runs in your browser.
+            Complain about doctors, solicitors, accountants, and other regulated professionals. Find
+            the right regulator, generate a complaint letter, and track fitness-to-practise
+            processes. Everything runs in your browser.
           </p>
           <div class="hero-actions">
             <a class="button" href="#tool">Add a complaint</a>
@@ -46,26 +52,24 @@
         </div>
       </section>
 
-
       <section id="tool" class="grid" aria-label="Professional complaint form">
         <form id="complaint-form" class="panel" aria-describedby="form-status">
           <h2>Add or update a professional complaint</h2>
 
           <label for="complainantName">Your name (complainant)</label>
-          <input
-            id="complainantName"
-            name="complainantName"
-            placeholder="e.g. Jane Doe"
-            required
-          />
+          <input id="complainantName" name="complainantName" placeholder="e.g. Jane Doe" required />
 
           <label for="regulator">Regulator</label>
           <select id="regulator" name="regulator">
             <option value="GMC">General Medical Council (GMC) — Doctors</option>
             <option value="SRA">Solicitors Regulation Authority (SRA) — Solicitors</option>
             <option value="LeO">Legal Ombudsman (LeO) — Legal Services</option>
-            <option value="ACCA">Association of Chartered Certified Accountants (ACCA) — Accountants</option>
-            <option value="RICS">Royal Institution of Chartered Surveyors (RICS) — Surveyors</option>
+            <option value="ACCA">
+              Association of Chartered Certified Accountants (ACCA) — Accountants
+            </option>
+            <option value="RICS">
+              Royal Institution of Chartered Surveyors (RICS) — Surveyors
+            </option>
             <option value="NMC">Nursing and Midwifery Council (NMC) — Nurses and Midwives</option>
             <option value="GPhC">General Pharmaceutical Council (GPhC) — Pharmacists</option>
             <option value="BPS">British Psychological Society (BPS) — Psychologists</option>
@@ -80,11 +84,7 @@
           />
 
           <label for="practiceName">Practice / firm name</label>
-          <input
-            id="practiceName"
-            name="practiceName"
-            placeholder="e.g. City Medical Practice"
-          />
+          <input id="practiceName" name="practiceName" placeholder="e.g. City Medical Practice" />
 
           <label for="practiceAddress">Practice / firm address</label>
           <input
@@ -171,7 +171,8 @@
             <h3>Legal Ombudsman</h3>
             <p>
               Within 6 months of the final response from the service provider. The Legal Ombudsman
-              investigates service complaints including delays, poor communication, and billing issues.
+              investigates service complaints including delays, poor communication, and billing
+              issues.
             </p>
           </article>
           <article class="card">
@@ -205,8 +206,8 @@
         <a href="https://www.bps.org.uk" rel="noopener noreferrer">BPS</a>
       </nav>
       <p>
-        Open-source, privacy-first, and local to your browser. Not legal advice.
-        Verify deadlines against current regulator guidance.
+        Open-source, privacy-first, and local to your browser. Not legal advice. Verify deadlines
+        against current regulator guidance.
       </p>
     </footer>
     <script type="module" src="src/app.js"></script>

@@ -20,7 +20,14 @@ import {
 test('getAuthorityTypes returns all expected types', () => {
   const types = getAuthorityTypes();
   const ids = types.map((t) => t.id);
-  for (const expected of ['council', 'nhs-trust', 'police', 'university', 'government-department', 'police-fire-authority']) {
+  for (const expected of [
+    'council',
+    'nhs-trust',
+    'police',
+    'university',
+    'government-department',
+    'police-fire-authority'
+  ]) {
     assert.ok(ids.includes(expected), `missing authority type ${expected}`);
   }
 });
@@ -60,7 +67,8 @@ test('createBatchRequest produces valid batch with required fields', () => {
 
 test('createBatchRequest throws on missing subject', () => {
   assert.throws(
-    () => createBatchRequest({ authorities: [{ name: 'A', type: 'council' }], sentDate: '2026-06-01' }),
+    () =>
+      createBatchRequest({ authorities: [{ name: 'A', type: 'council' }], sentDate: '2026-06-01' }),
     /subject is required/
   );
 });

@@ -9,7 +9,7 @@ import {
   getSENDTribunalStages,
   getEvidenceChecklist,
   serializeSEND,
-  parseSEND,
+  parseSEND
 } from './index.mjs';
 
 describe('getAppealTypes', () => {
@@ -89,7 +89,7 @@ describe('generateExclusionReviewText', () => {
       pupilName: 'Alex Smith',
       exclusionType: 'fixed-term',
       exclusionDate: '2026-06-15',
-      grounds: 'Disruptive behaviour in class',
+      grounds: 'Disruptive behaviour in class'
     };
     const text = generateExclusionReviewText(data);
     assert.ok(text.includes('Oakwood Primary'));
@@ -105,7 +105,7 @@ describe('generateExclusionReviewText', () => {
       pupilName: 'Child',
       exclusionType: 'permanent',
       exclusionDate: '2026-01-01',
-      grounds: 'Reason',
+      grounds: 'Reason'
     };
     assert.equal(typeof generateExclusionReviewText(data), 'string');
   });
@@ -117,7 +117,7 @@ describe('generateSENDTribunalText', () => {
       childName: 'Jordan Doe',
       laName: 'Bristol City Council',
       ehcpDate: '2025-09-01',
-      grounds: 'The LA failed to issue the EHCP within statutory timescales',
+      grounds: 'The LA failed to issue the EHCP within statutory timescales'
     };
     const text = generateSENDTribunalText(data);
     assert.ok(text.includes('Jordan Doe'));
@@ -131,7 +131,7 @@ describe('generateSENDTribunalText', () => {
       childName: 'Child',
       laName: 'Council',
       ehcpDate: '2025-01-01',
-      grounds: 'Grounds',
+      grounds: 'Grounds'
     };
     assert.equal(typeof generateSENDTribunalText(data), 'string');
   });
@@ -173,8 +173,12 @@ describe('serializeSEND / parseSEND', () => {
     const store = {};
     const localStorage = {
       getItem: (k) => store[k] ?? null,
-      setItem: (k, v) => { store[k] = String(v); },
-      removeItem: (k) => { delete store[k]; },
+      setItem: (k, v) => {
+        store[k] = String(v);
+      },
+      removeItem: (k) => {
+        delete store[k];
+      }
     };
 
     const data = { childName: 'Test', appealType: 'send-tribunal', count: 3 };

@@ -24,86 +24,86 @@ const tools = [
     dir: 'uc-sanctions',
     title: 'UC Sanctions Challenge',
     description:
-      'Browser-only tool to challenge Universal Credit sanctions. Generate representations, track mandatory reconsideration windows, and prepare for tribunal appeals.',
+      'Browser-only tool to challenge Universal Credit sanctions. Generate representations, track mandatory reconsideration windows, and prepare for tribunal appeals.'
   },
   {
     dir: 'immigration-complaints',
     title: 'Immigration Complaint Tool',
     description:
-      'Browser-only immigration complaint drafting tool. Structure complaints about UKVI, Home Office case handling, detention conditions, and legal representative conduct.',
+      'Browser-only immigration complaint drafting tool. Structure complaints about UKVI, Home Office case handling, detention conditions, and legal representative conduct.'
   },
   {
     dir: 'benefits-appeals',
     title: 'Benefits Appeals Helper',
     description:
-      'Browser-only preparation tool for benefit appeal hearings. Track mandatory reconsideration deadlines, organise grounds of appeal, and build submission packs for tribunals.',
+      'Browser-only preparation tool for benefit appeal hearings. Track mandatory reconsideration deadlines, organise grounds of appeal, and build submission packs for tribunals.'
   },
   {
     dir: 'eviction-notice-validator',
     title: 'Eviction Notice Validator',
     description:
-      'Browser-only eviction notice checker for private renters in England. Validate section 21 and section 8 notice forms, dates, and deposit protection requirements.',
+      'Browser-only eviction notice checker for private renters in England. Validate section 21 and section 8 notice forms, dates, and deposit protection requirements.'
   },
   {
     dir: 'send-helper',
     title: 'School SEND Helper',
     description:
-      'Browser-only tool for parents and advocates navigating the Special Educational Needs and Disabilities (SEND) system. Draft EHCNA requests, track deadlines, and prepare for annual reviews.',
+      'Browser-only tool for parents and advocates navigating the Special Educational Needs and Disabilities (SEND) system. Draft EHCNA requests, track deadlines, and prepare for annual reviews.'
   },
   {
     dir: 'batch-foi',
     title: 'Multi-Authority FOI Batch Tool',
     description:
-      'Browser-only batch Freedom of Information request tool. Send the same request template to multiple public authorities and track responses in one place.',
+      'Browser-only batch Freedom of Information request tool. Send the same request template to multiple public authorities and track responses in one place.'
   },
   {
     dir: 'deadline-cascade',
     title: 'Deadline Cascade Visualizer',
     description:
-      'Browser-only deadline cascade visualizer for UK public-law challenges and complaints. Map statutory, ombudsman, and judicial review time limits across connected routes.',
+      'Browser-only deadline cascade visualizer for UK public-law challenges and complaints. Map statutory, ombudsman, and judicial review time limits across connected routes.'
   },
   {
     dir: 'fee-calculator',
     title: 'Court and Tribunal Fee Calculator',
     description:
-      'Browser-only fee calculator for UK courts and tribunals. Lookup fees for employment tribunal, immigration, property chamber, and general civil claims.',
+      'Browser-only fee calculator for UK courts and tribunals. Lookup fees for employment tribunal, immigration, property chamber, and general civil claims.'
   },
   {
     dir: 'evidence-checker',
     title: 'Evidence Upload Readiness Checker',
     description:
-      'Browser-only evidence readiness checker. Verify that documents are complete, labelled, formatted, and admissible before uploading to a tribunal or ombudsman portal.',
+      'Browser-only evidence readiness checker. Verify that documents are complete, labelled, formatted, and admissible before uploading to a tribunal or ombudsman portal.'
   },
   {
     dir: 'nhs-complaints-tracker',
     title: 'NHS Complaints Tracker',
     description:
-      'Browser-only NHS complaints tracking tool. Log complaints with GP surgeries, hospital trusts, and ICBs. Track stages from local resolution to the Parliamentary and Health Service Ombudsman.',
+      'Browser-only NHS complaints tracking tool. Log complaints with GP surgeries, hospital trusts, and ICBs. Track stages from local resolution to the Parliamentary and Health Service Ombudsman.'
   },
   {
     dir: 'ombudsman-outcomes',
     title: 'Ombudsman Outcomes Database',
     description:
-      'Browser-only reference tool for UK ombudsman decisions. Browse and search outcome summaries from the Parliamentary and Health Service Ombudsman, Local Government and Social Care Ombudsman, and others.',
+      'Browser-only reference tool for UK ombudsman decisions. Browse and search outcome summaries from the Parliamentary and Health Service Ombudsman, Local Government and Social Care Ombudsman, and others.'
   },
   {
     dir: 'professional-complaints',
     title: 'Professional Complaints Router',
     description:
-      'Browser-only router for professional regulation complaints. Identify the correct regulator for solicitors, doctors, nurses, teachers, surveyors, and other regulated professionals in the UK.',
+      'Browser-only router for professional regulation complaints. Identify the correct regulator for solicitors, doctors, nurses, teachers, surveyors, and other regulated professionals in the UK.'
   },
   {
     dir: 'employment-tribunal',
     title: 'Employment Tribunal Case Builder',
     description:
-      'Browser-only employment tribunal case builder. Draft an ET1 claim form, organise evidence chronologically, track early conciliation dates, and prepare for preliminary hearings.',
+      'Browser-only employment tribunal case builder. Draft an ET1 claim form, organise evidence chronologically, track early conciliation dates, and prepare for preliminary hearings.'
   },
   {
     dir: 'accessible-formats-request',
     title: 'Accessible Formats Request Generator',
     description:
-      'Browser-only generator for accessible-format requests under the Equality Act 2010. Draft letters asking for Braille, large print, easy read, BSL, audio, or accessible PDFs from public bodies and service providers.',
-  },
+      'Browser-only generator for accessible-format requests under the Equality Act 2010. Draft letters asking for Braille, large print, easy read, BSL, audio, or accessible PDFs from public bodies and service providers.'
+  }
 ];
 
 // ---------------------------------------------------------------------------
@@ -188,8 +188,8 @@ function packageJsonTemplate(dir, existing) {
     scripts: {
       ...(existing.scripts || {}),
       test: 'node --test',
-      build: 'echo \'Static site — no build step required\'',
-    },
+      build: "echo 'Static site — no build step required'"
+    }
   };
 }
 
@@ -265,7 +265,9 @@ for (const tool of tools) {
   }
 }
 
-console.log(`\n${isDryRun ? 'Would touch' : 'Touched'} ${changed} of ${tools.length} tool directories.`);
+console.log(
+  `\n${isDryRun ? 'Would touch' : 'Touched'} ${changed} of ${tools.length} tool directories.`
+);
 
 if (isDryRun) {
   console.log('Run without DRY_RUN to apply changes.');

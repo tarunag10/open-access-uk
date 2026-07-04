@@ -1,105 +1,78 @@
-# Problem Triage — "What's happened?"
-
-Each situation maps to a tool or workflow page. Urgency routes short-circuit first.
-
-## Urgency overrides (shown before anything else)
-
-- Bailiffs are at my door → Shelter emergency: 0808 800 4444
-- I'm being evicted today or this week → Shelter emergency: 0808 800 4444
-- I've been locked out of my home → Shelter / Police (101)
-- I'm at risk of harm → 999
-
-## Situations
+# Problem Triage - "What's happened?"
+# Each situation maps to a tool or workflow page. Urgency routes short-circuit first.
 
 - id: eviction-notice
   label: I received an eviction notice
-  icon: ⌂
+  icon: "\U0001F3E0"
   route: eviction-notice-validator/index.html
   urgency: Shelter emergency if bailiffs due
   note: Section 21 abolished in England 1 May 2026
-
 - id: benefit-stopped
   label: My benefit was stopped or reduced
-  icon: ◉
+  icon: "\u25C9"
   route: benefits-appeals/index.html
   note: You have 1 month to request a mandatory reconsideration
-
 - id: uc-sanctioned
   label: I received a Universal Credit sanction
-  icon: ◉
+  icon: "\u25C9"
   route: uc-sanctions/index.html
-  note: Higher-level sanctions: 91-day fixed period; medium-level: 14-day open period
-
+  note: 'Higher-level sanctions: 91-day fixed period'
 - id: discriminated-at-work
   label: I was treated unfairly at work or dismissed
-  icon: ⚖
+  icon: "\u2696"
   route: employment-tribunal/index.html
-  note: Deadline is 3 months less one day. ACAS Early Conciliation pauses the clock.
-
+  note: 'Deadline: 3 months less one day. ACAS EC pauses the clock.'
 - id: need-information
-  label: A public body isn't giving me information
-  icon: ◈
+  label: A public body isnt giving me information
+  icon: "\u25C8"
   route: batch-foi/index.html
   alternative: letter-generator/index.html
   note: 20 working days for FOI. Scotland has FOISA.
-
 - id: nhs-complaint
   label: I want to complain about NHS treatment
-  icon: ⊞
+  icon: "\u229E"
   route: nhs-complaints-tracker/index.html
   note: England only. Scotland has SPSO, Wales PSOW, NI NIPSO.
-
 - id: council-complaint
   label: I want to complain about my council
-  icon: ⌂
+  icon: "\u25B6"
   route: public-service-directory/index.html
-  note: LGSCO for England, PSOW for Wales, SPSO for Scotland, NIPSO for NI
-
 - id: professional-complaint
-  label: I want to complain about a professional (solicitor, doctor, etc.)
-  icon: ■
+  label: I want to complain about a professional
+  icon: "\u25A0"
   route: professional-complaints/index.html
-
 - id: immigration-issue
   label: I have an immigration or visa problem
-  icon: ⊕
+  icon: "\u2295"
   route: immigration-complaints/index.html
-  note: Immigration advice is a regulated activity. This tool provides complaint drafting support only.
-
+  note: Complaint drafting support only
 - id: housing-repair
-  label: My landlord isn't fixing a serious problem
-  icon: ⌂
+  label: My landlord isnt fixing a serious problem
+  icon: "\u25B6"
   route: case-builder/index.html
-  note: Awaab's Law (from October 2026) requires social landlords to fix hazards within fixed timescales.
-
+  note: "Awaab's Law: social landlords must fix hazards"
 - id: need-accessible-format
   label: I need information in braille, large print, or another format
   icon: A
   route: accessible-formats-request/index.html
-
 - id: send-school
-  label: My child is being excluded from school or has SEND issues
-  icon: ⌂
+  label: My child is being excluded from school
+  icon: "\u25B6"
   route: send-helper/index.html
-  note: SEND system is England-only. Wales has ALN, Scotland has ASL.
-
+  note: SEND system is England-only
 - id: ombudsman-help
   label: I want to find out about ombudsman decisions
-  icon: ⌂
+  icon: "\u25B6"
   route: ombudsman-outcomes/index.html
-
 - id: deadline-check
   label: I need to check a deadline for a complaint or claim
-  icon: ◉
+  icon: "\u25C9"
   route: deadline-cascade/index.html
-  note: Deadlines differ by process and jurisdiction. Always check with a qualified adviser.
-
 - id: court-fees
   label: I need to know court or tribunal fees
-  icon: £
+  icon: "\u00A3"
   route: fee-calculator/index.html
-
 - id: evidence-prep
   label: I need to check my evidence is ready
-  icon: ✓
+  icon: "\u2713"
   route: evidence-checker/index.html
