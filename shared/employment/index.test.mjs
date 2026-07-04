@@ -44,17 +44,19 @@ test('getClaimTypes returns copy of array', () => {
 
 test('getACASDeadline returns 3 months minus 1 day from dismissal', () => {
   const deadline = getACASDeadline('2026-01-15');
-  assert.equal(deadline, '2026-04-14');
+  assert.equal(typeof deadline, 'object');
+  assert.equal(deadline.targetDate, '2026-04-14');
+  assert.equal(deadline.months, 3);
 });
 
 test('getACASDeadline handles year boundary', () => {
   const deadline = getACASDeadline('2025-12-15');
-  assert.equal(deadline, '2026-03-14');
+  assert.equal(deadline.targetDate, '2026-03-14');
 });
 
 test('getACASDeadline handles short months', () => {
   const deadline = getACASDeadline('2026-02-28');
-  assert.equal(deadline, '2026-05-27');
+  assert.equal(deadline.targetDate, '2026-05-27');
 });
 
 test('getACASDeadline returns null for invalid date', () => {
