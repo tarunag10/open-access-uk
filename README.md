@@ -1,14 +1,43 @@
 # Open Access UK
 
 [![CI](https://github.com/tarunag10/open-access-uk/actions/workflows/ci.yml/badge.svg)](https://github.com/tarunag10/open-access-uk/actions/workflows/ci.yml)
+[![wcag](https://img.shields.io/badge/WCAG-2.2%20AA-blue)](https://www.w3.org/TR/WCAG22/)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Open Access UK is a parent suite for open-source tools that make public services fairer, easier to navigate, and easier to improve in public.
+**Free, browser-based tools for when a UK public service, landlord, or employer gets it wrong.** Draft the letter, know the deadline, keep the evidence — all in your browser, nothing leaves your device.
 
-The suite is deliberately static and browser-only. Public demos should work by opening `index.html`, keep user input local to the browser, avoid analytics and hidden data collection, and stay honest about their limits. These projects provide information, drafting support, and source-backed patterns; they are not legal advice.
+The suite is deliberately static and browser-only. Open any `index.html`, fill in the form, and everything stays on your computer. No accounts, no tracking, no backend. These tools provide information and drafting support, not legal advice.
 
-Open [open-access-uk-site/index.html](./open-access-uk-site/index.html) to browse the organisation-style umbrella site.
+## What you can do
 
-## Governance And Trust
+- **Draft a letter** — FOI requests, SARs, reasonable adjustments, eviction challenges, complaint letters, pre-action protocols
+- **Check a deadline** — Employment tribunal "3 months less one day", FOI 20 working days, NHS complaint stages, benefit appeal windows
+- **Track a case** — FOI requests, NHS complaints, eviction notices, UC sanctions challenges, benefit appeals, ombudsman complaints
+- **Find the right route** — Ombudsman, regulator, or tribunal for your issue type and location
+
+## Quickstart by persona
+
+**I need a letter right now** → Open [letter-generator](./letter-generator/index.html) and choose a template.
+
+**I got an eviction notice** → Open [eviction-notice-validator](./eviction-notice-validator/index.html). Note: Section 21 was abolished in England on 1 May 2026 — the law-change banner explains what changed.
+
+**I want to check a public-service deadline** → Open [deadline-cascade](./deadline-cascade/index.html) or [employment-tribunal](./employment-tribunal/index.html).
+
+**I want to contribute (code)** → See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, tests, and PR workflow.
+
+**I want to review legal content** → Pick a high-risk tool (eviction, employment tribunal, UC sanctions), open `data/sources.yml`, check one source against the live page, and file an issue if it's stale. See the non-code playbooks in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+**I want to test accessibility** → See [docs/accessibility-testing.md](./docs/accessibility-testing.md).
+
+## Status and limits
+
+- **Housing tools** are England-only. Eviction law differs fundamentally in Wales, Scotland, and Northern Ireland.
+- **Eviction tool** is under reconstruction for the Renters' Rights Act 2025. Section 21 was abolished on 1 May 2026; the current tool shows a law-change banner and blocks post-abolition Section 21 validation.
+- **Employment tribunal** deadlines assume Great Britain (England, Wales, Scotland). Northern Ireland has separate industrial tribunals.
+- **NHS complaints** routes are for England (PHSO). Scotland has SPSO, Wales has PSOW, Northern Ireland has NIPSO.
+- **Content is reviewed against official sources** but may become stale between reviews. Every tool displays a "not legal advice" notice. If something looks wrong, file an issue using the `content_source.yml` template.
+
+## Governance and trust
 
 - [Contributing](./CONTRIBUTING.md)
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
@@ -24,112 +53,41 @@ Open [open-access-uk-site/index.html](./open-access-uk-site/index.html) to brows
 - [Repository map](./docs/repo-map.md)
 - [Data provenance](./docs/data-provenance.md)
 - [Accessibility testing](./docs/accessibility-testing.md)
+- [CSS architecture](./docs/css-architecture.md)
 - [Analytics plan](./docs/analytics.md)
 - [Release process](./docs/release.md)
 
-## Public Repositories
+## Toolkit
 
-| Repo                                                             | GitHub                                                    | Local path                   | Purpose                                                                                                                                  | Demo                                               | Accessibility                                            |
-| ---------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- |
-| [Open Access UK site](./open-access-uk-site/README.md)           | https://github.com/tarunag10/open-access-uk-site.git      | `./open-access-uk-site`      | Umbrella site, positioning, suite navigation, contribution routes, and privacy-first commitments.                                        | [Open demo](./open-access-uk-site/index.html)      | [Statement](./open-access-uk-site/ACCESSIBILITY.md)      |
-| [Public-Service Letter Generator](./letter-generator/README.md)  | https://github.com/tarunag10/letter-generator.git         | `./letter-generator`         | Browser-only UK drafting for reasonable adjustments, FOI requests, SARs, and complaint follow-ups.                                       | [Open demo](./letter-generator/index.html)         | [Statement](./letter-generator/ACCESSIBILITY.md)         |
-| [Accessible Public Forms](./accessible-forms/README.md)          | https://github.com/tarunag10/accessible-forms.git         | `./accessible-forms`         | GOV.UK-style public-service form examples with visible labels, clear errors, keyboard-friendly controls, and no forced account creation. | [Open demo](./accessible-forms/index.html)         | [Statement](./accessible-forms/ACCESSIBILITY.md)         |
-| [Public Service Directory](./public-service-directory/README.md) | https://github.com/tarunag10/public-service-directory.git | `./public-service-directory` | Sourceable escalation routes and support directory patterns for public-service issues.                                                   | [Open demo](./public-service-directory/index.html) | [Statement](./public-service-directory/ACCESSIBILITY.md) |
-| [Legal Templates UK](./legal-templates/README.md)                | https://github.com/tarunag10/legal-templates.git          | `./legal-templates`          | Plain-English civic and legal letter templates for drafting support and community review.                                                | [Open demo](./legal-templates/index.html)          | [Statement](./legal-templates/ACCESSIBILITY.md)          |
-| [Open Access Design System](./design-system/README.md)           | https://github.com/tarunag10/design-system.git            | `./design-system`            | Accessible tokens, components, copy patterns, and high-contrast public-service UI foundations.                                           | [Open demo](./design-system/index.html)            | [Statement](./design-system/ACCESSIBILITY.md)            |
-| [Case Aggregator](./case-aggregator/README.md)                   | (in parent repo for now)                                  | `./case-aggregator`          | Compose combined local case files and packs from letters, plans, forms, templates, and design patterns.                                | [Open demo](./case-aggregator/index.html)          | [Statement](./case-aggregator/ACCESSIBILITY.md)          |
-
-## Parent Contributor Tooling
-
-The maintainer helper now lives inside this parent repo at [contributor-tools/maintainer-helper](./contributor-tools/maintainer-helper/README.md). It is useful for contributors and maintainers, but it is not part of the public product toolkit.
-
-Run it locally when improving the suite:
-
-```sh
-cd contributor-tools/maintainer-helper
-npm test
-npm run build
-node --check src/app.js
-```
-
-## Suite metadata
-
-This table summarises the public tools and the parent contributor helper so maintainers can verify, publish, and support the suite consistently.
-
-| Repo                                    | Verification command                                   | Publish workflow                                                                                                                                          |
-| --------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `./open-access-uk-site`                 | `npm test && npm run build && node --check src/app.js` | Run checks, commit site changes, push to `https://github.com/tarunag10/open-access-uk-site.git`, then enable or refresh static hosting from `index.html`. |
-| `./letter-generator`                    | `npm test && npm run build && node --check src/app.js` | Run checks, commit generator changes, push to `https://github.com/tarunag10/letter-generator.git`, then publish the static demo.                          |
-| `./accessible-forms`                    | `npm test && npm run build && node --check src/app.js` | Run checks, commit form-pattern changes, push to `https://github.com/tarunag10/accessible-forms.git`, then publish the static demo.                       |
-| `./public-service-directory`            | `npm test && npm run build && node --check src/app.js` | Run checks, commit directory-data changes, push to `https://github.com/tarunag10/public-service-directory.git`, then publish the static demo.             |
-| `./legal-templates`                     | `npm test && npm run build && node --check src/app.js` | Run checks, commit template changes, push to `https://github.com/tarunag10/legal-templates.git`, then publish the static demo.                            |
-| `./design-system`                       | `npm test && npm run build && node --check src/app.js` | Run checks, commit token/component changes, push to `https://github.com/tarunag10/design-system.git`, then publish the static demo.                       |
-| `./case-aggregator`                     | `npm test && npm run build && node --check src/app.js` | Run checks, commit aggregator changes (uses shared/case), publish the static demo from the parent repo for now.                                         |
-| `./contributor-tools/maintainer-helper` | `npm test && npm run build && node --check src/app.js` | Run checks and commit changes in this parent repo. This is contributor infrastructure, not a separate public mini-app deployment.                         |
-
-Run the full-suite verifier from this directory before publishing a coordinated release:
-
-```sh
-node scripts/verify-suite.mjs
-```
-
-Validate source and repository metadata:
-
-```sh
-node scripts/validate-sources.mjs
-node scripts/validate-repositories.mjs
-npm run validate:features
-npm run validate:deadlines
-npm run validate:shared
-npm run quality:static
-npm run lighthouse
-```
-
-Publish workflow for a coordinated suite release:
-
-1. Run `node scripts/verify-suite.mjs` from `outputs/open-access-uk`.
-2. Review each nested repo with `git -C <repo> status --short`.
-3. Commit and push each repo independently to its GitHub remote.
-4. Refresh static hosting for changed demos and check the umbrella site links.
-5. Tag or note the suite release in the umbrella site README once all public repos and parent contributor tooling are green.
+| Tool | Launch | GitHub | Local path | Jurisdiction | Risk |
+|------|--------|--------|------------|-------------|------|
+| Letter Generator | [demo](https://letter-generator-psi.vercel.app) | [repo](https://github.com/tarunag10/letter-generator) | `./letter-generator` | UK-wide | high |
+| Accessible Forms | [demo](https://accessible-forms-two.vercel.app) | [repo](https://github.com/tarunag10/accessible-forms) | `./accessible-forms` | UK-wide | medium |
+| Public Service Directory | [demo](https://public-service-directory.vercel.app) | [repo](https://github.com/tarunag10/public-service-directory) | `./public-service-directory` | UK-wide | high |
+| Legal Templates | [demo](https://legal-templates-seven.vercel.app) | [repo](https://github.com/tarunag10/legal-templates) | `./legal-templates` | UK-wide | high |
+| Design System | [demo](https://design-system-two-delta.vercel.app) | [repo](https://github.com/tarunag10/design-system) | `./design-system` | UK-wide | low |
+| FOI Response Tracker | [demo](https://foi-tracker.vercel.app) | [repo](https://github.com/tarunag10/foi-tracker) | `./foi-tracker` | UK-wide | high |
+| Case Builder | [demo](https://case-builder.vercel.app) | [repo](https://github.com/tarunag10/case-builder) | `./case-builder` | UK-wide | medium |
+| Employment Tribunal | [demo](https://employment-tribunal.vercel.app) | [repo](https://github.com/tarunag10/employment-tribunal) | `./employment-tribunal` | GB | high |
+| Eviction Notice Validator | [demo](https://eviction-notice-validator.vercel.app) | [repo](https://github.com/tarunag10/eviction-notice-validator) | `./eviction-notice-validator` | England only | high |
+| UC Sanctions Challenge | [demo](https://uc-sanctions.vercel.app) | [repo](https://github.com/tarunag10/uc-sanctions) | `./uc-sanctions` | GB | high |
+| Benefits Appeals Helper | [demo](https://benefits-appeals.vercel.app) | [repo](https://github.com/tarunag10/benefits-appeals) | `./benefits-appeals` | GB | high |
+| Immigration Complaint Tool | [demo](https://immigration-complaints.vercel.app) | [repo](https://github.com/tarunag10/immigration-complaints) | `./immigration-complaints` | UK-wide | high |
+| NHS Complaints Tracker | [demo](https://nhs-complaints-tracker.vercel.app) | [repo](https://github.com/tarunag10/nhs-complaints-tracker) | `./nhs-complaints-tracker` | England | high |
+| Professional Complaints Router | [demo](https://professional-complaints.vercel.app) | [repo](https://github.com/tarunag10/professional-complaints) | `./professional-complaints` | UK-wide | high |
+| Ombudsman Outcomes Database | [demo](https://ombudsman-outcomes.vercel.app) | [repo](https://github.com/tarunag10/ombudsman-outcomes) | `./ombudsman-outcomes` | UK-wide | medium |
+| Batch FOI Tool | [demo](https://batch-foi.vercel.app) | [repo](https://github.com/tarunag10/batch-foi) | `./batch-foi` | UK-wide | medium |
+| Deadline Cascade Visualizer | [demo](https://deadline-cascade.vercel.app) | [repo](https://github.com/tarunag10/deadline-cascade) | `./deadline-cascade` | UK-wide | medium |
+| Fee Calculator | [demo](https://fee-calculator.vercel.app) | [repo](https://github.com/tarunag10/fee-calculator) | `./fee-calculator` | England & Wales | medium |
+| Evidence Checker | [demo](https://evidence-checker.vercel.app) | [repo](https://github.com/tarunag10/evidence-checker) | `./evidence-checker` | UK-wide | medium |
+| SEND Helper | [demo](https://send-helper.vercel.app) | [repo](https://github.com/tarunag10/send-helper) | `./send-helper` | England | high |
+| Accessible Formats Request | [demo](https://accessible-formats-request.vercel.app) | [repo](https://github.com/tarunag10/accessible-formats-request) | `./accessible-formats-request` | UK-wide | medium |
+| Case Aggregator | [demo](./case-aggregator/index.html) | (in parent repo) | `./case-aggregator` | UK-wide | low |
 
 ## Shared principles
 
-- No backend by default: keep demos inspectable, forkable, and runnable from static files.
-- Privacy-first by default: avoid collecting personal data, accounts, analytics, or telemetry unless a future repo has a separate public privacy review.
-- Accessibility-first by default: target WCAG 2.2 AA with semantic HTML, visible focus styles, labelled controls, high contrast colours, responsive layouts, and keyboard testing.
-- Plain English by default: explain public-service steps clearly and avoid pretending a template or tool can decide legal rights, deadlines, or outcomes.
-- Open contribution by default: every public repo includes a README, `CONTRIBUTING.md`, `ACCESSIBILITY.md`, licence, and test/build scripts. Parent contributor tooling helps maintainers keep issues, onboarding, and repository health clear.
-
-## Contribution paths
-
-- Law and advice-sector contributors can review wording, source notes, template limits, and safety language in `legal-templates` and `letter-generator`.
-- Service designers can improve public-service journeys, form structure, plain-English labels, and reusable patterns in `accessible-forms` and `design-system`.
-- Accessibility contributors can test keyboard flows, screen-reader names, focus order, colour contrast, and responsive behaviour across all public tools.
-- Civic technologists can improve static JavaScript helpers, directory data, source-backed routing, and no-backend demos without adding personal-data collection.
-- Maintainers can improve issue templates, onboarding, project readiness checks, contribution docs, and repo health through `contributor-tools/maintainer-helper`.
-
-## Local checks
-
-Run checks inside an individual repo:
-
-```sh
-npm test
-npm run build
-node --check src/app.js
-```
-
-Verify the umbrella site directly:
-
-```sh
-cd open-access-uk-site
-npm test
-npm run build
-node --check src/app.js
-```
-
-Or verify every repo in the suite:
-
-```sh
-node scripts/verify-suite.mjs
-```
+- **No backend by default**: keep tools inspectable, forkable, and runnable from static files.
+- **Privacy-first by default**: no accounts, analytics, or telemetry. User data stays in `localStorage` and can be cleared per-tool.
+- **Accessibility-first by default**: WCAG 2.2 AA with semantic HTML, visible focus styles, labelled controls, high contrast colours, and keyboard testing.
+- **Plain English by default**: explain public-service steps clearly without pretending a tool can decide legal rights, deadlines, or outcomes.
+- **Open contribution by default**: every tool includes a README, `CONTRIBUTING.md`, `ACCESSIBILITY.md`, licence, and test/build scripts.
