@@ -60,3 +60,9 @@ Sources checked 25 October 2026:
 - [Landlord and Tenant Act 1954, sections 25](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/25), [26](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/26) and [30](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/30); [2004 prescribed-form Regulations](https://www.legislation.gov.uk/uksi/2004/1005).
 
 Automated evidence covers Section 25 unopposed/opposed Form 1/Form 2 paths, Section 26 Form 3, date boundaries, contracting-out flags, the telecom update, and accessible form controls. This workflow remains an educational triage aid, not a substitute for checking statutory forms or specialist review.
+
+## Employment Tribunal deadline transition verification — 25 October 2026
+
+The first CI run after the eviction/business-tenancy push exposed a stale shared deadline calculation: it selected the six-month period from the current date rather than the relevant event date. Updated the selection to follow the event date and added 30 September/1 October 2026 boundary tests. This preserves the three-month period for relevant dates before commencement and applies the general six-month change from 1 October 2026; claim-specific and jurisdictional exceptions still need checking.
+
+Source: [Employment Rights Act 2025 (Commencement No. 5) Regulations 2026](https://www.legislation.gov.uk/uksi/2026/954/made/data.html), regulation 3 brings section 152 and Schedule 12 into force on 1 October 2026, and regulation 4 sets the transition for relevant dates before that date. See also the [GOV.UK implementation timeline](https://www.gov.uk/government/publications/implementing-the-plan-to-make-work-pay-and-employment-rights-act/plan-to-make-work-pay-and-employment-rights-act-timeline-update).

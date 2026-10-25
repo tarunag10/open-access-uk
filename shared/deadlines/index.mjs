@@ -127,7 +127,7 @@ export const LAW_CHANGE_RULES = [
     day_type: 'calendar',
     valid_from: '2026-10-01',
     conservative_note:
-      'New 6-month limit under ERA 2025. Wrongful dismissal claims retain the 3-month limit. This rule is provisional pending the commencement SI.',
+      'New 6-month limit under ERA 2025 for most claims with a relevant date on or after 1 October 2026. Transitional and claim-specific exceptions apply; verify the claim type, jurisdiction and current guidance.',
     explanation:
       'Employment Rights Act 2025 extends the unfair dismissal time limit from 3 months to 6 months for most claim types.',
     provisional: true
@@ -261,12 +261,12 @@ function removeUndefined(obj) {
 }
 
 export function calculateETDeadline(effectiveDateOfTermination, earlyConciliationDays = 0) {
-  const todayStr = toLocalDateString(new Date());
-  const sixMonthRule = LAW_CHANGE_RULES.find((r) => r.id === 'et-claim-limit-6m');
-  const useSixMonth = sixMonthRule && todayStr >= sixMonthRule.valid_from;
-
   const date = parseLocalDate(effectiveDateOfTermination);
   if (!date) return null;
+
+  const sixMonthRule = LAW_CHANGE_RULES.find((r) => r.id === 'et-claim-limit-6m');
+  const relevantDate = toLocalDateString(date);
+  const useSixMonth = sixMonthRule && relevantDate >= sixMonthRule.valid_from;
 
   const months = useSixMonth ? 6 : 3;
   const deadline = addMonthsCorresponding(date, months);

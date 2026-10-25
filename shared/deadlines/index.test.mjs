@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   addWorkingDays,
   calculateDeadline,
+  calculateETDeadline,
   parseLocalDate,
   formatDateForDisplay,
   buildICS
@@ -12,6 +13,12 @@ test('parses local dates and adds working days', () => {
   assert.equal(parseLocalDate('2026-06-02').getFullYear(), 2026);
   assert.equal(addWorkingDays('2026-06-05', 1), '2026-06-08');
   assert.equal(addWorkingDays('bad-date', 1), null);
+});
+
+test('employment tribunal time limit transition follows the relevant claim date', () => {
+  assert.equal(calculateETDeadline('2026-01-15').targetDate, '2026-04-14');
+  assert.equal(calculateETDeadline('2026-09-30').targetDate, '2026-12-29');
+  assert.equal(calculateETDeadline('2026-10-01').targetDate, '2027-03-31');
 });
 
 test('calculates working-day, week, and month deadlines', () => {
