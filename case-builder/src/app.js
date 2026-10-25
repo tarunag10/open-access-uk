@@ -1681,45 +1681,6 @@ document
   ?.addEventListener('click', () => handleExportAll('markdown'));
 document.querySelector('#importJson')?.addEventListener('change', handleImport);
 document.querySelector('#clearAll')?.addEventListener('click', handleClearAll);
-document.querySelector('#loadSample')?.addEventListener('click', () => {
-  const today = new Date().toISOString().slice(0, 10);
-  const sample = [
-    createCase({
-      title: 'SEND tribunal waiting times',
-      description:
-        "Concerned about long waits for SEND tribunal hearings affecting my child's education.",
-      issueCategory: 'education',
-      status: 'planning',
-      organisation: 'Department for Education',
-      contactName: 'A. Parent',
-      contactDetails: 'a.parent@example.com',
-      journey: suggestJourney('education')
-    }),
-    createCase({
-      title: 'Council complaint: missed bin collections',
-      description:
-        'Repeated missed bin collections over 3 months. Want to request an internal review and, if needed, escalate to the ombudsman.',
-      issueCategory: 'complaint',
-      status: 'drafting',
-      organisation: 'Manchester City Council',
-      contactName: 'A. Resident',
-      contactDetails: 'a.resident@example.com',
-      sentDate: today,
-      journey: suggestJourney('complaint')
-    })
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (!merged.find((e) => e.title === s.title)) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  document.querySelector('#status-msg').textContent = 'Loaded sample cases.';
-  renderAll();
-});
-
 const activeStored = getActive();
 if (activeStored) activeId = activeStored;
 

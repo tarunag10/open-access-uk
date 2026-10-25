@@ -1434,66 +1434,8 @@ form.addEventListener('change', () => {
 });
 
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 clearAllBtn?.addEventListener('click', handleClearAll);
-loadSampleBtn?.addEventListener('click', () => {
-  const sample = [
-    {
-      id: generateValidationId(),
-      createdAt: new Date().toISOString(),
-      noticeType: 'section21',
-      tenantName: 'Jane Smith',
-      landlordName: 'Acme Properties Ltd',
-      propertyAddress: '42 Oak Street, Manchester, M1 1AA',
-      noticeDate: '2026-05-01',
-      noticeServedDate: '2026-05-01',
-      tenancyStartDate: '2023-06-15',
-      depositAmount: '1200.00',
-      depositScheme: 'dps',
-      groundsDetails: 'No-fault eviction notice under Section 21.',
-      result: validateSection21({
-        noticeServedDate: '2026-05-01',
-        prescribedForm: true,
-        depositProtected: true,
-        hmoLicense: true,
-        epcProvided: true,
-        gasSafetyCertificate: true
-      })
-    },
-    {
-      id: generateValidationId(),
-      createdAt: new Date(Date.now() - 86400000).toISOString(),
-      noticeType: 'section8-ground8',
-      tenantName: 'John Doe',
-      landlordName: 'Riverside Lettings',
-      propertyAddress: '15 River Lane, Birmingham, B1 2BB',
-      noticeDate: '2026-04-15',
-      noticeServedDate: '2026-04-15',
-      tenancyStartDate: '2024-01-01',
-      depositAmount: '900.00',
-      depositScheme: 'mydeposits',
-      groundsDetails: 'Rent arrears of 3 months.',
-      result: validateSection8({
-        ground: 'ground8',
-        noticeServedDate: '2026-04-15',
-        rentArrearsMonths: 3,
-        serviceMethod: 'first-class'
-      })
-    }
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (!merged.find((e) => e.tenantName === s.tenantName && e.noticeType === s.noticeType)) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample validations.';
-  renderAll();
-});
-
 updateNoticeType();
 renderAll();
 initTheme('#theme-toggle');

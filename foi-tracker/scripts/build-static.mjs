@@ -171,6 +171,11 @@ function bundleJs(entryFile, outputFile) {
   // Older bundles encoded the machine's absolute checkout path in module
   // identifiers. Keep only the repository-relative module portion.
   body = body.replace(/(__m\d+_)[A-Za-z0-9_]*_shared_/g, '$1shared_');
+  if (allFiles.length === 1 && parseImports(body).length === 0) {
+    if (body !== readFileSync(outputFile, 'utf8')) writeFileSync(outputFile, body);
+    console.log(`  Already bundled ${relative(root, outputFile)}`);
+    return;
+  }
   const imports = parseImports(readFileSync(entryPath, 'utf8'));
   for (const imp of imports) {
     const resolvedFile = resolveImport(entryPath, imp.source);
