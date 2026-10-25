@@ -290,13 +290,13 @@ function escapeHtml(str) {
 }
 
 function renderRequestCard(request) {
-  const format = getFormatDetails(request.format);
+  const __tracker_format = getFormatDetails(request.__tracker_format);
   const orgType = ORGANISATION_TYPES.find((t) => t.value === request.organisationType);
 
   return `
     <header>
       <h3>${escapeHtml(request.organisationName || 'Untitled request')}</h3>
-      <span class="status-pill format-${request.format}">${format ? format.name : request.format}</span>
+      <span class="status-pill __tracker_format-${request.__tracker_format}">${__tracker_format ? __tracker_format.name : request.__tracker_format}</span>
     </header>
     <p class="meta">${escapeHtml(orgType ? orgType.label : request.organisationType || 'Unknown type')} — ${request.deadline || 'No deadline set'}</p>
     <p class="meta">${escapeHtml(request.documents || 'No documents specified')}</p>
@@ -325,15 +325,15 @@ function renderRequestList(requests, container) {
 }
 
 function renderFormatRequirements(formatId, container) {
-  const reqs = getFormatRequirements(formatId);
+  const __tracker_reqs = getFormatRequirements(formatId);
   container.replaceChildren();
-  if (reqs.length === 0) {
+  if (__tracker_reqs.length === 0) {
     const p = document.createElement('p');
-    p.textContent = 'No specific requirements for this format.';
+    p.textContent = 'No specific requirements for this __tracker_format.';
     container.append(p);
     return;
   }
-  for (const req of reqs) {
+  for (const req of __tracker_reqs) {
     const row = document.createElement('div');
     row.className = 'breakdown-row';
     const label = document.createElement('span');
@@ -360,36 +360,6 @@ export {
   parseAccessibleFormats
 };
 
-
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
 
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:accessible-formats-request:requests';
@@ -420,7 +390,7 @@ function generateId() {
 
 function renderOutput(data) {
   const requestText = generateRequestText(data);
-  const route = getOrganisationRoutes(data.format);
+  const __app_route = getOrganisationRoutes(data.format);
   const rights = getEqualityActRights();
   const monitoring = getMonitoringInfo();
 
@@ -439,13 +409,13 @@ function renderOutput(data) {
   html += '</ul>';
   html += '</div>';
 
-  if (route) {
+  if (__app_route) {
     html += '<div class="output-section">';
-    html += `<h4>Supplier: ${escapeHtml(route.name)}</h4>`;
-    if (route.website) {
-      html += `<p><a href="${route.website}" target="_blank" rel="noopener noreferrer">${route.website}</a></p>`;
+    html += `<h4>Supplier: ${escapeHtml(__app_route.name)}</h4>`;
+    if (__app_route.website) {
+      html += `<p><a href="${__app_route.website}" target="_blank" rel="noopener noreferrer">${__app_route.website}</a></p>`;
     }
-    html += `<p>${escapeHtml(route.process)}</p>`;
+    html += `<p>${escapeHtml(__app_route.process)}</p>`;
     html += '</div>';
   }
 
@@ -606,15 +576,15 @@ function handleImport(event) {
   const reader = new FileReader();
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      if (!Array.isArray(parsed)) throw new Error('not a list');
+      const __app_parsed = JSON.parse(reader.result);
+      if (!Array.isArray(__app_parsed)) throw new Error('not a list');
       const existing = loadAll();
       const merged = [...existing];
-      for (const item of parsed) {
+      for (const item of __app_parsed) {
         if (!merged.find((e) => e.id === item.id)) merged.push(item);
       }
       saveAll(merged);
-      statusEl.textContent = `Imported ${parsed.length} request(s) locally.`;
+      statusEl.textContent = `Imported ${__app_parsed.length} request(s) locally.`;
       renderAll();
     } catch {
       statusEl.textContent = 'Could not import file. Expected a JSON list of requests.';
@@ -661,51 +631,11 @@ const exportCsvBtn = document.querySelector('#exportCsv');
 const exportJsonBtn = document.querySelector('#exportJson');
 const importInput = document.querySelector('#importJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 exportCsvBtn?.addEventListener('click', () => handleExport('csv'));
 exportJsonBtn?.addEventListener('click', () => handleExport('json'));
 importInput?.addEventListener('change', handleImport);
 clearAllBtn?.addEventListener('click', handleClearAll);
-loadSampleBtn?.addEventListener('click', () => {
-  const sample = [
-    {
-      id: generateId(),
-      createdAt: new Date().toISOString(),
-      requestorName: 'Jane Smith',
-      requestorAddress: '123 High Street, London, SW1A 1AA',
-      organisationName: 'Manchester City Council',
-      organisationType: 'council',
-      format: 'braille',
-      documents: 'Council tax bill, Housing application form',
-      deadline: '2026-07-31',
-      reason: 'I am blind and require braille to read correspondence.'
-    },
-    {
-      id: generateId(),
-      createdAt: new Date().toISOString(),
-      requestorName: 'John Doe',
-      requestorAddress: '456 Oak Avenue, Birmingham, B1 1AA',
-      organisationName: 'NHS England',
-      organisationType: 'nhs',
-      format: 'easy-read',
-      documents: 'Annual report 2026, Patient information leaflet',
-      deadline: '2026-08-15',
-      reason: 'I have a learning disability and need easy read versions.'
-    }
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (!merged.find((e) => e.organisationName === s.organisationName && e.format === s.format)) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample requests.';
-  renderAll();
-});
-
 renderAll();
 initTheme('#theme-toggle');
 

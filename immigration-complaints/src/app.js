@@ -268,10 +268,10 @@ function nextTheme(current) {
 
 // ===== src/tracker.js (imports resolved) =====
 
-const COMPLAINT_TYPES = getComplaintTypes();
+const __tracker_COMPLAINT_TYPES = getComplaintTypes();
 
-function typeById(id) {
-  return COMPLAINT_TYPES.find((t) => t.id === id) || null;
+function __tracker_typeById(id) {
+  return __tracker_COMPLAINT_TYPES.find((t) => t.id === id) || null;
 }
 
 function calculateDaysRemaining(sentDate, typeId, today = new Date()) {
@@ -306,7 +306,7 @@ function escapeHtml(str) {
 }
 
 function renderComplaintCard(complaint) {
-  const type = typeById(complaint.complaintType);
+  const __tracker_type = __tracker_typeById(complaint.complaintType);
   const days = calculateDaysRemaining(complaint.dateSubmitted, complaint.complaintType);
 
   let deadlineText = 'Add a submission date to see the deadline.';
@@ -325,13 +325,13 @@ function renderComplaintCard(complaint) {
   return `
     <header>
       <h3>${escapeHtml(complaint.complainantName || 'Untitled complaint')}</h3>
-      <span class="status-pill type-${complaint.complaintType}">${type ? type.name : complaint.complaintType}</span>
+      <span class="status-pill __tracker_type-${complaint.complaintType}">${__tracker_type ? __tracker_type.name : complaint.complaintType}</span>
     </header>
     <p class="meta">${escapeHtml(complaint.description || 'No description')} — ${complaint.dateSubmitted || 'not submitted'}</p>
     <p class="deadline${statusCls}">${deadlineText}</p>
     <div class="item-actions">
-      <button type="button" data-action="view" data-id="${complaint.id}">View</button>
-      <button type="button" data-action="delete" data-id="${complaint.id}" class="secondary">Delete</button>
+      <button __tracker_type="button" data-action="view" data-id="${complaint.id}">View</button>
+      <button __tracker_type="button" data-action="delete" data-id="${complaint.id}" class="secondary">Delete</button>
     </div>`;
 }
 
@@ -364,8 +364,8 @@ function renderComplaints(complaints, container) {
 }
 
 export {
-  COMPLAINT_TYPES,
-  typeById,
+  __tracker_COMPLAINT_TYPES,
+  __tracker_typeById,
   calculateDaysRemaining,
   filterByType,
   renderComplaintCard,
@@ -382,36 +382,6 @@ export {
   parseImmigration
 };
 
-
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
 
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:immigration-complaints:complaints';
@@ -486,7 +456,7 @@ function renderSummary(complaints) {
     })
   );
 
-  const breakdownPanel = document.querySelector('#type-breakdown');
+  const breakdownPanel = document.querySelector('#__app_type-breakdown');
   if (breakdownPanel) {
     breakdownPanel.replaceChildren(
       ...COMPLAINT_TYPES.map((t) => {
@@ -528,23 +498,23 @@ function selectComplaint(id) {
 
 function renderDetail(complaint) {
   detailContent.replaceChildren();
-  const type = typeById(complaint.complaintType);
+  const __app_type = typeById(complaint.complaintType);
   const days = calculateDaysRemaining(complaint.dateSubmitted, complaint.complaintType);
   const contacts = getHomeOfficeContactInfo(complaint.complaintType);
-  const docs = getRequiredDocuments(complaint.complaintType);
+  const __app_docs = getRequiredDocuments(complaint.complaintType);
 
   const header = document.createElement('div');
   const title = document.createElement('h2');
   title.textContent = complaint.complainantName || 'Untitled complaint';
   const status = document.createElement('span');
-  status.className = `status-pill type-${complaint.complaintType}`;
-  status.textContent = type ? type.name : complaint.complaintType;
+  status.className = `status-pill __app_type-${complaint.complaintType}`;
+  status.textContent = __app_type ? __app_type.name : complaint.complaintType;
   header.append(title, status);
 
   const grid = document.createElement('dl');
   grid.className = 'detail-grid';
   const fields = [
-    ['Complaint type', type ? type.name : complaint.complaintType],
+    ['Complaint __app_type', __app_type ? __app_type.name : complaint.complaintType],
     ['Application reference', complaint.applicationReference || 'Not provided'],
     ['Date submitted', complaint.dateSubmitted || 'Not recorded'],
     ['Description', complaint.description || 'Not specified'],
@@ -582,10 +552,10 @@ function renderDetail(complaint) {
   const docsHeading = document.createElement('h3');
   docsHeading.textContent = 'Document checklist';
   docsSection.append(docsHeading);
-  if (docs) {
+  if (__app_docs) {
     const ul = document.createElement('ul');
     ul.className = 'body-text';
-    for (const doc of docs) {
+    for (const doc of __app_docs) {
       const li = document.createElement('li');
       li.textContent = doc;
       ul.append(li);
@@ -609,14 +579,14 @@ function renderDetail(complaint) {
   actions.className = 'detail-actions';
 
   const copyComplaint = document.createElement('button');
-  copyComplaint.type = 'button';
+  copyComplaint.__app_type = 'button';
   copyComplaint.textContent = 'Copy complaint letter';
   copyComplaint.addEventListener('click', () =>
     copyText(buildComplaintLetter(complaint), 'Complaint letter copied locally.')
   );
 
   const copyICIBI = document.createElement('button');
-  copyICIBI.type = 'button';
+  copyICIBI.__app_type = 'button';
   copyICIBI.className = 'secondary';
   copyICIBI.textContent = 'Copy ICIBI escalation';
   copyICIBI.addEventListener('click', () =>
@@ -630,7 +600,7 @@ function renderDetail(complaint) {
 function buildComplaintLetter(complaint) {
   return generateComplaintText({
     complainantName: complaint.complainantName,
-    type: complaint.complaintType,
+    __app_type: complaint.complaintType,
     complainantAddress: complaint.complainantAddress,
     applicationReference: complaint.applicationReference,
     dateSubmitted: complaint.dateSubmitted,
@@ -709,7 +679,7 @@ async function copyText(text, message) {
 }
 
 function downloadText(text, filename, mimeType) {
-  const blob = new Blob([text], { type: mimeType });
+  const blob = new Blob([text], { __app_type: mimeType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -795,16 +765,16 @@ function handleImport(event) {
   const reader = new FileReader();
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      if (!Array.isArray(parsed)) throw new Error('not a list');
+      const __app_parsed = JSON.parse(reader.result);
+      if (!Array.isArray(__app_parsed)) throw new Error('not a list');
       const existing = loadAll();
       const merged = [...existing];
-      for (const item of parsed) {
+      for (const item of __app_parsed) {
         const c = createImmigrationComplaint(item);
         if (!merged.find((e) => e.id === c.id)) merged.push(c);
       }
       saveAll(merged);
-      statusEl.textContent = `Imported ${parsed.length} complaint(s) locally.`;
+      statusEl.textContent = `Imported ${__app_parsed.length} complaint(s) locally.`;
       renderAll();
     } catch {
       statusEl.textContent = 'Could not import file. Expected a JSON list of complaints.';
@@ -837,49 +807,12 @@ const exportCsvBtn = document.querySelector('#exportCsv');
 const exportJsonBtn = document.querySelector('#exportJson');
 const importInput = document.querySelector('#importJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 exportCsvBtn?.addEventListener('click', () => handleExport('csv'));
 exportJsonBtn?.addEventListener('click', () => handleExport('json'));
 importInput?.addEventListener('change', handleImport);
 clearAllBtn?.addEventListener('click', handleClearAll);
-loadSampleBtn?.addEventListener('click', () => {
-  const sample = [
-    createImmigrationComplaint({
-      complainantName: 'Jane Smith',
-      complaintType: 'visa-delay',
-      applicationReference: 'GWF987654321',
-      dateSubmitted: '2026-05-15',
-      description:
-        'Visitor visa application submitted over 8 weeks ago, no decision received. Travel booked for 1 July 2026.',
-      desiredOutcome:
-        'Immediate decision on application or expedited processing due to travel dates.'
-    }),
-    createImmigrationComplaint({
-      complainantName: 'Ahmed Khan',
-      complaintType: 'brp-issue',
-      applicationReference: 'BRP-2026-555123',
-      dateSubmitted: '2026-06-10',
-      description:
-        'BRP card received with incorrect name spelling. Collection appointment missed due to post office delay.',
-      desiredOutcome: 'Corrected BRP card issued with accurate details.'
-    })
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (
-      !merged.find(
-        (e) => e.complainantName === s.complainantName && e.description === s.description
-      )
-    ) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample complaints.';
-  renderAll();
-});
+
 
 renderAll();
 initTheme('#theme-toggle');

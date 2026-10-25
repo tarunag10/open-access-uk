@@ -830,20 +830,20 @@ function initBusinessTenancyUI() {
 
   function updateFields() {
     const type = businessForm?.elements.namedItem('noticeType')?.value;
-    const is25 = type === 'section25';
+    const __tracker_is25 = type === 'section25';
     const is26 = type === 'section26';
     const opposition = businessForm?.elements.namedItem('opposition')?.value === 'opposed';
     const responseOpposes =
       businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
-    const isForm1 = is25 && businessForm?.elements.namedItem('noticeForm')?.value === 'form1';
-    if (section25Fields) section25Fields.hidden = !is25;
+    const isForm1 = __tracker_is25 && businessForm?.elements.namedItem('noticeForm')?.value === 'form1';
+    if (section25Fields) section25Fields.hidden = !__tracker_is25;
     if (section26Fields) section26Fields.hidden = !is26;
     if (form1Fields) form1Fields.hidden = !isForm1;
     if (oppositionFields)
-      oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
+      oppositionFields.hidden = !(__tracker_is25 && opposition) && !(is26 && responseOpposes);
     const fieldRequired = [
-      ['terminationDate', is25],
-      ['opposition', is25],
+      ['terminationDate', __tracker_is25],
+      ['opposition', __tracker_is25],
       ['newTenancyDate', is26],
       ['proposedTerms', is26],
       ['landlordResponse', is26],
@@ -925,36 +925,6 @@ export {
 };
 
 
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
-
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:eviction-notice-validator:validations';
 const FORM_KEY = 'open-access-uk:eviction-notice-validator:form-draft';
@@ -985,20 +955,20 @@ function selectWorkflow(workflow) {
 
 function updateBusinessFields() {
   const type = businessForm?.elements.namedItem('noticeType')?.value;
-  const is25 = type === 'section25';
+  const __app_is25 = type === 'section25';
   const is26 = type === 'section26';
   const opposition = businessForm?.elements.namedItem('opposition')?.value === 'opposed';
   const responseOpposes = businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
-  if (section25Fields) section25Fields.hidden = !is25;
+  if (section25Fields) section25Fields.hidden = !__app_is25;
   if (section26Fields) section26Fields.hidden = !is26;
-  if (oppositionFields) oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
+  if (oppositionFields) oppositionFields.hidden = !(__app_is25 && opposition) && !(is26 && responseOpposes);
   const termination = businessForm?.elements.namedItem('terminationDate');
   const newTenancy = businessForm?.elements.namedItem('newTenancyDate');
   const terms = businessForm?.elements.namedItem('proposedTerms');
   const oppositionSelect = businessForm?.elements.namedItem('opposition');
   const response = businessForm?.elements.namedItem('landlordResponse');
-  if (termination) termination.required = is25;
-  if (oppositionSelect) oppositionSelect.required = is25;
+  if (termination) termination.required = __app_is25;
+  if (oppositionSelect) oppositionSelect.required = __app_is25;
   if (newTenancy) newTenancy.required = is26;
   if (terms) terms.required = is26;
   if (response) response.required = is26;
@@ -1125,7 +1095,7 @@ function renderList(records) {
     const item = document.createElement('article');
     item.className = 'complaint-item';
     if (activeId === record.id) item.classList.add('active');
-    const noticeName = NOTICE_TYPE_MAP[record.noticeType] || record.noticeType;
+    const __app_noticeName = NOTICE_TYPE_MAP[record.noticeType] || record.noticeType;
     const isValid = record.result?.valid;
     const statusClass = isValid ? 'valid' : record.result?.errors?.length > 0 ? 'invalid' : '';
 
@@ -1134,7 +1104,7 @@ function renderList(records) {
         <h3>${escapeHtml(record.tenantName || 'Untitled')}</h3>
         <span class="status-pill ${statusClass}">${isValid ? 'No listed issues found' : record.result?.errors?.length > 0 ? 'Issues flagged' : 'Pending'}</span>
       </header>
-      <p class="meta">${escapeHtml(noticeName)} — ${escapeHtml(record.landlordName || 'No landlord')} — ${record.noticeServedDate || 'No date'}</p>
+      <p class="meta">${escapeHtml(__app_noticeName)} — ${escapeHtml(record.landlordName || 'No landlord')} — ${record.noticeServedDate || 'No date'}</p>
       <div class="item-actions">
         <button type="button" data-action="view" data-id="${record.id}">View</button>
         <button type="button" data-action="delete" data-id="${record.id}" class="secondary">Delete</button>
@@ -1165,7 +1135,7 @@ function selectRecord(id) {
 
 function renderDetail(record) {
   detailContent.replaceChildren();
-  const noticeName = NOTICE_TYPE_MAP[record.noticeType] || record.noticeType;
+  const __app_noticeName = NOTICE_TYPE_MAP[record.noticeType] || record.noticeType;
   const timeline = getCourtTimeline(record.noticeType);
   const isValid = record.result?.valid;
 
@@ -1180,7 +1150,7 @@ function renderDetail(record) {
   const grid = document.createElement('dl');
   grid.className = 'detail-grid';
   const fields = [
-    ['Notice type', noticeName],
+    ['Notice type', __app_noticeName],
     ['Tenant', record.tenantName || 'Not specified'],
     ['Landlord', record.landlordName || 'Not specified'],
     ['Property', record.propertyAddress || 'Not specified'],

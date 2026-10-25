@@ -176,14 +176,14 @@ function isWorkingDay(date) {
 }
 
 function addWorkingDaysLocal(date, days) {
-  const result = new Date(date);
+  const __tracker_result = new Date(date);
   let remaining = days;
   while (remaining > 0) {
-    result.setDate(result.getDate() + 1);
-    if (isWorkingDay(result)) remaining -= 1;
+    __tracker_result.setDate(__tracker_result.getDate() + 1);
+    if (isWorkingDay(__tracker_result)) remaining -= 1;
   }
-  result.setHours(0, 0, 0, 0);
-  return result;
+  __tracker_result.setHours(0, 0, 0, 0);
+  return __tracker_result;
 }
 
 function parseLocalDate(value) {
@@ -203,8 +203,8 @@ function toLocalDateString(date) {
 }
 
 function calculateDaysRemaining(sentDate, stageId, today = new Date()) {
-  const stage = getComplaintStages().find((s) => s.id === stageId);
-  if (!stage || !sentDate) return null;
+  const __tracker_stage = getComplaintStages().find((s) => s.id === stageId);
+  if (!__tracker_stage || !sentDate) return null;
 
   const deadlineInfo = getDeadlineForStage(stageId, sentDate);
   if (!deadlineInfo) return null;
@@ -225,16 +225,16 @@ function calculateDaysRemaining(sentDate, stageId, today = new Date()) {
 
 function filterByStage(complaints, stageId) {
   if (!stageId) return complaints;
-  return complaints.filter((c) => c.stage === stageId);
+  return complaints.filter((c) => c.__tracker_stage === stageId);
 }
 
 function renderTimeline(complaint) {
   const stages = getComplaintStages();
-  const currentIdx = stages.findIndex((s) => s.id === complaint.stage);
+  const currentIdx = stages.findIndex((s) => s.id === complaint.__tracker_stage);
 
   let html = '<ol class="timeline" aria-label="Complaint stages">';
   for (let i = 0; i < stages.length; i++) {
-    const stage = stages[i];
+    const __tracker_stage = stages[i];
     const isComplete = i < currentIdx;
     const isCurrent = i === currentIdx;
     const cls = isComplete
@@ -243,8 +243,8 @@ function renderTimeline(complaint) {
         ? 'timeline-current'
         : 'timeline-future';
     html += `<li class="${cls}" aria-current="${isCurrent ? 'step' : 'false'}">`;
-    html += `<strong>${stage.name}</strong>`;
-    html += `<span>${stage.description}</span>`;
+    html += `<strong>${__tracker_stage.name}</strong>`;
+    html += `<span>${__tracker_stage.description}</span>`;
     html += '</li>';
   }
   html += '</ol>';
@@ -252,8 +252,8 @@ function renderTimeline(complaint) {
 }
 
 function renderComplaintCard(complaint) {
-  const stage = getComplaintStages().find((s) => s.id === complaint.stage);
-  const days = calculateDaysRemaining(complaint.sentDate, complaint.stage);
+  const __tracker_stage = getComplaintStages().find((s) => s.id === complaint.__tracker_stage);
+  const days = calculateDaysRemaining(complaint.sentDate, complaint.__tracker_stage);
 
   let deadlineText = 'Add a sent date to see the deadline.';
   if (days !== null) {
@@ -271,7 +271,7 @@ function renderComplaintCard(complaint) {
   return `
     <header>
       <h3>${escapeHtml(complaint.trustName || 'Untitled complaint')}</h3>
-      <span class="status-pill stage-${complaint.stage}">${stage ? stage.name : complaint.stage}</span>
+      <span class="status-pill __tracker_stage-${complaint.__tracker_stage}">${__tracker_stage ? __tracker_stage.name : complaint.__tracker_stage}</span>
     </header>
     <p class="meta">${escapeHtml(complaint.description || 'No description')} — ${complaint.sentDate || 'not sent'}</p>
     <p class="deadline${statusCls}">${deadlineText}</p>
@@ -292,8 +292,8 @@ function renderComplaints(complaints, container) {
     return;
   }
   const sorted = [...complaints].sort((a, b) => {
-    const aDays = calculateDaysRemaining(a.sentDate, a.stage);
-    const bDays = calculateDaysRemaining(b.sentDate, b.stage);
+    const aDays = calculateDaysRemaining(a.sentDate, a.__tracker_stage);
+    const bDays = calculateDaysRemaining(b.sentDate, b.__tracker_stage);
     const aOverdue = aDays !== null && aDays < 0 ? 0 : 1;
     const bOverdue = bDays !== null && bDays < 0 ? 0 : 1;
     if (aOverdue !== bOverdue) return aOverdue - bOverdue;
@@ -303,7 +303,7 @@ function renderComplaints(complaints, container) {
   for (const complaint of sorted) {
     const item = document.createElement('article');
     item.className = 'complaint-item';
-    const days = calculateDaysRemaining(complaint.sentDate, complaint.stage);
+    const days = calculateDaysRemaining(complaint.sentDate, complaint.__tracker_stage);
     if (days !== null && days < 0) item.classList.add('overdue');
     item.innerHTML = renderComplaintCard(complaint);
     container.append(item);
@@ -342,36 +342,6 @@ export {
 };
 
 
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
-
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:nhs-complaints-tracker:complaints';
 const FORM_KEY = 'open-access-uk:nhs-complaints-tracker:form-draft';
@@ -399,9 +369,9 @@ function values() {
 function renderSummary(complaints) {
   const total = complaints.length;
   const open = complaints.filter((c) => c.status === 'open').length;
-  const pals = complaints.filter((c) => c.stage === 'pals').length;
-  const formal = complaints.filter((c) => c.stage === 'formal').length;
-  const phso = complaints.filter((c) => c.stage === 'phso').length;
+  const pals = complaints.filter((c) => c.__app_stage === 'pals').length;
+  const formal = complaints.filter((c) => c.__app_stage === 'formal').length;
+  const phso = complaints.filter((c) => c.__app_stage === 'phso').length;
 
   const cards = [
     { label: 'Total complaints', value: total, tone: 'default' },
@@ -426,7 +396,7 @@ function renderSummary(complaints) {
     })
   );
 
-  const breakdownPanel = document.querySelector('#stage-breakdown');
+  const breakdownPanel = document.querySelector('#__app_stage-breakdown');
   if (breakdownPanel) {
     breakdownPanel.replaceChildren(
       ...NHS_STAGES.map((s) => {
@@ -435,7 +405,7 @@ function renderSummary(complaints) {
         const label = document.createElement('span');
         label.textContent = s.name;
         const value = document.createElement('span');
-        value.textContent = complaints.filter((c) => c.stage === s.id).length;
+        value.textContent = complaints.filter((c) => c.__app_stage === s.id).length;
         row.append(label, value);
         return row;
       })
@@ -468,16 +438,16 @@ function selectComplaint(id) {
 
 function renderDetail(complaint) {
   detailContent.replaceChildren();
-  const stage = NHS_STAGES.find((s) => s.id === complaint.stage);
-  const days = calculateDaysRemaining(complaint.sentDate, complaint.stage);
+  const __app_stage = NHS_STAGES.find((s) => s.id === complaint.__app_stage);
+  const days = calculateDaysRemaining(complaint.sentDate, complaint.__app_stage);
   const orgType = ORGANISATION_TYPES.find((t) => t.value === complaint.organisationType);
 
   const header = document.createElement('div');
   const title = document.createElement('h2');
   title.textContent = complaint.trustName || 'Untitled complaint';
   const status = document.createElement('span');
-  status.className = `status-pill stage-${complaint.stage}`;
-  status.textContent = stage ? stage.name : complaint.stage;
+  status.className = `status-pill __app_stage-${complaint.__app_stage}`;
+  status.textContent = __app_stage ? __app_stage.name : complaint.__app_stage;
   header.append(title, status);
 
   const grid = document.createElement('dl');
@@ -534,24 +504,24 @@ function renderDetail(complaint) {
   const stageForm = document.createElement('div');
   stageForm.className = 'status-form';
   const stageLabel = document.createElement('label');
-  stageLabel.htmlFor = 'detail-stage';
-  stageLabel.textContent = 'Update stage';
+  stageLabel.htmlFor = 'detail-__app_stage';
+  stageLabel.textContent = 'Update __app_stage';
   const stageSelect = document.createElement('select');
-  stageSelect.id = 'detail-stage';
+  stageSelect.id = 'detail-__app_stage';
   for (const s of NHS_STAGES) {
     const opt = document.createElement('option');
     opt.value = s.id;
     opt.textContent = s.name;
     stageSelect.append(opt);
   }
-  stageSelect.value = complaint.stage;
+  stageSelect.value = complaint.__app_stage;
   stageSelect.addEventListener('change', () => updateStage(complaint.id, stageSelect.value));
   stageForm.append(stageLabel, stageSelect);
 
-  const nextStage = getNextStage(complaint.stage);
+  const nextStage = getNextStage(complaint.__app_stage);
   const advanceBtn = document.createElement('button');
   advanceBtn.type = 'button';
-  advanceBtn.textContent = nextStage ? `Advance to ${stageName(nextStage)}` : 'Final stage reached';
+  advanceBtn.textContent = nextStage ? `Advance to ${stageName(nextStage)}` : 'Final __app_stage reached';
   advanceBtn.disabled = !nextStage;
   advanceBtn.addEventListener('click', () => {
     if (nextStage) updateStage(complaint.id, nextStage);
@@ -624,7 +594,7 @@ function buildPhsoLetter(complaint) {
     `Trust: ${complaint.trustName || 'Not specified'}`,
     `Original complaint date: ${complaint.sentDate || 'Not recorded'}`,
     `Trust reference: ${complaint.reference || 'Not provided'}`,
-    `Current stage: ${stageName(complaint.stage)}`,
+    `Current __app_stage: ${stageName(complaint.__app_stage)}`,
     '',
     `Summary of the complaint:`,
     complaint.description || '[Description of complaint]',
@@ -640,13 +610,13 @@ function buildPhsoLetter(complaint) {
   return body.join('\n');
 }
 
-function updateStage(id, stage) {
+function updateStage(id, __app_stage) {
   const complaints = loadAll();
-  const idx = complaints.findIndex((c) => c.id === id);
-  if (idx === -1) return;
-  complaints[idx] = { ...complaints[idx], stage, updatedAt: new Date().toISOString() };
+  const __app_idx = complaints.findIndex((c) => c.id === id);
+  if (__app_idx === -1) return;
+  complaints[__app_idx] = { ...complaints[__app_idx], __app_stage, updatedAt: new Date().toISOString() };
   saveAll(complaints);
-  statusEl.textContent = `Stage updated to ${stageName(stage)}.`;
+  statusEl.textContent = `Stage updated to ${stageName(__app_stage)}.`;
   renderAll();
 }
 
@@ -733,7 +703,7 @@ function handleAdd(event) {
     patientName: data.organisationName,
     trustName: data.organisationName,
     organisationType: data.organisationType,
-    stage: data.stage,
+    __app_stage: data.__app_stage,
     sentDate: data.sentDate,
     reference: data.reference,
     description: data.description,
@@ -762,7 +732,7 @@ function handleExport(format) {
       'id',
       'trustName',
       'organisationType',
-      'stage',
+      '__app_stage',
       'sentDate',
       'reference',
       'status',
@@ -772,7 +742,7 @@ function handleExport(format) {
       c.id,
       csvField(c.trustName),
       c.organisationType || '',
-      c.stage,
+      c.__app_stage,
       c.sentDate,
       csvField(c.reference),
       c.status,
@@ -803,16 +773,16 @@ function handleImport(event) {
   const reader = new FileReader();
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      if (!Array.isArray(parsed)) throw new Error('not a list');
+      const __app_parsed = JSON.parse(reader.result);
+      if (!Array.isArray(__app_parsed)) throw new Error('not a list');
       const existing = loadAll();
       const merged = [...existing];
-      for (const item of parsed) {
+      for (const item of __app_parsed) {
         const c = createComplaintRecord(item);
         if (!merged.find((e) => e.id === c.id)) merged.push(c);
       }
       saveAll(merged);
-      statusEl.textContent = `Imported ${parsed.length} complaint(s) locally.`;
+      statusEl.textContent = `Imported ${__app_parsed.length} complaint(s) locally.`;
       renderAll();
     } catch {
       statusEl.textContent = 'Could not import file. Expected a JSON list of complaints.';
@@ -845,53 +815,11 @@ const exportCsvBtn = document.querySelector('#exportCsv');
 const exportJsonBtn = document.querySelector('#exportJson');
 const importInput = document.querySelector('#importJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 exportCsvBtn?.addEventListener('click', () => handleExport('csv'));
 exportJsonBtn?.addEventListener('click', () => handleExport('json'));
 importInput?.addEventListener('change', handleImport);
 clearAllBtn?.addEventListener('click', handleClearAll);
-loadSampleBtn?.addEventListener('click', () => {
-  const today = new Date();
-  const past = new Date(today);
-  past.setDate(past.getDate() - 30);
-  const recent = new Date(today);
-  recent.setDate(recent.getDate() - 10);
-  const sample = [
-    createComplaintRecord({
-      patientName: 'Manchester Royal Infirmary',
-      trustName: 'Manchester Royal Infirmary',
-      organisationType: 'hospital',
-      stage: 'formal',
-      sentDate: past.toISOString().slice(0, 10),
-      reference: 'MRI-FORMAL-2026-001',
-      description: 'Delayed discharge and poor communication during inpatient stay in March 2026.',
-      notes: 'Trust acknowledged complaint on time but response not yet received.'
-    }),
-    createComplaintRecord({
-      patientName: 'Riverside Medical Practice',
-      trustName: 'Riverside Medical Practice',
-      organisationType: 'gp',
-      stage: 'pals',
-      sentDate: recent.toISOString().slice(0, 10),
-      reference: 'RMP-PALS-2026-004',
-      description:
-        'Difficulty accessing repeat prescriptions and long wait times for appointments.',
-      notes: 'PALS contacted, awaiting initial response.'
-    })
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (!merged.find((e) => e.trustName === s.trustName && e.description === s.description)) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample complaints.';
-  renderAll();
-});
-
 renderAll();
 initTheme('#theme-toggle');
 

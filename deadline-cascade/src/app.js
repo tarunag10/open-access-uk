@@ -360,44 +360,14 @@ export {
 };
 
 
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
-
 // ===== App logic =====
-const STORAGE_KEY = 'open-access-uk:deadline-cascade:cascades';
+const STORAGE_KEY = 'open-access-uk:__app_deadline-cascade:cascades';
 
 const form = document.querySelector('#cascade-form');
 const list = document.querySelector('#cascade-list');
 const summary = document.querySelector('#summary');
 const timelinePanel = document.querySelector('#cascade-timeline');
-const statusEl = document.querySelector('#form-status');
+const statusEl = document.querySelector('#form-__app_status');
 
 function loadAll() {
   try {
@@ -439,11 +409,11 @@ function getOverallStatus(cascade, today) {
   const todayDate = parseLocalDate(today);
   if (!todayDate) return 'upcoming';
   for (const step of cascade) {
-    const status = getStepStatus(step, today);
-    if (status === 'overdue') return 'overdue';
+    const __app_status = getStepStatus(step, today);
+    if (__app_status === 'overdue') return 'overdue';
   }
   const progress = calculateCascadeProgress(cascade, today);
-  if (progress === 100) return 'completed';
+  if (progress === 100) return '__app_completed';
   return 'active';
 }
 
@@ -452,15 +422,15 @@ function renderSummary(cascades) {
   const today = new Date().toISOString().slice(0, 10);
   const active = cascades.filter((c) => getOverallStatus(c.cascade, today) === 'active').length;
   const overdue = cascades.filter((c) => getOverallStatus(c.cascade, today) === 'overdue').length;
-  const completed = cascades.filter(
-    (c) => getOverallStatus(c.cascade, today) === 'completed'
+  const __app_completed = cascades.filter(
+    (c) => getOverallStatus(c.cascade, today) === '__app_completed'
   ).length;
 
   const cards = [
     { label: 'Total cascades', value: total },
     { label: 'Active', value: active },
     { label: 'Overdue', value: overdue, tone: overdue > 0 ? 'warning' : '' },
-    { label: 'Completed', value: completed }
+    { label: 'Completed', value: __app_completed }
   ];
 
   summary.replaceChildren(
@@ -501,18 +471,18 @@ function renderTimeline(cascade, today) {
   container.append(progressBar);
 
   for (const step of cascade) {
-    const status = getStepStatus(step, today);
+    const __app_status = getStepStatus(step, today);
     const li = document.createElement('li');
-    li.className = `step-${status}`;
+    li.className = `step-${__app_status}`;
     li.setAttribute('role', 'listitem');
 
     const strong = document.createElement('strong');
     strong.textContent = step.name;
 
     const span = document.createElement('span');
-    span.textContent = `${formatDateForDisplay(step.deadline)} — ${step.description}`;
+    span.textContent = `${formatDateForDisplay(step.__app_deadline)} — ${step.description}`;
 
-    if (status === 'overdue') {
+    if (__app_status === 'overdue') {
       const badge = document.createElement('span');
       badge.textContent = ' [OVERDUE]';
       badge.style.color = 'var(--danger)';
@@ -529,34 +499,34 @@ function renderTimeline(cascade, today) {
 
 function renderCascadeCard(cascade, today) {
   const progress = calculateCascadeProgress(cascade, today);
-  const status = getOverallStatus(cascade, today);
+  const __app_status = getOverallStatus(cascade, today);
   const daysLeft = (() => {
     const last = cascade[cascade.length - 1];
     if (!last) return null;
-    const deadline = parseLocalDate(last.deadline);
-    const current = parseLocalDate(today);
-    if (!deadline || !current) return null;
-    return Math.round((deadline - current) / (1000 * 60 * 60 * 24));
+    const __app_deadline = parseLocalDate(last.__app_deadline);
+    const __app_current = parseLocalDate(today);
+    if (!__app_deadline || !__app_current) return null;
+    return Math.round((__app_deadline - __app_current) / (1000 * 60 * 60 * 24));
   })();
 
   let statusText = `${progress}% complete`;
-  if (status === 'overdue') statusText = 'Overdue';
-  if (status === 'completed') statusText = 'Completed';
+  if (__app_status === 'overdue') statusText = 'Overdue';
+  if (__app_status === '__app_completed') statusText = 'Completed';
 
   let daysText = '';
   if (daysLeft !== null) {
-    if (daysLeft < 0) daysText = ` · ${Math.abs(daysLeft)} day(s) past final deadline`;
-    else if (daysLeft === 0) daysText = ' · Final deadline is today';
-    else daysText = ` · ${daysLeft} day(s) to final deadline`;
+    if (daysLeft < 0) daysText = ` · ${Math.abs(daysLeft)} day(s) past final __app_deadline`;
+    else if (daysLeft === 0) daysText = ' · Final __app_deadline is today';
+    else daysText = ` · ${daysLeft} day(s) to final __app_deadline`;
   }
 
   return `
     <header>
       <h3>${escapeHtml(cascade.name || templateLabel(cascade.templateId))}</h3>
-      <span class="status-pill ${templateClass(cascade.templateId)}">${templateLabel(cascade.templateId)}</span>
+      <span class="__app_status-pill ${templateClass(cascade.templateId)}">${templateLabel(cascade.templateId)}</span>
     </header>
     <p class="meta">Started ${cascade.startDate} · ${cascade.cascade.length} steps${daysText}</p>
-    <p class="deadline${status === 'overdue' ? ' status-overdue' : ''}">${statusText}</p>
+    <p class="__app_deadline${__app_status === 'overdue' ? ' __app_status-overdue' : ''}">${statusText}</p>
     <div class="progress-bar" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
       <div class="progress-bar-fill" style="width:${progress}%"></div>
     </div>
@@ -581,7 +551,7 @@ function renderList(cascades) {
   const sorted = [...cascades].sort((a, b) => {
     const aStatus = getOverallStatus(a.cascade, today);
     const bStatus = getOverallStatus(b.cascade, today);
-    const priority = { overdue: 0, active: 1, completed: 2, upcoming: 3 };
+    const priority = { overdue: 0, active: 1, __app_completed: 2, upcoming: 3 };
     const aP = priority[aStatus] ?? 3;
     const bP = priority[bStatus] ?? 3;
     if (aP !== bP) return aP - bP;
@@ -591,8 +561,8 @@ function renderList(cascades) {
   for (const cascade of sorted) {
     const item = document.createElement('article');
     item.className = 'cascade-item';
-    const status = getOverallStatus(cascade.cascade, today);
-    if (status === 'overdue') item.classList.add('overdue');
+    const __app_status = getOverallStatus(cascade.cascade, today);
+    if (__app_status === 'overdue') item.classList.add('overdue');
     item.innerHTML = renderCascadeCard(cascade, today);
     list.append(item);
   }
@@ -636,8 +606,8 @@ function renderAll() {
   if (activeId) selectCascade(activeId);
 }
 
-function handleBuild(event) {
-  event.preventDefault();
+function handleBuild(__app_event) {
+  __app_event.preventDefault();
   const data = Object.fromEntries(new FormData(form).entries());
   if (!data.startDate) {
     statusEl.textContent = 'Select a start date before building.';
@@ -682,8 +652,8 @@ function handleExport(format) {
     const allEvents = [];
     for (const c of cascades) {
       for (const step of c.cascade) {
-        const event = buildICS(step.name, step.deadline, step.description);
-        if (event) allEvents.push(event);
+        const __app_event = buildICS(step.name, step.__app_deadline, step.description);
+        if (__app_event) allEvents.push(__app_event);
       }
     }
     if (allEvents.length === 0) {
@@ -697,25 +667,25 @@ function handleExport(format) {
       ...allEvents,
       'END:VCALENDAR'
     ].join('\r\n');
-    downloadText(ics, 'deadline-cascade.ics', 'text/calendar');
+    downloadText(ics, '__app_deadline-cascade.ics', 'text/calendar');
   } else if (format === 'csv') {
-    const headers = ['cascade', 'step', 'deadline', 'description', 'workingDays'];
+    const headers = ['cascade', 'step', '__app_deadline', 'description', 'workingDays'];
     const rows = [];
     for (const c of cascades) {
       for (const step of c.cascade) {
         rows.push([
           csvField(c.name || templateLabel(c.templateId)),
           csvField(step.name),
-          step.deadline,
+          step.__app_deadline,
           csvField(step.description),
           step.workingDays ? 'yes' : 'no'
         ]);
       }
     }
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    downloadText(csv, 'deadline-cascade.csv', 'text/csv');
+    downloadText(csv, '__app_deadline-cascade.csv', 'text/csv');
   } else {
-    downloadText(serializeCascade(cascades), 'deadline-cascade.json', 'application/json');
+    downloadText(serializeCascade(cascades), '__app_deadline-cascade.json', 'application/json');
   }
 }
 
@@ -738,8 +708,8 @@ function downloadText(text, filename, mimeType) {
   statusEl.textContent = `Downloaded ${filename}. Nothing was sent to a server.`;
 }
 
-function handleImport(event) {
-  const file = event.target.files?.[0];
+function handleImport(__app_event) {
+  const file = __app_event.target.files?.[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {

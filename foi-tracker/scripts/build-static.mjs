@@ -127,7 +127,11 @@ function bundleJs(entryFile, outputFile) {
   // Precompute names so the entry can destructure imports after dependencies are emitted.
   for (let i = 1; i < allFiles.length; i++) {
     const file = allFiles[i];
-    moduleVarNames.set(file, `__m${i}_${file.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`);
+    const moduleKey = relative(root, file);
+    moduleVarNames.set(
+      file,
+      `__m${i}_${moduleKey.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`
+    );
   }
 
   function importBindings(file) {
@@ -164,6 +168,9 @@ function bundleJs(entryFile, outputFile) {
 
   const entryPath = allFiles[0];
   let body = readFileSync(entryPath, 'utf8');
+  // Older bundles encoded the machine's absolute checkout path in module
+  // identifiers. Keep only the repository-relative module portion.
+  body = body.replace(/(__m\d+_)[A-Za-z0-9_]*_shared_/g, '$1shared_');
   const imports = parseImports(readFileSync(entryPath, 'utf8'));
   for (const imp of imports) {
     const resolvedFile = resolveImport(entryPath, imp.source);

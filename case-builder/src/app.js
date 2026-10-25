@@ -9,8 +9,16 @@
 // ===== src/app.js =====
 // ===== src/app.js =====
 // ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
 // ===== src/theme.js =====
-const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_theme_js =
+const __m1_src_theme_js =
   (() => {
     // <app>/src/theme.js
 
@@ -55,7 +63,7 @@ const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== ../shared/theme/index.mjs =====
-const __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_theme_index_mjs =
+const __m2_shared_theme_index_mjs =
   (() => {
     // shared/theme/index.mjs
     const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -75,7 +83,7 @@ const __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== src/builder.js =====
-const __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_builder_js =
+const __m3_src_builder_js =
   (() => {
     // Case Builder - core case management logic
     // Combines letters, evidence, deadlines, and escalation into portable case files.
@@ -638,7 +646,7 @@ const __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== src/export-hub.js =====
-const __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_export_hub_js =
+const __m4_src_export_hub_js =
   (() => {
     // Export hub - produces downloadable files for a case
 
@@ -759,13 +767,13 @@ const __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
 // ===== generated dependency bindings =====
 
 const { initTheme: initTheme } =
-  __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_theme_js;
+  __m1_src_theme_js;
 
 const {
   THEME_STORAGE_KEY: THEME_STORAGE_KEY,
   resolveInitialTheme: resolveInitialTheme,
   nextTheme: nextTheme
-} = __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_theme_index_mjs;
+} = __m2_shared_theme_index_mjs;
 
 const {
   ISSUE_CATEGORIES: ISSUE_CATEGORIES,
@@ -801,13 +809,13 @@ const {
   buildTimelineMarkdown: buildTimelineMarkdown,
   buildCaseJsonExport: buildCaseJsonExport,
   buildHandoffPack: buildHandoffPack
-} = __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_builder_js;
+} = __m3_src_builder_js;
 
 const {
   buildExportList: buildExportList,
   groupByType: groupByType,
   buildCombinedMarkdown: buildCombinedMarkdown
-} = __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_case_builder_src_export_hub_js;
+} = __m4_src_export_hub_js;
 
 // ===== src/app.js =====
 // ===== src/app.js =====
@@ -2198,3 +2206,11 @@ navToggle?.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', String(open));
   primaryNav?.classList.toggle('is-open', open);
 });
+
+
+
+
+
+
+
+

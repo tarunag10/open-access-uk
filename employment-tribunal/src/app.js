@@ -230,7 +230,7 @@ function renderClaimCard(claim) {
   const acasDeadline = getACASDeadline(claim.dismissalDate);
   const et1Deadline = claim.acasCertDate ? getET1Deadline(claim.acasCertDate) : null;
 
-  let deadlineText = 'Add a dismissal date to see ACAS deadline.';
+  let deadlineText = 'Add a dismissal __tracker_date to see ACAS deadline.';
   if (acasDeadline) {
     deadlineText = `ACAS deadline: ${acasDeadline}`;
   }
@@ -243,7 +243,7 @@ function renderClaimCard(claim) {
       <h3>${escapeHtml(claim.employerName || 'Untitled claim')}</h3>
       <span class="status-pill claim-${claim.claimType}">${typeName}</span>
     </header>
-    <p class="meta">${escapeHtml(claim.claimantName || 'No claimant')} — ${claim.dismissalDate || 'No dismissal date'}</p>
+    <p class="meta">${escapeHtml(claim.claimantName || 'No claimant')} — ${claim.dismissalDate || 'No dismissal __tracker_date'}</p>
     <p class="deadline">${deadlineText}</p>
     <div class="item-actions">
       <button type="button" data-action="view" data-id="${claim.id}">View</button>
@@ -275,11 +275,11 @@ function renderTimeline(claim) {
   const chronology = getChronologyTemplate();
   let html = '<ol class="timeline" aria-label="Claim chronology">';
   for (const step of chronology) {
-    const date = claim[step.dateField] || '';
-    const cls = date ? 'timeline-complete' : 'timeline-future';
+    const __tracker_date = claim[step.dateField] || '';
+    const cls = __tracker_date ? 'timeline-complete' : 'timeline-future';
     html += `<li class="${cls}">`;
     html += `<strong>${step.label}</strong>`;
-    html += `<span>${date || 'Not yet recorded'}</span>`;
+    html += `<span>${__tracker_date || 'Not yet recorded'}</span>`;
     html += '</li>';
   }
   html += '</ol>';
@@ -302,36 +302,6 @@ export {
   renderTimeline
 };
 
-
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
 
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:employment-tribunal:claims';
@@ -756,52 +726,12 @@ const exportCsvBtn = document.querySelector('#exportCsv');
 const exportJsonBtn = document.querySelector('#exportJson');
 const importInput = document.querySelector('#importJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 exportCsvBtn?.addEventListener('click', () => handleExport('csv'));
 exportJsonBtn?.addEventListener('click', () => handleExport('json'));
 importInput?.addEventListener('change', handleImport);
 clearAllBtn?.addEventListener('click', handleClearAll);
-loadSampleBtn?.addEventListener('click', () => {
-  const sample = [
-    createClaimRecord({
-      claimType: 'unfair-dismissal',
-      claimantName: 'Jane Smith',
-      employerName: 'Acme Corp Ltd',
-      employerAddress: '123 Business Park, London, EC1A 1BB',
-      employmentStartDate: '2020-03-15',
-      employmentEndDate: '2026-05-30',
-      dismissalDate: '2026-05-30',
-      weeklyPay: '500',
-      grounds:
-        'I was dismissed without a fair reason. My employer did not follow a fair procedure. I was not given proper notice or an opportunity to respond to the allegations.'
-    }),
-    createClaimRecord({
-      claimType: 'discrimination',
-      claimantName: 'John Doe',
-      employerName: 'Tech Solutions UK',
-      employerAddress: '45 Innovation Drive, Manchester, M1 1AE',
-      employmentStartDate: '2019-06-01',
-      employmentEndDate: '2026-04-15',
-      dismissalDate: '2026-04-15',
-      weeklyPay: '650',
-      grounds:
-        'I was discriminated against on the grounds of disability. Reasonable adjustments were not made for my condition.'
-    })
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (
-      !merged.find((e) => e.employerName === s.employerName && e.claimantName === s.claimantName)
-    ) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample claims.';
-  renderAll();
-});
+
 
 renderAll();
 initTheme('#theme-toggle');

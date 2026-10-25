@@ -365,36 +365,6 @@ export {
 };
 
 
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
-
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:professional-complaints:complaints';
 const FORM_KEY = 'open-access-uk:professional-complaints:form-draft';
@@ -425,7 +395,7 @@ function renderSummary(complaints) {
 
   const regulatorCounts = REGULATORS.map((r) => ({
     label: r.id,
-    value: complaints.filter((c) => c.regulator === r.id).length
+    value: complaints.filter((c) => c.__app_regulator === r.id).length
   }));
 
   const cards = [
@@ -481,16 +451,16 @@ function selectComplaint(id) {
 
 function renderDetail(complaint) {
   detailContent.replaceChildren();
-  const regulator = getRegulatorDetails(complaint.regulator);
-  const deadlines = getComplaintDeadlines(complaint.regulator);
-  const ftpProcess = getFitnessToPractiseProcess(complaint.regulator);
+  const __app_regulator = getRegulatorDetails(complaint.__app_regulator);
+  const deadlines = getComplaintDeadlines(complaint.__app_regulator);
+  const ftpProcess = getFitnessToPractiseProcess(complaint.__app_regulator);
 
   const header = document.createElement('div');
   const title = document.createElement('h2');
   title.textContent = complaint.professionalName || 'Untitled complaint';
   const status = document.createElement('span');
-  status.className = `status-pill regulator-${complaint.regulator}`;
-  status.textContent = regulator ? regulator.profession : complaint.regulator;
+  status.className = `status-pill __app_regulator-${complaint.__app_regulator}`;
+  status.textContent = __app_regulator ? __app_regulator.profession : complaint.__app_regulator;
   header.append(title, status);
 
   const grid = document.createElement('dl');
@@ -498,7 +468,7 @@ function renderDetail(complaint) {
   const fields = [
     [
       'Regulator',
-      regulator ? `${regulator.name} (${regulator.id})` : complaint.regulator || 'Not specified'
+      __app_regulator ? `${__app_regulator.name} (${__app_regulator.id})` : complaint.__app_regulator || 'Not specified'
     ],
     ['Complainant', complaint.complainantName || 'Not provided'],
     ['Practice', complaint.practiceName || 'Not provided'],
@@ -529,7 +499,7 @@ function renderDetail(complaint) {
   if (ftpProcess.length > 0) {
     ftpSection = document.createElement('section');
     const ftpHeading = document.createElement('h3');
-    ftpHeading.textContent = `Fitness to practise process (${regulator ? regulator.id : ''})`;
+    ftpHeading.textContent = `Fitness to practise process (${__app_regulator ? __app_regulator.id : ''})`;
     ftpSection.append(ftpHeading);
 
     const ftpList = document.createElement('ol');
@@ -572,15 +542,15 @@ function renderDetail(complaint) {
 }
 
 function buildComplaintSummary(complaint) {
-  const regulator = getRegulatorDetails(complaint.regulator);
-  const lines = [];
-  lines.push(`Complaint: ${complaint.professionalName}`);
-  lines.push(`Regulator: ${regulator ? regulator.name : complaint.regulator}`);
-  if (complaint.practiceName) lines.push(`Practice: ${complaint.practiceName}`);
-  if (complaint.complaintType) lines.push(`Category: ${complaint.complaintType}`);
-  if (complaint.descriptionOfConcern) lines.push(`Description: ${complaint.descriptionOfConcern}`);
-  if (complaint.desiredOutcome) lines.push(`Desired outcome: ${complaint.desiredOutcome}`);
-  return lines.join('\n');
+  const __app_regulator = getRegulatorDetails(complaint.__app_regulator);
+  const __app_lines = [];
+  __app_lines.push(`Complaint: ${complaint.professionalName}`);
+  __app_lines.push(`Regulator: ${__app_regulator ? __app_regulator.name : complaint.__app_regulator}`);
+  if (complaint.practiceName) __app_lines.push(`Practice: ${complaint.practiceName}`);
+  if (complaint.complaintType) __app_lines.push(`Category: ${complaint.complaintType}`);
+  if (complaint.descriptionOfConcern) __app_lines.push(`Description: ${complaint.descriptionOfConcern}`);
+  if (complaint.desiredOutcome) __app_lines.push(`Desired outcome: ${complaint.desiredOutcome}`);
+  return __app_lines.join('\n');
 }
 
 function generateComplaintId() {
@@ -595,7 +565,7 @@ function createComplaintRecord(data) {
     id: generateComplaintId(),
     createdAt: new Date().toISOString(),
     status: 'open',
-    regulator: data.regulator || '',
+    __app_regulator: data.__app_regulator || '',
     professionalName: data.professionalName,
     practiceName: data.practiceName || '',
     practiceAddress: data.practiceAddress || '',
@@ -691,7 +661,7 @@ function handleAdd(event) {
   const complaints = loadAll();
   const now = new Date().toISOString();
   const newComplaint = createComplaintRecord({
-    regulator: data.regulator,
+    __app_regulator: data.__app_regulator,
     professionalName: data.professionalName,
     practiceName: data.practiceName,
     practiceAddress: data.practiceAddress,
@@ -720,7 +690,7 @@ function handleExport(format) {
   if (format === 'csv') {
     const headers = [
       'id',
-      'regulator',
+      '__app_regulator',
       'professionalName',
       'practiceName',
       'complaintType',
@@ -729,7 +699,7 @@ function handleExport(format) {
     ];
     const rows = complaints.map((c) => [
       c.id,
-      c.regulator || '',
+      c.__app_regulator || '',
       csvField(c.professionalName),
       csvField(c.practiceName),
       c.complaintType || '',
@@ -761,16 +731,16 @@ function handleImport(event) {
   const reader = new FileReader();
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      if (!Array.isArray(parsed)) throw new Error('not a list');
+      const __app_parsed = JSON.parse(reader.result);
+      if (!Array.isArray(__app_parsed)) throw new Error('not a list');
       const existing = loadAll();
       const merged = [...existing];
-      for (const item of parsed) {
+      for (const item of __app_parsed) {
         const c = createComplaintRecord(item);
         if (!merged.find((e) => e.id === c.id)) merged.push(c);
       }
       saveAll(merged);
-      statusEl.textContent = `Imported ${parsed.length} complaint(s) locally.`;
+      statusEl.textContent = `Imported ${__app_parsed.length} complaint(s) locally.`;
       renderAll();
     } catch {
       statusEl.textContent = 'Could not import file. Expected a JSON list of complaints.';
@@ -799,8 +769,8 @@ restoreFormDraft();
 form.addEventListener('submit', handleAdd);
 form.addEventListener('input', saveFormDraft);
 
-// Update categories when regulator changes
-const regulatorSelect = form?.querySelector('#regulator');
+// Update categories when __app_regulator changes
+const regulatorSelect = form?.querySelector('#__app_regulator');
 const categorySelect = form?.querySelector('#complaintType');
 regulatorSelect?.addEventListener('change', () => {
   if (categorySelect) {
@@ -814,46 +784,12 @@ const exportCsvBtn = document.querySelector('#exportCsv');
 const exportJsonBtn = document.querySelector('#exportJson');
 const importInput = document.querySelector('#importJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 exportCsvBtn?.addEventListener('click', () => handleExport('csv'));
 exportJsonBtn?.addEventListener('click', () => handleExport('json'));
 importInput?.addEventListener('change', handleImport);
 clearAllBtn?.addEventListener('click', handleClearAll);
-loadSampleBtn?.addEventListener('click', () => {
-  const sample = [
-    createComplaintRecord({
-      regulator: 'GMC',
-      professionalName: 'Dr John Smith',
-      practiceName: 'City Medical Practice',
-      practiceAddress: '45 Harley Street, London, W1G 8BT',
-      complaintType: 'conduct',
-      descriptionOfConcern: 'Misdiagnosis leading to delayed treatment and unnecessary procedures.',
-      desiredOutcome: 'Investigation and formal apology',
-      complainantName: 'Jane Doe'
-    }),
-    createComplaintRecord({
-      regulator: 'SRA',
-      professionalName: 'Ms Sarah Williams',
-      practiceName: 'Williams & Co Solicitors',
-      practiceAddress: '12 High Street, Manchester, M1 1AE',
-      complaintType: 'conduct',
-      descriptionOfConcern: 'Failure to communicate and missing critical filing deadlines.',
-      desiredOutcome: 'Compensation and disciplinary review',
-      complainantName: 'John Smith'
-    })
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (!merged.find((e) => e.professionalName === s.professionalName)) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample complaints.';
-  renderAll();
-});
+
 
 renderAll();
 initTheme('#theme-toggle');

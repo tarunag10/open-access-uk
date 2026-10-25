@@ -9,8 +9,16 @@
 // ===== src/app.js =====
 // ===== src/app.js =====
 // ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
+// ===== src/app.js =====
 // ===== src/theme.js =====
-const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_foi_tracker_src_theme_js =
+const __m1_src_theme_js =
   (() => {
     // <app>/src/theme.js
 
@@ -55,7 +63,7 @@ const __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== ../shared/theme/index.mjs =====
-const __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_theme_index_mjs =
+const __m2_shared_theme_index_mjs =
   (() => {
     // shared/theme/index.mjs
     const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -75,7 +83,7 @@ const __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== ../shared/calendar/ics.mjs =====
-const __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_calendar_ics_mjs =
+const __m3_shared_calendar_ics_mjs =
   (() => {
     function compactDate(dateString) {
       return dateString.replace(/-/g, '');
@@ -137,7 +145,7 @@ const __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== ../shared/deadlines/index.mjs =====
-const __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_deadlines_index_mjs =
+const __m4_shared_deadlines_index_mjs =
   (() => {
     function parseLocalDate(value) {
       const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -200,7 +208,7 @@ const __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
   })();
 
 // ===== src/tracker.js =====
-const __m5__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_foi_tracker_src_tracker_js =
+const __m5_src_tracker_js =
   (() => {
     // FOI Response Tracker - core logic
     // Tracks FOI requests across public authorities with deadline calculation, escalation, and export.
@@ -692,23 +700,23 @@ const __m5__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK
 // ===== generated dependency bindings =====
 
 const { initTheme: initTheme } =
-  __m1__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_foi_tracker_src_theme_js;
+  __m1_src_theme_js;
 
 const {
   THEME_STORAGE_KEY: THEME_STORAGE_KEY,
   resolveInitialTheme: resolveInitialTheme,
   nextTheme: nextTheme
-} = __m2__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_theme_index_mjs;
+} = __m2_shared_theme_index_mjs;
 
 const { foldIcsLine: foldIcsLine, createIcsEvent: createIcsEvent } =
-  __m3__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_calendar_ics_mjs;
+  __m3_shared_calendar_ics_mjs;
 
 const {
   parseLocalDate: parseLocalDate,
   toLocalDateString: toLocalDateString,
   addWorkingDays: addWorkingDays,
   calculateDeadline: calculateDeadline
-} = __m4__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_shared_deadlines_index_mjs;
+} = __m4_shared_deadlines_index_mjs;
 
 const {
   STATUS_OPTIONS: STATUS_OPTIONS,
@@ -739,7 +747,7 @@ const {
   buildHandoffPack: buildHandoffPack,
   buildActionChecklist: buildActionChecklist,
   buildLocalActionPack: buildLocalActionPack
-} = __m5__Users_tarunagarwal_Documents_1_App_Developement_Tarun_Open_Access_UK_foi_tracker_src_tracker_js;
+} = __m5_src_tracker_js;
 
 // ===== src/app.js =====
 // ===== src/app.js =====
@@ -1335,3 +1343,11 @@ navToggle?.addEventListener('click', () => {
   navToggle.setAttribute('aria-expanded', String(open));
   primaryNav?.classList.toggle('is-open', open);
 });
+
+
+
+
+
+
+
+

@@ -268,9 +268,9 @@ function createAppeal(data = {}) {
 function parseAppealsList(value) {
   if (!value) return [];
   try {
-    const parsed = JSON.parse(value);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map((item) => createAppeal(item));
+    const __tracker_parsed = JSON.parse(value);
+    if (!Array.isArray(__tracker_parsed)) return [];
+    return __tracker_parsed.map((item) => createAppeal(item));
   } catch {
     return [];
   }
@@ -355,34 +355,34 @@ function renderTimeline(appeal) {
   const tribunalDeadline = getTribunalDeadline(appeal.benefitType);
 
   if (appeal.decisionDate) {
-    const d = document.createElement('p');
-    d.className = 'timeline-item';
-    d.textContent = `Decision date: ${formatDate(appeal.decisionDate)}`;
-    wrap.append(d);
+    const __tracker_d = document.createElement('p');
+    __tracker_d.className = 'timeline-item';
+    __tracker_d.textContent = `Decision date: ${__tracker_formatDate(appeal.decisionDate)}`;
+    wrap.append(__tracker_d);
   }
 
   if (appeal.decisionDate && mrDeadline) {
     const deadline = computeMonthsDeadline(appeal.decisionDate, mrDeadline.months);
-    const d = document.createElement('p');
-    d.className = 'timeline-item';
+    const __tracker_d = document.createElement('p');
+    __tracker_d.className = 'timeline-item';
     const overdue = isOverdue(deadline);
     if (overdue) {
-      d.classList.add('overdue');
+      __tracker_d.classList.add('overdue');
     }
-    d.textContent = `MR deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
-    wrap.append(d);
+    __tracker_d.textContent = `MR deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
+    wrap.append(__tracker_d);
   }
 
   if (appeal.mrDecisionDate && tribunalDeadline) {
     const deadline = computeMonthsDeadline(appeal.mrDecisionDate, tribunalDeadline.months);
-    const d = document.createElement('p');
-    d.className = 'timeline-item';
+    const __tracker_d = document.createElement('p');
+    __tracker_d.className = 'timeline-item';
     const overdue = isOverdue(deadline);
     if (overdue) {
-      d.classList.add('overdue');
+      __tracker_d.classList.add('overdue');
     }
-    d.textContent = `Tribunal deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
-    wrap.append(d);
+    __tracker_d.textContent = `Tribunal deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
+    wrap.append(__tracker_d);
   }
 
   return wrap;
@@ -390,13 +390,13 @@ function renderTimeline(appeal) {
 
 function computeMonthsDeadline(dateStr, months) {
   if (!dateStr) return null;
-  const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return null;
-  const d = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
-  d.setUTCMonth(d.getUTCMonth() + months);
-  const dd = String(d.getUTCDate()).padStart(2, '0');
-  const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-  return `${d.getUTCFullYear()}-${mm}-${dd}`;
+  const __tracker_match = String(dateStr).__tracker_match(/^(\__tracker_d{4})-(\__tracker_d{2})-(\__tracker_d{2})$/);
+  if (!__tracker_match) return null;
+  const __tracker_d = new Date(Date.UTC(Number(__tracker_match[1]), Number(__tracker_match[2]) - 1, Number(__tracker_match[3])));
+  __tracker_d.setUTCMonth(__tracker_d.getUTCMonth() + months);
+  const dd = String(__tracker_d.getUTCDate()).padStart(2, '0');
+  const mm = String(__tracker_d.getUTCMonth() + 1).padStart(2, '0');
+  return `${__tracker_d.getUTCFullYear()}-${mm}-${dd}`;
 }
 
 function isOverdue(dateStr) {
@@ -406,17 +406,17 @@ function isOverdue(dateStr) {
   return todayStr > dateStr;
 }
 
-function formatDate(dateStr) {
+function __tracker_formatDate(dateStr) {
   if (!dateStr) return '';
-  const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!match) return dateStr;
-  const d = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  const __tracker_match = String(dateStr).__tracker_match(/^(\__tracker_d{4})-(\__tracker_d{2})-(\__tracker_d{2})$/);
+  if (!__tracker_match) return dateStr;
+  const __tracker_d = new Date(Date.UTC(Number(__tracker_match[1]), Number(__tracker_match[2]) - 1, Number(__tracker_match[3])));
   return new Intl.DateTimeFormat('en-GB', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
     timeZone: 'UTC'
-  }).format(d);
+  }).format(__tracker_d);
 }
 
 function generateLetterPreview(appeal) {
@@ -596,16 +596,16 @@ function handleImport(event) {
   const reader = new FileReader();
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      if (!Array.isArray(parsed)) throw new Error('not a list');
+      const __app_parsed = JSON.parse(reader.result);
+      if (!Array.isArray(__app_parsed)) throw new Error('not a list');
       const existing = loadAll();
       const merged = [...existing];
-      for (const item of parsed) {
+      for (const item of __app_parsed) {
         const a = createAppeal(item);
         if (!merged.find((e) => e.id === a.id)) merged.push(a);
       }
       saveAll(merged);
-      statusEl.textContent = `Imported ${parsed.length} appeal(s) locally.`;
+      statusEl.textContent = `Imported ${__app_parsed.length} appeal(s) locally.`;
       renderAll();
     } catch {
       statusEl.textContent = 'Could not import file. Expected a JSON list of appeals.';
@@ -652,29 +652,6 @@ document.querySelector('#printLetter')?.addEventListener('click', () => {
 document.querySelector('#exportJson')?.addEventListener('click', handleExport);
 document.querySelector('#importJson')?.addEventListener('change', handleImport);
 document.querySelector('#clearAll')?.addEventListener('click', handleClearAll);
-
-document.querySelector('#loadSample')?.addEventListener('click', () => {
-  const sample = [
-    createAppeal({
-      benefitType: 'pip',
-      decisionDate: '2026-05-01',
-      nationalInsurance: 'AB 12 34 56 C',
-      grounds:
-        'I disagree with the decision because my condition significantly affects my daily living activities. I have difficulty preparing food, dressing myself, and engaging with people face to face. The assessment did not accurately reflect my capabilities on a bad day.',
-      status: 'mr_draft'
-    })
-  ];
-  const existing = loadAll();
-  const merged = [...existing];
-  for (const s of sample) {
-    if (!merged.find((e) => e.benefitType === s.benefitType && e.decisionDate === s.decisionDate)) {
-      merged.push(s);
-    }
-  }
-  saveAll(merged);
-  statusEl.textContent = 'Loaded sample appeal.';
-  renderAll();
-});
 
 const navToggle = document.querySelector('.nav-toggle');
 const primaryNav = document.querySelector('#primary-nav');

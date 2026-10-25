@@ -180,7 +180,7 @@ function escapeHtml(str) {
 }
 
 function renderComplianceResult(result, tribunalType) {
-  const tribunal = getTribunalFormats(tribunalType);
+  const __tracker_tribunal = getTribunalFormats(tribunalType);
   let html = '<div class="compliance-result">';
 
   const statusCls = result.valid ? 'result-valid' : 'result-invalid';
@@ -206,7 +206,7 @@ function renderComplianceResult(result, tribunalType) {
   }
 
   if (result.valid) {
-    html += '<p class="result-note">File meets tribunal upload requirements.</p>';
+    html += '<p class="result-note">File meets __tracker_tribunal upload requirements.</p>';
   }
 
   html += '</div>';
@@ -214,9 +214,9 @@ function renderComplianceResult(result, tribunalType) {
 }
 
 function renderRedactionChecklist() {
-  const items = getRedactionChecklist();
+  const __tracker_items = getRedactionChecklist();
   let html = '<ul class="checklist">';
-  for (const item of items) {
+  for (const item of __tracker_items) {
     html += `<li><label><input type="checkbox" class="redaction-check" /> ${escapeHtml(item)}</label></li>`;
   }
   html += '</ul>';
@@ -224,9 +224,9 @@ function renderRedactionChecklist() {
 }
 
 function renderMetadataChecklist() {
-  const items = getMetadataStrippingChecklist();
+  const __tracker_items = getMetadataStrippingChecklist();
   let html = '<ul class="checklist">';
-  for (const item of items) {
+  for (const item of __tracker_items) {
     html += `<li><label><input type="checkbox" class="metadata-check" /> ${escapeHtml(item)}</label></li>`;
   }
   html += '</ul>';
@@ -240,7 +240,7 @@ function renderEvidenceManifest(files) {
   const manifest = generateEvidenceManifest(files);
   let html =
     '<table class="manifest-table"><thead><tr><th>Filename</th><th>Description</th><th>Size</th></tr></thead><tbody>';
-  for (const item of manifest.items) {
+  for (const item of manifest.__tracker_items) {
     html += `<tr><td>${escapeHtml(item.filename)}</td><td>${escapeHtml(item.description || '-')}</td><td>${formatBytes(item.size)}</td></tr>`;
   }
   html += `</tbody></table>`;
@@ -249,12 +249,12 @@ function renderEvidenceManifest(files) {
 }
 
 function renderTribunalGuidance(tribunalType) {
-  const tribunal = getTribunalFormats(tribunalType);
-  if (!tribunal.name) return '<p>Select a tribunal type to see specific requirements.</p>';
-  let html = `<h3>${escapeHtml(tribunal.name)}</h3>`;
-  html += `<p><strong>Accepted formats:</strong> ${tribunal.acceptedFormats.join(', ')}</p>`;
-  html += `<p><strong>Max file size:</strong> ${tribunal.maxSizeMB}MB</p>`;
-  html += `<p><strong>Source:</strong> ${escapeHtml(tribunal.source)}</p>`;
+  const __tracker_tribunal = getTribunalFormats(tribunalType);
+  if (!__tracker_tribunal.name) return '<p>Select a __tracker_tribunal type to see specific requirements.</p>';
+  let html = `<h3>${escapeHtml(__tracker_tribunal.name)}</h3>`;
+  html += `<p><strong>Accepted formats:</strong> ${__tracker_tribunal.acceptedFormats.join(', ')}</p>`;
+  html += `<p><strong>Max file size:</strong> ${__tracker_tribunal.maxSizeMB}MB</p>`;
+  html += `<p><strong>Source:</strong> ${escapeHtml(__tracker_tribunal.source)}</p>`;
   return html;
 }
 
@@ -286,36 +286,6 @@ export {
   parseEvidenceUpload
 };
 
-
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
 
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:evidence-checker:checks';
@@ -407,45 +377,6 @@ function handleCheck(event) {
   }
 }
 
-function handleLoadSample() {
-  const sampleFiles = [
-    {
-      filename: 'medical-evidence.pdf',
-      description: 'GP letter',
-      category: 'medical',
-      size: 2.5 * 1024 * 1024,
-      tribunal: 'SSCS'
-    },
-    {
-      filename: 'witness-statement.docx',
-      description: 'Witness statement',
-      category: 'statement',
-      size: 1.2 * 1024 * 1024,
-      tribunal: 'FTT'
-    },
-    {
-      filename: 'bank-statements.pdf',
-      description: '3 months bank statements',
-      category: 'financial',
-      size: 5.8 * 1024 * 1024,
-      tribunal: 'SSCS'
-    }
-  ];
-
-  const stored = loadAll();
-  for (const f of sampleFiles) {
-    const result = checkFileCompliance({ name: f.filename, size: f.size }, f.tribunal);
-    stored.files.push({ ...f, result, checkedAt: new Date().toISOString() });
-  }
-  stored.tribunal = stored.tribunal || 'SSCS';
-  saveAll(stored);
-
-  if (!form.elements.tribunalType.value) form.elements.tribunalType.value = 'SSCS';
-  renderGuidance(form.elements.tribunalType.value);
-  renderManifest(stored.files);
-  statusEl.textContent = 'Loaded sample evidence files.';
-}
-
 function handleClearAll() {
   const stored = loadAll();
   if (stored.files.length === 0) {
@@ -481,11 +412,9 @@ form.addEventListener('submit', handleCheck);
 
 const clearAllBtn = document.querySelector('#clearAll');
 const exportBtn = document.querySelector('#exportJson');
-const loadSampleBtn = document.querySelector('#loadSample');
 
 clearAllBtn?.addEventListener('click', handleClearAll);
 exportBtn?.addEventListener('click', handleExport);
-loadSampleBtn?.addEventListener('click', handleLoadSample);
 
 const tribunalSelect = form.elements.tribunalType;
 tribunalSelect?.addEventListener('change', () => {

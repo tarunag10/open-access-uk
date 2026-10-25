@@ -94,8 +94,12 @@ function bundleApp(toolDir) {
   // 3. Extract app logic: everything after the inlined shared/tracker section
   //    The marker is typically "// ===== App logic =====" or the first section after tracker.js
   //    Look for the first line that isn't a comment or whitespace after the inlined section
-  const appLogicStart = currentApp.search(/\n\/\/ ===== (?:App logic|Theme init|src\/app\.js)/);
-  const appLogic = appLogicStart >= 0 ? currentApp.slice(appLogicStart + 1) : currentApp;
+  const appLogicMarker = /\n\/\/ ===== (?:App logic|Theme init|src\/app\.js)/g;
+  const appLogicMatches = [...currentApp.matchAll(appLogicMarker)];
+  const appLogicStart = appLogicMatches.length
+    ? appLogicMatches[appLogicMatches.length - 1].index
+    : -1;
+  let appLogic = appLogicStart >= 0 ? currentApp.slice(appLogicStart + 1) : currentApp;
 
   // 4. Build the banner and assemble
   const banner =
@@ -116,7 +120,30 @@ function bundleApp(toolDir) {
   }
 
   // Build the tracker inline (with escapeHtml and other helpers)
-  const trackerHelpers = trackerSrc.replace(/^import\s+[^;]+;\n?/gm, '');
+  let trackerHelpers = trackerSrc.replace(/^import\s+[^;]+;\n?/gm, '');
+  // Trackers sometimes define a local alias/helper with the same name as an
+  // inlined shared export. Keep both implementations available by namespacing
+  // the tracker declaration and its references in the generated bundle.
+  const sharedNames = new Set();
+  for (const source of [...inlinedModules, ...themeSrc]) {
+    for (const declaration of source.matchAll(
+      /^\s*(?:export\s+)?(?:const|let|var|function|class)\s+([A-Za-z_$][\w$]*)/gm
+    )) {
+      sharedNames.add(declaration[1]);
+    }
+  }
+  for (const name of sharedNames) {
+    const declarationPattern = new RegExp(`\\b(?:const|let|var|function|class)\\s+${name}\\b`);
+    if (declarationPattern.test(trackerHelpers)) {
+      trackerHelpers = trackerHelpers.replace(
+        new RegExp(`\\b${name}\\b`, 'g'),
+        `__tracker_${name}`
+      );
+    }
+    if (declarationPattern.test(appLogic)) {
+      appLogic = appLogic.replace(new RegExp(`\\b${name}\\b`, 'g'), `__app_${name}`);
+    }
+  }
 
   const bundled =
     banner +
@@ -126,7 +153,10 @@ function bundleApp(toolDir) {
     `// ===== src/tracker.js (imports resolved) =====\n${trackerHelpers}\n\n` +
     appLogic;
 
-  return { bundled, existingPath: appPath };
+  // Prettier and CI should see the same single final newline as generated.
+  const normalizedBundle = `${bundled.trimEnd()}\n`;
+
+  return { bundled: normalizedBundle, existingPath: appPath };
 }
 
 // ---- CLI ----

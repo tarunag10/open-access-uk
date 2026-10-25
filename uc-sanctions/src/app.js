@@ -254,7 +254,7 @@ function createChallengeRecord(data) {
   const sanctionType = data.sanctionType || 'standard';
   if (!validTypes.includes(sanctionType)) {
     throw new Error(
-      `Invalid sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`
+      `Invalid __tracker_sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`
     );
   }
   return {
@@ -276,13 +276,13 @@ function createChallengeRecord(data) {
 }
 
 function renderChallengeCard(challenge) {
-  const sanction = getSanctionDeductionRates(challenge.sanctionType);
+  const __tracker_sanction = getSanctionDeductionRates(challenge.sanctionType);
   const statusCls = challenge.status === 'submitted' ? 'status-submitted' : '';
 
   return `
     <header>
       <h3>${escapeHtml(challenge.claimantName)}</h3>
-      <span class="status-pill sanction-${challenge.sanctionType}">${sanction ? sanction.name : challenge.sanctionType}</span>
+      <span class="status-pill __tracker_sanction-${challenge.sanctionType}">${__tracker_sanction ? __tracker_sanction.name : challenge.sanctionType}</span>
     </header>
     <p class="meta">Decision: ${challenge.decisionDate || 'Not recorded'} — Status: ${challenge.status}</p>
     <p class="deadline${statusCls}">${challenge.reasonForSanction ? escapeHtml(challenge.reasonForSanction.slice(0, 100)) : 'No reason recorded'}</p>
@@ -331,36 +331,6 @@ export {
   renderChallenges
 };
 
-
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
 
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:uc-sanctions:challenges';
@@ -446,14 +416,14 @@ function selectChallenge(id) {
 
 function renderDetail(challenge) {
   detailContent.replaceChildren();
-  const sanction = getSanctionDeductionRates(challenge.sanctionType);
+  const __app_sanction = getSanctionDeductionRates(challenge.sanctionType);
 
   const header = document.createElement('div');
   const title = document.createElement('h2');
   title.textContent = challenge.claimantName;
   const status = document.createElement('span');
-  status.className = `status-pill sanction-${challenge.sanctionType}`;
-  status.textContent = sanction ? sanction.name : challenge.sanctionType;
+  status.className = `status-pill __app_sanction-${challenge.sanctionType}`;
+  status.textContent = __app_sanction ? __app_sanction.name : challenge.sanctionType;
   header.append(title, status);
 
   const grid = document.createElement('dl');
@@ -461,8 +431,8 @@ function renderDetail(challenge) {
   const fields = [
     ['NINO', challenge.nino || 'Not provided'],
     ['Decision date', challenge.decisionDate || 'Not recorded'],
-    ['Deduction rate', sanction ? `${sanction.deductionRate * 100}% of standard allowance` : 'N/A'],
-    ['Max duration', sanction ? `${sanction.maxWeeks || 'N/A'} weeks` : 'N/A'],
+    ['Deduction rate', __app_sanction ? `${__app_sanction.deductionRate * 100}% of standard allowance` : 'N/A'],
+    ['Max duration', __app_sanction ? `${__app_sanction.maxWeeks || 'N/A'} weeks` : 'N/A'],
     ['Status', challenge.status],
     ['Created', new Date(challenge.createdAt).toLocaleString()]
   ];
@@ -476,7 +446,7 @@ function renderDetail(challenge) {
 
   const reasonSection = document.createElement('section');
   const reasonHeading = document.createElement('h3');
-  reasonHeading.textContent = 'Reason for sanction (DWP)';
+  reasonHeading.textContent = 'Reason for __app_sanction (DWP)';
   const reasonText = document.createElement('p');
   reasonText.className = 'body-text';
   reasonText.textContent = challenge.reasonForSanction || 'No reason recorded.';
@@ -537,7 +507,7 @@ function renderDetail(challenge) {
       sanctionType: challenge.sanctionType,
       decisionDate: challenge.decisionDate,
       reasonForHardship:
-        challenge.hardshipReason || 'I cannot meet my basic needs due to the sanction.'
+        challenge.hardshipReason || 'I cannot meet my basic needs due to the __app_sanction.'
     });
     copyText(text, 'Hardship request copied.');
   });
@@ -689,7 +659,7 @@ function handleGenerateHardship() {
     claimantName: data.claimantName,
     sanctionType: data.sanctionType,
     decisionDate: data.decisionDate,
-    reasonForHardship: data.hardshipReason || 'I cannot meet my basic needs due to the sanction.'
+    reasonForHardship: data.hardshipReason || 'I cannot meet my basic needs due to the __app_sanction.'
   });
   currentOutput = text;
   outputWindow.textContent = text;
@@ -715,11 +685,11 @@ function handleImport(event) {
   const reader = new FileReader();
   reader.onload = () => {
     try {
-      const parsed = JSON.parse(reader.result);
-      if (typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('not an object');
+      const __app_parsed = JSON.parse(reader.result);
+      if (typeof __app_parsed !== 'object' || Array.isArray(__app_parsed)) throw new Error('not an object');
       const existing = loadAll();
       const merged = { ...existing };
-      for (const [name, entries] of Object.entries(parsed)) {
+      for (const [name, entries] of Object.entries(__app_parsed)) {
         if (Array.isArray(entries)) {
           merged[name] = merged[name] || [];
           for (const entry of entries) {
@@ -765,7 +735,6 @@ const generateHardshipBtn = document.querySelector('#generateHardship');
 const exportJsonBtn = document.querySelector('#exportJson');
 const importInput = document.querySelector('#importJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 const copyOutputBtn = document.querySelector('#copyOutput');
 const downloadOutputBtn = document.querySelector('#downloadOutput');
 const printOutputBtn = document.querySelector('#printOutput');
@@ -796,40 +765,7 @@ printOutputBtn?.addEventListener('click', () => {
   }
 });
 
-loadSampleBtn?.addEventListener('click', () => {
-  const sample = [
-    createChallengeRecord({
-      claimantName: 'Jane Doe',
-      nino: 'QQ 12 34 56 C',
-      sanctionType: 'higher-level',
-      decisionDate: '2026-05-15',
-      reasonForSanction: 'Failed to attend mandatory work-focused interview on 15 May 2026',
-      groundsForChallenge:
-        'I was not notified of the interview date. The letter was sent to my old address.',
-      goodReasons: 'I had informed DWP of my address change on 1 May 2026.',
-      hardshipReason:
-        'I cannot pay my rent or buy food because my entire standard allowance has been sanctioned.'
-    }),
-    createChallengeRecord({
-      claimantName: 'John Smith',
-      sanctionType: 'standard',
-      decisionDate: '2026-06-01',
-      reasonForSanction: 'Failure to accept a voluntary job opportunity',
-      groundsForChallenge:
-        'The job was 40 miles away with no public transport. I applied for 3 jobs closer to home.',
-      goodReasons: 'Transport failure - no bus route available to the location.'
-    })
-  ];
-  const existing = loadAll();
-  for (const s of sample) {
-    if (!existing.find((e) => e.claimantName === s.claimantName)) {
-      existing.push(s);
-    }
-  }
-  saveAll(existing);
-  statusEl.textContent = 'Loaded sample challenges.';
-  renderAll();
-});
+
 
 renderAll();
 initTheme('#theme-toggle');

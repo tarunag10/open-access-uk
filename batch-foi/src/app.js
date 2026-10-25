@@ -510,13 +510,13 @@ function nextTheme(current) {
 
 function calculateDaysRemaining(sentDate, today = new Date()) {
   if (!sentDate) return null;
-  const deadline = addWorkingDays(sentDate, 20);
-  if (!deadline) return null;
+  const __tracker_deadline = addWorkingDays(sentDate, 20);
+  if (!__tracker_deadline) return null;
 
   const target = new Date(
-    Number(deadline.slice(0, 4)),
-    Number(deadline.slice(5, 7)) - 1,
-    Number(deadline.slice(8, 10))
+    Number(__tracker_deadline.slice(0, 4)),
+    Number(__tracker_deadline.slice(5, 7)) - 1,
+    Number(__tracker_deadline.slice(8, 10))
   );
   const today_ = new Date(today);
   today_.setHours(0, 0, 0, 0);
@@ -542,7 +542,7 @@ function renderBatchCard(batch) {
   const total = batch.authorities.length;
   const received = batch.authorities.filter((a) => a.responseDate).length;
 
-  let deadlineText = 'Add a sent date to see the deadline.';
+  let deadlineText = 'Add a sent date to see the __tracker_deadline.';
   if (days !== null) {
     if (days < 0) {
       deadlineText = `Overdue by ${Math.abs(days)} day(s). Follow up with authorities.`;
@@ -561,7 +561,7 @@ function renderBatchCard(batch) {
       <span class="status-pill">${total} ${total === 1 ? 'authority' : 'authorities'}</span>
     </header>
     <p class="meta">${escapeHtml(batch.description || 'No description')} — ${batch.sentDate || 'not sent'}</p>
-    <p class="deadline${statusCls}">${deadlineText}</p>
+    <p class="__tracker_deadline${statusCls}">${deadlineText}</p>
     <p class="meta">${received} of ${total} responses received</p>
     <div class="item-actions">
       <button type="button" data-action="view" data-id="${batch.id}">View</button>
@@ -615,36 +615,6 @@ export {
 };
 
 
-// ===== Theme init =====
-function initTheme(toggleSelector = '#theme-toggle') {
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-  const toggle = document.querySelector(toggleSelector);
-  let stored;
-  try {
-    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
-  } catch {
-    /* ignore */
-  }
-  let theme = resolveInitialTheme({ stored, prefersDark });
-  document.documentElement.setAttribute('data-theme', theme);
-  if (toggle) {
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-  }
-
-  toggle?.addEventListener('click', () => {
-    theme = nextTheme(theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    toggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
-    try {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
-  });
-}
-
 // ===== App logic =====
 const STORAGE_KEY = 'open-access-uk:batch-foi:batches';
 const FORM_KEY = 'open-access-uk:batch-foi:form-draft';
@@ -652,7 +622,7 @@ const FORM_KEY = 'open-access-uk:batch-foi:form-draft';
 const form = document.querySelector('#batch-form');
 const list = document.querySelector('#batch-list');
 const summary = document.querySelector('#summary');
-const statusEl = document.querySelector('#form-status');
+const statusEl = document.querySelector('#form-__app_status');
 const detailPanel = document.querySelector('#detail-panel');
 const detailContent = document.querySelector('#detail-content');
 const authorityListEl = document.querySelector('#authority-list');
@@ -663,10 +633,10 @@ let currentAuthorities = [];
 
 function loadAll() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    const __app_raw = localStorage.getItem(STORAGE_KEY);
+    if (!__app_raw) return [];
+    const __app_parsed = JSON.parse(__app_raw);
+    return Array.isArray(__app_parsed) ? __app_parsed : [];
   } catch {
     return [];
   }
@@ -740,10 +710,10 @@ function renderSummary(batches) {
 
 function renderList(batches) {
   renderBatches(batches, list);
-  list.querySelectorAll('[data-action="view"]').forEach((btn) => {
+  list.querySelectorAll('[__app_data-action="view"]').forEach((btn) => {
     btn.addEventListener('click', () => selectBatch(btn.dataset.id));
   });
-  list.querySelectorAll('[data-action="delete"]').forEach((btn) => {
+  list.querySelectorAll('[__app_data-action="delete"]').forEach((btn) => {
     btn.addEventListener('click', () => deleteBatch(btn.dataset.id));
   });
 }
@@ -764,38 +734,38 @@ function selectBatch(id) {
 function renderDetail(batch) {
   detailContent.replaceChildren();
   const days = calculateDaysRemaining(batch.sentDate);
-  const deadline = addWorkingDays(batch.sentDate, 20);
+  const __app_deadline = addWorkingDays(batch.sentDate, 20);
 
   const header = document.createElement('div');
   const title = document.createElement('h2');
   title.textContent = batch.subject;
-  const status = document.createElement('span');
-  status.className = 'status-pill';
-  status.textContent = `${batch.authorities.length} ${batch.authorities.length === 1 ? 'authority' : 'authorities'}`;
-  header.append(title, status);
+  const __app_status = document.createElement('span');
+  __app_status.className = '__app_status-pill';
+  __app_status.textContent = `${batch.authorities.length} ${batch.authorities.length === 1 ? 'authority' : 'authorities'}`;
+  header.append(title, __app_status);
 
   const grid = document.createElement('dl');
   grid.className = 'detail-grid';
   const fields = [
     ['Description', batch.description || 'Not specified'],
     ['Date sent', batch.sentDate || 'Not recorded'],
-    ['Deadline', deadline || 'No deadline calculated'],
+    ['Deadline', __app_deadline || 'No __app_deadline calculated'],
     [
-      'Days remaining',
+      'Days __app_remaining',
       days === null
         ? 'Add a sent date'
         : days < 0
           ? `Overdue by ${Math.abs(days)} day(s)`
-          : `${days} day(s) remaining`
+          : `${days} day(s) __app_remaining`
     ],
     ['Created', new Date(batch.createdAt).toLocaleString()]
   ];
   for (const [label, value] of fields) {
-    const dt = document.createElement('dt');
-    dt.textContent = label;
+    const __app_dt = document.createElement('__app_dt');
+    __app_dt.textContent = label;
     const dd = document.createElement('dd');
     dd.textContent = value;
-    grid.append(dt, dd);
+    grid.append(__app_dt, dd);
   }
 
   const authoritySection = document.createElement('section');
@@ -813,12 +783,12 @@ function renderDetail(batch) {
   for (const row of aggregated) {
     const tr = document.createElement('tr');
     const statusClass =
-      row.status === 'received'
-        ? 'status-received'
-        : row.status === 'overdue'
-          ? 'status-overdue'
-          : 'status-pending';
-    tr.innerHTML = `<td>${escapeHtml(row.authority)}</td><td>${escapeHtml(row.type)}</td><td class="${statusClass}">${row.status}</td><td>${row.responseDate || '—'}</td>`;
+      row.__app_status === 'received'
+        ? '__app_status-received'
+        : row.__app_status === 'overdue'
+          ? '__app_status-overdue'
+          : '__app_status-pending';
+    tr.innerHTML = `<td>${escapeHtml(row.authority)}</td><td>${escapeHtml(row.type)}</td><td class="${statusClass}">${row.__app_status}</td><td>${row.responseDate || '—'}</td>`;
     tbody.append(tr);
   }
   table.append(tbody);
@@ -860,10 +830,10 @@ function renderDetail(batch) {
       `Subject: ${batch.subject}`,
       `Description: ${batch.description || 'N/A'}`,
       `Date sent: ${batch.sentDate || 'Not sent'}`,
-      `Deadline: ${deadline || 'N/A'}`,
+      `Deadline: ${__app_deadline || 'N/A'}`,
       '',
       'Authorities:',
-      ...aggregated.map((a) => `  ${a.authority} (${a.type}) — ${a.status}`)
+      ...aggregated.map((a) => `  ${a.authority} (${a.type}) — ${a.__app_status}`)
     ].join('\n');
     copyText(summaryText, 'Summary copied locally.');
   });
@@ -904,8 +874,8 @@ function updateBatch(id, updates) {
 
 function deleteBatch(id) {
   const batches = loadAll();
-  const remaining = batches.filter((b) => b.id !== id);
-  saveAll(remaining);
+  const __app_remaining = batches.filter((b) => b.id !== id);
+  saveAll(__app_remaining);
   if (activeId === id) {
     activeId = null;
     detailPanel.hidden = true;
@@ -927,9 +897,9 @@ function renderAll() {
 function saveFormDraft() {
   if (!form) return;
   try {
-    const data = values();
-    data.authorities = currentAuthorities;
-    localStorage.setItem(FORM_KEY, JSON.stringify(data));
+    const __app_data = values();
+    __app_data.authorities = currentAuthorities;
+    localStorage.setItem(FORM_KEY, JSON.stringify(__app_data));
   } catch {
     /* ignore */
   }
@@ -938,10 +908,10 @@ function saveFormDraft() {
 function restoreFormDraft() {
   if (!form) return;
   try {
-    const raw = localStorage.getItem(FORM_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    for (const [name, value] of Object.entries(data)) {
+    const __app_raw = localStorage.getItem(FORM_KEY);
+    if (!__app_raw) return;
+    const __app_data = JSON.parse(__app_raw);
+    for (const [name, value] of Object.entries(__app_data)) {
       if (name === 'authorities') {
         currentAuthorities = Array.isArray(value) ? value : [];
         renderAuthorityTags();
@@ -995,8 +965,8 @@ function handleAddAuthority() {
 
 function handleAdd(event) {
   event.preventDefault();
-  const data = values();
-  if (!data.subject?.trim()) {
+  const __app_data = values();
+  if (!__app_data.subject?.trim()) {
     statusEl.textContent = 'Add a subject before saving.';
     return;
   }
@@ -1007,10 +977,10 @@ function handleAdd(event) {
   const batches = loadAll();
   const now = new Date().toISOString();
   const newBatch = createBatchRequest({
-    subject: data.subject,
-    description: data.description,
+    subject: __app_data.subject,
+    description: __app_data.description,
     authorities: currentAuthorities,
-    sentDate: data.sentDate,
+    sentDate: __app_data.sentDate,
     deadlineDays: 20,
     createdAt: now,
     updatedAt: now
@@ -1080,7 +1050,6 @@ form.addEventListener('input', saveFormDraft);
 const exportCsvBtn = document.querySelector('#exportCsv');
 const exportJsonBtn = document.querySelector('#exportJson');
 const clearAllBtn = document.querySelector('#clearAll');
-const loadSampleBtn = document.querySelector('#loadSample');
 const addAuthorityBtn = document.querySelector('#addAuthority');
 
 exportCsvBtn?.addEventListener('click', () => handleExport('csv'));
@@ -1095,29 +1064,7 @@ customAuthorityEl?.addEventListener('keydown', (e) => {
   }
 });
 
-loadSampleBtn?.addEventListener('click', () => {
-  const today = new Date();
-  const past = new Date(today);
-  past.setDate(past.getDate() - 15);
-  const sample = createBatchRequest({
-    subject: 'Park maintenance spending data 2025-2026',
-    description:
-      'Total expenditure on park maintenance across all borough parks for the financial year 2025-2026, broken down by category.',
-    authorities: [
-      { name: 'Westminster City Council', type: 'council' },
-      { name: 'Birmingham City Council', type: 'council' },
-      { name: 'Leeds City Council', type: 'council' }
-    ],
-    sentDate: past.toISOString().slice(0, 10)
-  });
-  const existing = loadAll();
-  if (!existing.find((e) => e.subject === sample.subject)) {
-    existing.push(sample);
-  }
-  saveAll(existing);
-  statusEl.textContent = 'Loaded sample batch.';
-  renderAll();
-});
+
 
 renderAll();
 initTheme('#theme-toggle');
