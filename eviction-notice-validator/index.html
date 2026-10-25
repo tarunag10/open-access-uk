@@ -22,6 +22,7 @@
       </button>
       <nav id="primary-nav" aria-label="Primary">
         <a href="#tool">Tool</a>
+        <a href="#business-tenancy-panel">Business tenancies</a>
         <a href="#results">Results</a>
         <a href="#guidance">Guidance</a>
       </nav>
@@ -35,11 +36,12 @@
           <strong>Law changed 1 May 2026</strong>
           <p>
             Section 21 no-fault evictions were abolished in England on 1 May 2026 under the Renters'
-            Rights Act 2025. Section 21 notices served before that date may still be valid — court
-            proceedings must be issued by <strong>31 July 2026</strong>. From 1 May 2026, all
+            Rights Act 2025. A pre-abolition Section 21 notice could only be used to start a court claim by
+            <strong>31 July 2026</strong>. That deadline has passed; claims issued by then may continue. From 1 May 2026, all
             possession claims use the revised Section 8 grounds with new mandatory grounds and a
             raised serious-arrears threshold (3+ months). For current guidance, visit
-            <a href="https://www.gov.uk/government/collections/renters-rights-bill">GOV.UK</a> or
+            <a href="https://www.gov.uk/guidance/repossessing-your-privately-rented-property-after-1-may-2026">GOV.UK guidance for landlords</a>,
+            the <a href="https://www.gov.uk/guidance/assured-tenancy-forms">official assured tenancy forms</a>, or
             <a href="https://england.shelter.org.uk/">Shelter</a>.
           </p>
         </div>
@@ -48,12 +50,12 @@
         <div>
           <h1>Eviction Notice Validator (under reconstruction)</h1>
           <p>
-            Check an eviction notice against current law. Section 21 was abolished on 1 May 2026.
-            Post-abolition notices must use Section 8 / RRA grounds. Everything runs in your
-            browser.
+            Run a preliminary checklist against selected notice details. This cannot confirm that a
+            notice is valid or replace a review of the notice, service evidence, tenancy and current
+            law. Everything runs in your browser.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#tool">Validate a notice</a>
+            <a class="button" href="#tool">Check notice details</a>
           </div>
         </div>
         <div class="product-panel" aria-label="Eviction notice validator preview">
@@ -66,17 +68,30 @@
         </div>
       </section>
 
-      <section id="tool" class="grid" aria-label="Eviction notice validation form">
+      <div class="panel" role="tablist" aria-label="Tenancy notice type">
+        <button id="residential-tab" type="button" role="tab" aria-selected="true" aria-controls="tool">Residential possession</button>
+        <button id="business-tab" type="button" role="tab" aria-selected="false" aria-controls="business-tenancy-panel" tabindex="-1">Business tenancy renewal</button>
+      </div>
+      <section id="tool" class="grid" role="tabpanel" aria-labelledby="residential-tab" aria-label="Residential possession notice validation form">
         <form id="validation-form" class="panel" aria-describedby="form-status">
-          <h2>Validate an eviction notice</h2>
+          <h2>Check an eviction notice</h2>
+          <p>
+            This tool checks a limited set of details. “No listed issues found” is not a legal
+            determination. The current Section 8 notice for private rented tenancies in England is
+            <a href="https://www.gov.uk/guidance/assured-tenancy-forms">Form 3A</a>. Check GOV.UK
+            for the current form and guidance.
+          </p>
           <label for="noticeType">Notice type</label>
           <select id="noticeType" name="noticeType">
-            <option value="section21">Section 21 (No-Fault Eviction)</option>
-            <option value="section8-ground8">Section 8 - Ground 8 (Mandatory)</option>
+            <option value="section21">Section 21 (historic notices only)</option>
+            <option value="section8-ground8">Section 8 - Ground 8 (serious rent arrears)</option>
             <option value="section8-ground10">Section 8 - Ground 10</option>
             <option value="section8-ground11">Section 8 - Ground 11</option>
             <option value="section8-ground12">Section 8 - Ground 12</option>
             <option value="section8-ground14">Section 8 - Ground 14</option>
+            <option value="rra-ground-landlord-sale">Section 8 - Ground 1A (landlord intends to sell)</option>
+            <option value="rra-ground-landlord-move-in">Section 8 - Ground 1 (landlord or family member moving in)</option>
+            <option value="rra-ground-serious-arrears">Section 8 - Ground 8 (serious rent arrears, 3 months)</option>
           </select>
 
           <label for="tenantName">Tenant name</label>
@@ -104,15 +119,24 @@
           <label for="noticeServedDate">Date notice served</label>
           <input id="noticeServedDate" name="noticeServedDate" type="date" />
 
+          <label for="possessionDate">Date the notice requires possession</label>
+          <input id="possessionDate" name="possessionDate" type="date" />
+
+          <div id="section21-transition-options" hidden>
+            <label for="proceedingsIssuedDate">Date Section 21 court proceedings were issued</label>
+            <input id="proceedingsIssuedDate" name="proceedingsIssuedDate" type="date" />
+            <p>Pre-1 May 2026 notices could only be used to start a possession claim by 31 July 2026. Existing issued cases may continue.</p>
+          </div>
+
           <label for="tenancyStartDate">Tenancy start date</label>
           <input id="tenancyStartDate" name="tenancyStartDate" type="date" />
 
           <div id="section21-options">
             <fieldset>
-              <legend>Section 21 Requirements</legend>
+              <legend>Historic checks for notices served before 1 May 2026</legend>
               <label class="checkbox-label">
                 <input type="checkbox" name="prescribedForm" value="true" />
-                Prescribed form (Form 6A) served
+                Prescribed form (historic Form 6A or permitted equivalent) served
               </label>
               <label class="checkbox-label">
                 <input type="checkbox" name="depositProtected" value="true" />
@@ -133,8 +157,22 @@
             </fieldset>
           </div>
 
+          <p id="section21-post-abolition" hidden role="status">
+            Section 21 was abolished for private rentals on 1 May 2026. A notice served on or after
+            that date cannot be used. See the
+            <a href="https://www.gov.uk/guidance/repossessing-your-privately-rented-property-after-1-may-2026">current GOV.UK guidance</a>.
+          </p>
+
           <div id="section8-options" hidden>
-            <label for="rentArrearsMonths">Months of rent arrears (Ground 8/10)</label>
+            <label for="noticeForm">Section 8 notice form used</label>
+            <select id="noticeForm" name="noticeForm">
+              <option value="">Select...</option>
+              <option value="form3a">Form 3A (or substantially similar form, from 1 May 2026)</option>
+              <option value="form3">Form 3 (before 1 May 2026)</option>
+              <option value="other">Other or unsure</option>
+            </select>
+
+            <label for="rentArrearsMonths">Months of rent arrears at date notice served (Ground 8/10)</label>
             <input
               id="rentArrearsMonths"
               name="rentArrearsMonths"
@@ -143,6 +181,17 @@
               step="0.5"
               placeholder="e.g. 3"
             />
+
+            <div id="serious-arrears-options" hidden>
+              <label for="rentArrearsMonthsAtHearing">Months of rent arrears at hearing (Ground 8)</label>
+              <input id="rentArrearsMonthsAtHearing" name="rentArrearsMonthsAtHearing" type="number" min="0" step="0.5" />
+            </div>
+
+            <div id="landlord-intention-options" hidden>
+              <label for="landlordIntentionEvidence">Evidence or circumstances supporting Ground 1 or 1A</label>
+              <textarea id="landlordIntentionEvidence" name="landlordIntentionEvidence" rows="3" placeholder="For example, evidence of the genuine intention to sell, or who intends to occupy and why..."></textarea>
+              <p>Describe the evidence or circumstances. The court assesses whether the ground is proved. See <a href="https://www.gov.uk/government/publications/grounds-for-possession-guidance-for-landlords-and-letting-agents/grounds-for-possession-guidance-for-landlords-and-letting-agents">GOV.UK grounds guidance</a>.</p>
+            </div>
 
             <label for="serviceMethod">How was notice served?</label>
             <select id="serviceMethod" name="serviceMethod">
@@ -196,7 +245,7 @@
           ></textarea>
 
           <div class="actions" aria-label="Form actions">
-            <button type="submit">Validate notice</button>
+            <button type="submit">Check these details</button>
             <button id="loadSample" type="button" class="secondary">Load sample</button>
             <button id="clearAll" type="button" class="secondary">Clear all</button>
           </div>
@@ -204,7 +253,7 @@
         </form>
 
         <div>
-          <section id="summary" class="summary-grid" aria-label="Validation summary"></section>
+          <section id="summary" class="summary-grid" aria-label="Checklist summary"></section>
           <section class="panel" aria-label="Court timeline">
             <h3>Court timeline</h3>
             <div id="court-timeline" class="timeline-info"></div>
@@ -212,8 +261,93 @@
         </div>
       </section>
 
+      <section id="business-tenancy-panel" class="grid" role="tabpanel" aria-labelledby="business-tab" aria-label="Business tenancy renewal notice checklist" hidden>
+        <form id="business-tenancy-form" class="panel" aria-describedby="business-form-help business-form-status">
+          <h2>Business tenancy renewal checklist</h2>
+          <p id="business-form-help">A preliminary checklist for business tenancy renewal notices in England and Wales under Part II of the Landlord and Tenant Act 1954. This is a separate process from residential possession. It does not generate or replace prescribed forms.</p>
+          <p>Use the current <a href="https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords/forms-prescribed-under-the-landlord-and-tenant-act-1954-part-2-notices-regulations-2004" target="_blank" rel="noopener noreferrer">prescribed notice forms</a> and the <a href="https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords" target="_blank" rel="noopener noreferrer">GOV.UK business lease renewal guide</a>. Guidance updated 30 July 2026.
+          </p>
+          <label for="businessNoticeType">Which notice or request are you checking?</label>
+          <select id="businessNoticeType" name="noticeType" required>
+            <option value="">Select...</option>
+            <option value="section25">Landlord: Section 25 notice (prescribed Form 1 or Form 2)</option>
+            <option value="section26">Tenant: Section 26 request (prescribed Form 3)</option>
+          </select>
+
+          <label for="businessTenantName">Tenant name</label>
+          <input id="businessTenantName" name="tenantName" required autocomplete="organization" />
+          <label for="businessTenantAddress">Tenant address for this notice</label>
+          <textarea id="businessTenantAddress" name="tenantAddressForService" rows="2" required autocomplete="street-address"></textarea>
+          <label for="businessLandlordName">Landlord name</label>
+          <input id="businessLandlordName" name="landlordName" required autocomplete="organization" />
+          <label for="businessLandlordAddress">Landlord address for this notice</label>
+          <textarea id="businessLandlordAddress" name="landlordAddressForService" rows="2" required autocomplete="street-address"></textarea>
+          <label for="businessPropertyAddress">Business premises address</label>
+          <textarea id="businessPropertyAddress" name="propertyAddress" rows="2" required autocomplete="street-address"></textarea>
+          <label for="businessDescription">Nature of business carried on at the premises</label>
+          <textarea id="businessDescription" name="businessDescription" rows="2" placeholder="Describe the business occupying the premises"></textarea>
+
+          <label for="contractedOut">Was the tenancy contracted out of Part II of the 1954 Act?</label>
+          <select id="contractedOut" name="contractedOut" required>
+            <option value="">Select...</option><option value="no">No / not to my knowledge</option><option value="yes">Yes</option><option value="unsure">Not sure</option>
+          </select>
+          <p>Check the lease and any warning notice, declaration or agreement made before the lease was granted. This form cannot establish whether contracting out was legally effective.</p>
+
+          <label for="businessServiceDate">Date the notice/request was served</label>
+          <input id="businessServiceDate" name="serviceDate" type="date" required />
+          <label for="businessNoticeDate">Date notice/request was signed or dated</label>
+          <input id="businessNoticeDate" name="noticeDate" type="date" required />
+          <label for="businessServiceMethod">How was it served?</label>
+          <select id="businessServiceMethod" name="serviceMethod" required><option value="">Select...</option><option value="personal">Personal delivery</option><option value="post">Post</option><option value="email">Email (if permitted by the lease/consent)</option><option value="other">Other / unsure</option></select>
+          <label for="businessNoticeForm">Prescribed form used</label>
+          <select id="businessNoticeForm" name="noticeForm" required>
+            <option value="">Select...</option><option value="form1">Section 25 Form 1 (landlord does not oppose renewal)</option><option value="form2">Section 25 Form 2 (landlord opposes renewal)</option><option value="form7">Section 25 Form 7 (opposition; tenant may have 1967 Act rights)</option><option value="form3">Section 26 Form 3 (tenant’s request)</option>
+          </select>
+          <p>Other prescribed forms may apply to special statutory circumstances. In particular, Form 7 may be relevant where the tenant may have rights under the Leasehold Reform Act 1967. The checklist does not assess eligibility for those forms.</p>
+          <label for="businessLeaseExpiryDate">Current lease expiry date</label>
+          <input id="businessLeaseExpiryDate" name="leaseExpiryDate" type="date" required />
+          <div id="section25-fields" hidden>
+            <label for="terminationDate">Proposed termination date in Section 25 notice</label>
+            <input id="terminationDate" name="terminationDate" type="date" />
+            <label for="opposition">Does the landlord oppose a new tenancy?</label>
+            <select id="opposition" name="opposition"><option value="">Select...</option><option value="unopposed">No (Section 25 unopposed notice)</option><option value="opposed">Yes (Section 25 opposed notice)</option></select>
+          </div>
+          <div id="form1-fields" hidden>
+            <label for="landlordProposedTerms">Landlord’s proposals for the new tenancy (Form 1 schedule)</label>
+            <textarea id="landlordProposedTerms" name="landlordProposedTerms" rows="4" placeholder="Include proposed rent, term and other terms from the Form 1 schedule"></textarea>
+          </div>
+          <div id="section26-fields" hidden>
+            <label for="newTenancyDate">Proposed start date for the new tenancy</label>
+            <input id="newTenancyDate" name="newTenancyDate" type="date" />
+            <label for="proposedProperty">Property the tenant proposes to include in the new tenancy</label>
+            <textarea id="proposedProperty" name="proposedProperty" rows="2" placeholder="State whether it is the whole premises or describe the part"></textarea>
+            <label for="proposedTerms">Tenant’s proposed terms for the new tenancy</label>
+            <textarea id="proposedTerms" name="proposedTerms" rows="4" placeholder="Summarise rent, term, premises and other proposed terms"></textarea>
+            <label for="landlordResponse">Landlord’s response to the Section 26 request</label>
+            <select id="landlordResponse" name="landlordResponse"><option value="unknown">No response / not sure</option><option value="accepts">Does not oppose renewal</option><option value="opposes">Opposes renewal</option></select>
+            <label for="counterNoticeDate">Date landlord’s counter-notice was served, if any</label>
+            <input id="counterNoticeDate" name="counterNoticeDate" type="date" />
+          </div>
+          <div id="opposition-fields" hidden>
+            <label for="oppositionGrounds">Section 30 ground(s) stated for opposing renewal</label>
+            <textarea id="oppositionGrounds" name="oppositionGrounds" rows="4" placeholder="Record the ground number(s) and wording in the notice/counter-notice"></textarea>
+            <p>Grounds include tenant breaches, persistent delay in paying rent, other substantial breaches or suitable alternative accommodation, and landlord redevelopment or own occupation. Their application depends on detailed facts and evidence. See <a href="https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/30" target="_blank" rel="noopener noreferrer">section 30</a>.</p>
+          </div>
+          <label for="telecomTenancy">Does this involve a legacy telecommunications agreement?</label>
+          <select id="telecomTenancy" name="telecomTenancy"><option value="no">No / not known to be telecommunications land</option><option value="yes">Yes or possibly</option></select>
+          <p>If yes, the 30 July 2026 guidance update may affect whether a prescribed form refers to a court or tribunal. Get advice on whether the special tribunal jurisdiction applies.</p>
+
+          <div class="actions" aria-label="Business tenancy form actions"><button type="submit">Check these details</button><button id="clearBusinessForm" type="reset" class="secondary">Clear form</button></div>
+          <p id="business-form-status" role="status" aria-live="polite"></p>
+        </form>
+        <section class="panel" aria-labelledby="business-result-heading"><h2 id="business-result-heading">Checklist result</h2><div id="business-result" aria-live="polite">Complete the form to see date and completeness checks.</div>
+          <h3>Key procedure points</h3><ul><li>Section 25 and Section 26 are alternative ways to start the renewal timetable. Once one is served, the other route is generally unavailable for the same tenancy.</li><li>The proposed date and service date generally need to fall within a window of 6 to 12 months. Verify the lease date and prescribed form.</li><li>A landlord wishing to oppose a Section 26 request must generally serve a counter-notice within two months.</li><li>Either party may need to apply to court by the statutory deadline. Written extensions and transition rules can affect the deadline; this checklist does not calculate it.</li></ul>
+          <p><strong>Privacy:</strong> this form runs in your browser and does not send details to a server. Avoid entering confidential information on a shared device.</p>
+        </section>
+      </section>
+
       <section id="results" class="list-section" aria-label="Validation results">
-        <h2>Validated notices</h2>
+        <h2>Saved checklist results</h2>
         <div id="result-list" class="complaint-list"></div>
       </section>
 
@@ -227,23 +361,24 @@
       </section>
 
       <section id="guidance" class="footer-band">
-        <h2>How to challenge invalid notices</h2>
+        <p>Legal sources last checked: 25 October 2026. Check the linked official guidance for later changes.</p>
+        <h2>Before relying on a possession notice</h2>
         <div class="cards">
           <article class="card">
-            <h3>Challenge a Section 21 notice</h3>
+            <h3>Historic Section 21 cases</h3>
             <p>
-              A Section 21 notice can be challenged if the landlord has not used the prescribed form
-              (Form 6A), has not provided the EPC or gas safety certificate, or has not protected
-              the deposit within 30 days. Write to the landlord listing the defects.
+              Private landlords cannot serve a new Section 21 notice. The deadline to start a court
+              claim using a pre-1 May 2026 notice was 31 July 2026. Claims started by then may
+              continue. For a live case, get advice on the notice and court papers.
             </p>
           </article>
           <article class="card">
             <h3>Deposit protection rules</h3>
             <p>
               Your deposit must be protected in a government-approved scheme within 30 days of
-              receiving it. The landlord must also serve prescribed information. Failure to do so
-              can invalidate a Section 21 notice and you may be awarded 1-3x the deposit amount in
-              compensation.
+              receiving it. The landlord must also serve prescribed information. Deposit rules
+              affect most possession grounds. Check the current
+              <a href="https://www.gov.uk/guidance/repossessing-your-privately-rented-property-after-1-may-2026">GOV.UK guidance</a>.
             </p>
           </article>
           <article class="card">
@@ -276,8 +411,8 @@
         <a href="https://www.gov.uk/eviction" rel="noopener noreferrer">GOV.UK - Eviction</a>
       </nav>
       <p>
-        Open-source, privacy-first, and local to your browser. Not legal advice. Source: Housing Act
-        1988, Shelter, and GOV.UK guidance.
+        Open-source, privacy-first, and local to your browser. Not legal advice. Sources: Housing
+        Act 1988 and current GOV.UK possession and assured-tenancy forms guidance.
       </p>
     </footer>
     <script type="module" src="src/app.js"></script>

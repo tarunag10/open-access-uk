@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import {
   DEPOSIT_SCHEMES,
   escapeHtml,
@@ -11,7 +13,8 @@ import {
   generateChallengeText,
   getCourtTimeline,
   serializeEviction,
-  parseEviction
+  parseEviction,
+  toSection8ValidationData
 } from '../src/tracker.js';
 
 test('DEPOSIT_SCHEMES includes all three schemes', () => {
@@ -30,10 +33,43 @@ test('escapeHtml escapes special characters', () => {
   assert.equal(escapeHtml('a & b'), 'a &amp; b');
 });
 
-test('getNoticeTypes returns all 6 notice types', () => {
+test('getNoticeTypes returns all 9 notice types', () => {
   const types = getNoticeTypes();
   assert.ok(Array.isArray(types));
   assert.equal(types.length, 9);
+});
+
+test('form exposes every notice type and conditional RRA evidence field', () => {
+  const html = readFileSync(fileURLToPath(new URL('../index.html', import.meta.url)), 'utf8');
+  for (const notice of getNoticeTypes()) {
+    assert.match(html, new RegExp(`<option value="${notice.id}">`), `${notice.id} is missing from the form`);
+  }
+  assert.match(html, /name="landlordIntentionEvidence"/);
+  assert.match(html, /name="rentArrearsMonthsAtHearing"/);
+  assert.match(html, /name="possessionDate"/);
+  assert.match(html, /name="proceedingsIssuedDate"/);
+  assert.match(html, /name="noticeForm"/);
+  assert.match(html, /guidance\/assured-tenancy-forms/);
+  assert.match(html, /Legal sources last checked: 25 October 2026/);
+});
+
+test('form mapping passes landlord evidence, tenancy and both arrears snapshots', () => {
+  const mapped = toSection8ValidationData({
+    noticeServedDate: '2026-06-01',
+    noticeForm: 'form3a',
+    possessionDate: '2027-01-01',
+    tenancyStartDate: '2025-01-01',
+    serviceMethod: 'personal',
+    rentArrearsMonths: '3',
+    rentArrearsMonthsAtHearing: '3.5',
+    landlordIntentionEvidence: 'Instructed estate agent'
+  }, 'rra-ground-landlord-sale');
+  assert.equal(mapped.ground, 'rra-ground-landlord-sale');
+  assert.equal(mapped.noticeForm, 'form3a');
+  assert.equal(mapped.landlordIntentionEvidence, 'Instructed estate agent');
+  assert.equal(mapped.tenancyStartDate, '2025-01-01');
+  assert.equal(mapped.rentArrearsMonthsAtNotice, 3);
+  assert.equal(mapped.rentArrearsMonthsAtHearing, 3.5);
 });
 
 test('getNoticeTypes includes section21', () => {
@@ -64,7 +100,7 @@ test('getGroundsOfSection8 ground 8 is mandatory', () => {
   const g8 = grounds.find((g) => g.id === 'ground8');
   assert.ok(g8);
   assert.equal(g8.type, 'mandatory');
-  assert.equal(g8.noticeDays, 14);
+  assert.equal(g8.noticeDays, 28);
 });
 
 test('getDepositProtectionChecklist returns array with items', () => {
@@ -85,14 +121,26 @@ test('getDepositProtectionChecklist each item has id and description', () => {
 test('validateSection21 valid pre-abolition notice returns no errors', () => {
   const result = validateSection21({
     noticeServedDate: '2026-04-15',
+    noticeForm: 'form3',
+    possessionDate: '2026-06-15',
     prescribedForm: true,
     depositProtected: true,
     hmoLicense: true,
     epcProvided: true,
-    gasSafetyCertificate: true
+    gasSafetyCertificate: true,
+    proceedingsIssuedDate: '2026-07-31'
   });
   assert.equal(result.valid, true);
   assert.equal(result.errors.length, 0);
+});
+
+test('Section 21 transition permits only pre-abolition notices with proceedings issued by 31 July', () => {
+  const base = { noticeServedDate: '2026-04-30', possessionDate: '2026-06-30', prescribedForm: true, depositProtected: true, epcProvided: true, gasSafetyCertificate: true };
+  assert.equal(validateSection21({ ...base, proceedingsIssuedDate: '2026-07-31' }).valid, true);
+  const late = validateSection21({ ...base, proceedingsIssuedDate: '2026-08-01' });
+  assert.equal(late.valid, false);
+  assert.ok(late.errors.some((error) => error.includes('31 July 2026')));
+  assert.equal(validateSection21(base).valid, false, 'missing court issue date must not pass');
 });
 
 test('validateSection21 missing noticeServedDate returns error', () => {
@@ -153,6 +201,8 @@ test('validateSection8 valid ground 8 returns no errors', () => {
   const result = validateSection8({
     ground: 'ground8',
     noticeServedDate: '2026-04-15',
+    possessionDate: '2026-04-29',
+    noticeForm: 'form3',
     rentArrearsMonths: 3,
     serviceMethod: 'personal'
   });

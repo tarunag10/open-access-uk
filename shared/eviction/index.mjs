@@ -20,6 +20,7 @@ const NOTICE_TYPES = [
     id: 'section21',
     name: 'Section 21 (No-Fault)',
     noticeDays: 62,
+    noticePeriodText: '2 calendar months',
     description:
       "Abolished in England on 1 May 2026 by the Renters' Rights Act 2025. Cannot be served on any tenancy after that date.",
     source: 'housing-act-1988-s21',
@@ -29,7 +30,7 @@ const NOTICE_TYPES = [
   {
     id: 'section8-ground8',
     name: 'Section 8 - Ground 8 (Mandatory)',
-    noticeDays: 14,
+    noticeDays: 28,
     description:
       'At least 2 months rent arrears at time of notice and at hearing (pre-RRA). RRA raised threshold to at least 3 months arrears.',
     source: 'housing-act-1988-s8'
@@ -37,14 +38,14 @@ const NOTICE_TYPES = [
   {
     id: 'section8-ground10',
     name: 'Section 8 - Ground 10',
-    noticeDays: 14,
+    noticeDays: 28,
     description: 'Some rent arrears at time of service and hearing',
     source: 'housing-act-1988-s8'
   },
   {
     id: 'section8-ground11',
     name: 'Section 8 - Ground 11',
-    noticeDays: 14,
+    noticeDays: 28,
     description: 'Persistent delay in paying rent',
     source: 'housing-act-1988-s8'
   },
@@ -58,7 +59,7 @@ const NOTICE_TYPES = [
   {
     id: 'section8-ground14',
     name: 'Section 8 - Ground 14',
-    noticeDays: 14,
+    noticeDays: 0,
     description:
       'Nuisance or anti-social behaviour — under pre-RRA law proceedings could commence immediately after notice; RRA retains immediacy.',
     source: 'housing-act-1988-s8'
@@ -67,25 +68,27 @@ const NOTICE_TYPES = [
   {
     id: 'rra-ground-landlord-sale',
     name: 'RRA Ground — Landlord Intends to Sell',
-    noticeDays: 60,
+    noticeDays: 120,
+    noticePeriodText: '4 calendar months',
     description:
-      'Landlord intends to sell the property (new RRA mandatory ground). Notice period: 2 months.',
+      'Ground 1A: landlord intends to sell. Four months’ notice; possession date cannot be within the first 12 months of the tenancy.',
     source: 'renters-rights-act-2025'
   },
   {
     id: 'rra-ground-landlord-move-in',
     name: 'RRA Ground — Landlord or Family Move In',
-    noticeDays: 60,
+    noticeDays: 120,
+    noticePeriodText: '4 calendar months',
     description:
-      'Landlord or close family member needs to move into the property (new RRA mandatory ground). Notice period: 2 months.',
+      'Ground 1: landlord or a close family member needs to move in. Four months’ notice; possession date cannot be within the first 12 months of the tenancy.',
     source: 'renters-rights-act-2025'
   },
   {
     id: 'rra-ground-serious-arrears',
     name: 'RRA Ground — Serious Rent Arrears (3+ months)',
-    noticeDays: 14,
+    noticeDays: 28,
     description:
-      'At least 3 months rent arrears at time of notice and at hearing (RRA replaces pre-RRA Ground 8 threshold of 2 months).',
+      'Ground 8: at least 3 months’ rent arrears at notice and hearing. Four weeks’ notice.',
     source: 'renters-rights-act-2025'
   }
 ];
@@ -93,22 +96,22 @@ const NOTICE_TYPES = [
 const GROUNDS_OF_SECTION8 = [
   {
     id: 'ground8',
-    noticeDays: 14,
+    noticeDays: 28,
     type: 'mandatory',
     requirement:
-      'At least 2 months rent arrears at time of notice and at hearing (pre-RRA). Under RRA the threshold rises to at least 3 months.',
+      'At least 3 months’ rent arrears at the notice date and hearing date for notices under the law in force from 1 May 2026. Earlier notices are subject to the former rules and transition limits.',
     source: 'housing-act-1988-s8'
   },
   {
     id: 'ground10',
-    noticeDays: 14,
+    noticeDays: 28,
     type: 'discretionary',
     requirement: 'Some rent arrears at time of service and hearing',
     source: 'housing-act-1988-s8'
   },
   {
     id: 'ground11',
-    noticeDays: 14,
+    noticeDays: 28,
     type: 'discretionary',
     requirement: 'Persistent delay in paying rent',
     source: 'housing-act-1988-s8'
@@ -131,25 +134,25 @@ const GROUNDS_OF_SECTION8 = [
   // RRA new grounds
   {
     id: 'rra-ground-landlord-sale',
-    noticeDays: 60,
+    noticeDays: 120,
     type: 'mandatory',
     requirement:
-      'Landlord genuinely intends to sell the property. Cannot be used if landlord has owned property for less than 12 months (anti-avoidance).',
+      'The landlord intends to sell. The possession date must not fall within the tenancy’s first 12 months.',
     source: 'renters-rights-act-2025'
   },
   {
     id: 'rra-ground-landlord-move-in',
-    noticeDays: 60,
+    noticeDays: 120,
     type: 'mandatory',
     requirement:
-      'Landlord or a close family member (parent, child, sibling, grandparent) genuinely needs to move into the property.',
+      'The landlord or a qualifying close family member genuinely intends to occupy the property. The possession date must not fall within the tenancy’s first 12 months.',
     source: 'renters-rights-act-2025'
   },
   {
     id: 'rra-ground-serious-arrears',
-    noticeDays: 14,
+    noticeDays: 28,
     type: 'mandatory',
-    requirement: 'At least 3 months rent arrears at time of notice and at hearing.',
+    requirement: 'At least 3 months rent arrears at the notice date and hearing date.',
     source: 'renters-rights-act-2025'
   }
 ];
@@ -204,7 +207,7 @@ export function checkSection21Transition(noticeServedDate) {
   if (served < commencement) {
     return {
       status: 'transition',
-      message: `This Section 21 notice was served before the law changed on 1 May 2026. Court proceedings must be issued by 31 July 2026. After that date, no Section 21 notice can be enforced.`
+      message: `This Section 21 notice was served before the law changed on 1 May 2026. It could only be used to start court proceedings by 31 July 2026. Existing proceedings started by that deadline may continue. Check the court record.`
     };
   }
 
@@ -232,6 +235,16 @@ export function daysBetween(dateA, dateB) {
   if (!a || !b) return NaN;
   const ms = b.getTime() - a.getTime();
   return Math.round(ms / (1000 * 60 * 60 * 24));
+}
+
+function addCalendarMonths(dateString, months) {
+  const date = parseLocalDate(dateString);
+  if (!date) return null;
+  const day = date.getUTCDate();
+  const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
+  const lastDay = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  target.setUTCDate(Math.min(day, lastDay));
+  return toLocalDateString(target);
 }
 
 // ---------------------------------------------------------------------------
@@ -269,16 +282,20 @@ export function validateSection21(data) {
     return { valid: false, errors, transition };
   }
 
-  if (data.possessionDate) {
-    const days = daysBetween(data.noticeServedDate, data.possessionDate);
-    if (!isNaN(days) && days < 59) {
-      errors.push(
-        `Notice period must be at least "2 months" (which is at least 59 days depending on the months). Only ${days} days given.`
-      );
-    } else if (!isNaN(days) && days < 62) {
-      errors.push(
-        `The notice period of ${days} days may be short of the required "at least 2 months" for the specific months involved. Check with Shelter or a solicitor.`
-      );
+  if (!data.proceedingsIssuedDate) {
+    errors.push('For a pre-1 May 2026 Section 21 notice, confirm whether court proceedings were issued by 31 July 2026.');
+  } else if (data.proceedingsIssuedDate > SECTION_21_COURT_DEADLINE) {
+    errors.push('A Section 21 possession claim could not be started after 31 July 2026.');
+  } else if (data.possessionDate && data.proceedingsIssuedDate < data.possessionDate) {
+    errors.push('The Section 21 possession claim date is earlier than the date stated in the notice. Check the court record and notice.');
+  }
+
+  if (!data.possessionDate) {
+    errors.push('The date the notice requires possession is required to check the notice period.');
+  } else {
+    const earliestAfterNotice = addCalendarMonths(data.noticeServedDate, 2);
+    if (earliestAfterNotice && data.possessionDate < earliestAfterNotice) {
+      errors.push(`The Section 21 notice period must be at least 2 calendar months. The earliest date based on service is ${earliestAfterNotice}.`);
     }
   }
   if (!data.prescribedForm) errors.push('Prescribed form (Form 6A) must be served with the notice');
@@ -317,34 +334,85 @@ export function validateSection8(data) {
   if (!data.serviceMethod) {
     errors.push('Service method is required (personal or first/second class post)');
   }
+  const noticeDate = parseLocalDate(data.noticeServedDate);
+  const expectedForm = noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 'form3a' : 'form3';
+  if (data.noticeForm !== expectedForm) {
+    errors.push(`Check that the correct notice form was used for the service date: ${expectedForm === 'form3a' ? 'Form 3A (or substantially similar form)' : 'the pre-1 May 2026 Form 3'}.`);
+  }
+  const needsPossessionDate = data.ground !== 'ground14';
+  if (needsPossessionDate && !data.possessionDate) {
+    errors.push('The date the notice requires possession is required to check the notice period.');
+  } else if (needsPossessionDate && noticeDate && data.possessionDate && !['rra-ground-landlord-sale', 'rra-ground-landlord-move-in'].includes(data.ground)) {
+    const isPostCommencement = noticeDate >= parseLocalDate(RRA_COMMENCEMENT);
+    const minimumNoticeDays = isPostCommencement
+      ? ground.noticeDays
+      : ['ground8', 'ground10', 'ground11'].includes(data.ground)
+        ? 14
+        : ground.noticeDays;
+    const allowedDays = daysBetween(data.noticeServedDate, data.possessionDate);
+    if (Number.isFinite(allowedDays) && allowedDays < minimumNoticeDays) {
+      errors.push(`${ground.id} requires at least ${minimumNoticeDays} days' notice for this service date. Only ${allowedDays} days are allowed.`);
+    }
+  }
 
   // RRA ground: serious arrears (3+ months)
   if (data.ground === 'rra-ground-serious-arrears') {
-    if (!data.rentArrearsMonths || data.rentArrearsMonths < 3) {
+    if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
+      errors.push('The revised Ground 8 threshold applies to notices served on or after 1 May 2026.');
+    }
+    if (!data.rentArrearsMonthsAtNotice || data.rentArrearsMonthsAtNotice < 3) {
       errors.push(
-        `RRA Ground (Serious Rent Arrears) requires at least 3 months rent arrears at time of notice and at hearing. ${data.rentArrearsMonths || 0} month(s) provided.`
+        `Ground 8 requires at least 3 months rent arrears at the notice date. ${data.rentArrearsMonthsAtNotice || 0} month(s) provided.`
       );
+    }
+    if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
+      errors.push('Ground 8 also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.');
     }
     return { valid: errors.length === 0, errors };
   }
 
   // RRA grounds: landlord sale or move-in
   if (data.ground === 'rra-ground-landlord-sale' || data.ground === 'rra-ground-landlord-move-in') {
+    if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
+      errors.push('Grounds 1 and 1A under the revised law apply to notices served on or after 1 May 2026.');
+    }
     if (!data.landlordIntentionEvidence) {
       errors.push(
         `Evidence of the landlord's intention is required for this ground. Provide a description of the circumstances.`
       );
+    }
+    if (!data.tenancyStartDate) {
+      errors.push('Tenancy start date is required to check the 12-month protected period.');
+    }
+    if (!data.possessionDate) {
+      errors.push('Intended possession date is required to check notice timing and the 12-month protected period.');
+    } else if (data.tenancyStartDate) {
+      const earliestPossession = new Date(`${data.tenancyStartDate}T00:00:00Z`);
+      earliestPossession.setUTCFullYear(earliestPossession.getUTCFullYear() + 1);
+      const earliestDate = toLocalDateString(earliestPossession);
+      if (data.possessionDate < earliestDate) {
+        errors.push(`For Ground 1 or 1A, possession cannot be required before the tenancy's first anniversary (${earliestDate}).`);
+      }
+      const earliestAfterNotice = addCalendarMonths(data.noticeServedDate, 4);
+      if (earliestAfterNotice && data.possessionDate < earliestAfterNotice) {
+        errors.push(`Ground 1 and 1A require at least 4 calendar months' notice. The earliest date based on service is ${earliestAfterNotice}.`);
+      }
     }
     return { valid: errors.length === 0, errors };
   }
 
   // Pre-RRA grounds
   if (data.ground === 'ground8' || data.ground === 'ground10') {
-    const threshold = data.ground === 'ground8' ? 2 : 0;
-    if (!data.rentArrearsMonths || data.rentArrearsMonths < threshold) {
+    const threshold = data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 3 : data.ground === 'ground8' ? 2 : 0;
+    if (data.rentArrearsMonths === undefined || data.rentArrearsMonths < threshold || (data.ground === 'ground10' && data.rentArrearsMonths <= 0)) {
       errors.push(
         `${ground.id} requires at least ${threshold} month(s) of rent arrears at time of notice`
       );
+    }
+    if (data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)) {
+      if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
+        errors.push('Ground 8 under the revised law also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.');
+      }
     }
   }
   if (data.ground === 'ground12' && !data.breachDescription) {
@@ -409,6 +477,7 @@ export function getCourtTimeline(noticeType) {
     {
       name: 'Notice Period',
       minDays: baseDays,
+      periodText: notice.noticePeriodText || `${baseDays}+ days`,
       description: `${notice ? notice.name : 'Unknown'} notice period`
     },
     {

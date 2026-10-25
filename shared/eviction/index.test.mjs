@@ -136,14 +136,26 @@ test('getGroundsOfSection8 includes RRA grounds', () => {
 test('validateSection21 pre-abolition notice with all requirements passes', () => {
   const result = validateSection21({
     noticeServedDate: '2026-04-15',
+    possessionDate: '2026-06-15',
     prescribedForm: true,
     depositProtected: true,
     hmoLicense: true,
     epcProvided: true,
-    gasSafetyCertificate: true
+    gasSafetyCertificate: true,
+    proceedingsIssuedDate: '2026-07-31'
   });
   assert.equal(result.valid, true);
   assert.equal(result.errors.length, 0);
+});
+
+test('Section 21 transition deadline includes 31 July but excludes 1 August', () => {
+  const base = { noticeServedDate: '2026-04-30', possessionDate: '2026-06-30', noticeForm: 'form3', prescribedForm: true, depositProtected: true, epcProvided: true, gasSafetyCertificate: true };
+  assert.equal(validateSection21({ ...base, proceedingsIssuedDate: '2026-07-31' }).valid, true);
+  assert.equal(validateSection21({ ...base, proceedingsIssuedDate: '2026-06-29' }).valid, false);
+  const late = validateSection21({ ...base, proceedingsIssuedDate: '2026-08-01' });
+  assert.equal(late.valid, false);
+  assert.ok(late.errors.some((e) => e.includes('31 July 2026')));
+  assert.equal(validateSection21(base).valid, false);
 });
 
 test('validateSection21 post-abolition notice returns transition errors', () => {
@@ -182,7 +194,10 @@ test('validateSection8 valid ground 8 returns no errors', () => {
   const result = validateSection8({
     ground: 'ground8',
     noticeServedDate: '2026-05-01',
+    noticeForm: 'form3a',
+    possessionDate: '2026-05-29',
     rentArrearsMonths: 3,
+    rentArrearsMonthsAtHearing: 3,
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, true);
@@ -193,6 +208,8 @@ test('validateSection8 RRA serious arrears requires 3+ months', () => {
   const result = validateSection8({
     ground: 'rra-ground-serious-arrears',
     noticeServedDate: '2026-06-01',
+    noticeForm: 'form3a',
+    possessionDate: '2026-06-29',
     rentArrearsMonths: 2,
     serviceMethod: 'personal'
   });
@@ -204,10 +221,42 @@ test('validateSection8 RRA serious arrears passes with 3+ months', () => {
   const result = validateSection8({
     ground: 'rra-ground-serious-arrears',
     noticeServedDate: '2026-06-01',
-    rentArrearsMonths: 3,
+    noticeForm: 'form3a',
+    possessionDate: '2026-06-29',
+    rentArrearsMonthsAtNotice: 3,
+    rentArrearsMonthsAtHearing: 3,
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, true);
+});
+
+test('Ground 8 commencement threshold changes on 1 May 2026', () => {
+  const before = validateSection8({ ground: 'ground8', noticeServedDate: '2026-04-30', possessionDate: '2026-05-14', noticeForm: 'form3', rentArrearsMonths: 2, serviceMethod: 'personal' });
+  assert.equal(before.valid, true);
+  const onCommencement = validateSection8({ ground: 'ground8', noticeServedDate: '2026-05-01', possessionDate: '2026-05-29', noticeForm: 'form3a', rentArrearsMonths: 2, rentArrearsMonthsAtHearing: 2, serviceMethod: 'personal' });
+  assert.equal(onCommencement.valid, false);
+  assert.ok(onCommencement.errors.some((e) => e.includes('3 month')));
+  const meetsThreshold = validateSection8({ ground: 'ground8', noticeServedDate: '2026-05-01', possessionDate: '2026-05-29', noticeForm: 'form3a', rentArrearsMonths: 3, rentArrearsMonthsAtHearing: 3, serviceMethod: 'personal' });
+  assert.equal(meetsThreshold.valid, true);
+});
+
+test('Grounds 1 and 1A check evidence, four calendar months and the 12-month tenancy period', () => {
+  const base = { noticeServedDate: '2026-06-01', noticeForm: 'form3a', possessionDate: '2026-10-01', tenancyStartDate: '2025-10-01', serviceMethod: 'personal', landlordIntentionEvidence: 'Evidence of intention' };
+  assert.equal(validateSection8({ ...base, ground: 'rra-ground-landlord-sale' }).valid, true);
+  const earlyPossession = validateSection8({ ...base, ground: 'rra-ground-landlord-move-in', possessionDate: '2026-09-30' });
+  assert.equal(earlyPossession.valid, false);
+  assert.ok(earlyPossession.errors.some((e) => e.includes('first anniversary')));
+  const shortNotice = validateSection8({ ...base, ground: 'rra-ground-landlord-sale', possessionDate: '2026-09-30', tenancyStartDate: '2025-09-30' });
+  assert.equal(shortNotice.valid, false);
+  assert.ok(shortNotice.errors.some((e) => e.includes('4 calendar months')));
+  assert.equal(validateSection8({ ...base, ground: 'rra-ground-landlord-sale', landlordIntentionEvidence: '' }).valid, false);
+  const beforeCommencement = validateSection8({ ...base, ground: 'rra-ground-landlord-sale', noticeServedDate: '2026-04-30' });
+  assert.ok(beforeCommencement.errors.some((e) => e.includes('on or after 1 May 2026')));
+});
+
+test('post-commencement Ground 8 requires four weeks notice', () => {
+  const result = validateSection8({ ground: 'ground8', noticeServedDate: '2026-05-01', possessionDate: '2026-05-28', noticeForm: 'form3a', rentArrearsMonths: 3, rentArrearsMonthsAtHearing: 3, serviceMethod: 'personal' });
+  assert.ok(result.errors.some((error) => error.includes('28 days')));
 });
 
 test('validateSection8 RRA landlord sale requires evidence', () => {
