@@ -254,7 +254,7 @@ function createChallengeRecord(data) {
   const sanctionType = data.sanctionType || 'standard';
   if (!validTypes.includes(sanctionType)) {
     throw new Error(
-      `Invalid __tracker_sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`
+      `Invalid sanction type "${sanctionType}". Must be one of: ${validTypes.join(', ')}`
     );
   }
   return {
@@ -276,13 +276,13 @@ function createChallengeRecord(data) {
 }
 
 function renderChallengeCard(challenge) {
-  const __tracker_sanction = getSanctionDeductionRates(challenge.sanctionType);
+  const sanction = getSanctionDeductionRates(challenge.sanctionType);
   const statusCls = challenge.status === 'submitted' ? 'status-submitted' : '';
 
   return `
     <header>
       <h3>${escapeHtml(challenge.claimantName)}</h3>
-      <span class="status-pill __tracker_sanction-${challenge.sanctionType}">${__tracker_sanction ? __tracker_sanction.name : challenge.sanctionType}</span>
+      <span class="status-pill sanction-${challenge.sanctionType}">${sanction ? sanction.name : challenge.sanctionType}</span>
     </header>
     <p class="meta">Decision: ${challenge.decisionDate || 'Not recorded'} — Status: ${challenge.status}</p>
     <p class="deadline${statusCls}">${challenge.reasonForSanction ? escapeHtml(challenge.reasonForSanction.slice(0, 100)) : 'No reason recorded'}</p>

@@ -510,13 +510,13 @@ function nextTheme(current) {
 
 function calculateDaysRemaining(sentDate, today = new Date()) {
   if (!sentDate) return null;
-  const __tracker_deadline = addWorkingDays(sentDate, 20);
-  if (!__tracker_deadline) return null;
+  const deadline = addWorkingDays(sentDate, 20);
+  if (!deadline) return null;
 
   const target = new Date(
-    Number(__tracker_deadline.slice(0, 4)),
-    Number(__tracker_deadline.slice(5, 7)) - 1,
-    Number(__tracker_deadline.slice(8, 10))
+    Number(deadline.slice(0, 4)),
+    Number(deadline.slice(5, 7)) - 1,
+    Number(deadline.slice(8, 10))
   );
   const today_ = new Date(today);
   today_.setHours(0, 0, 0, 0);
@@ -542,7 +542,7 @@ function renderBatchCard(batch) {
   const total = batch.authorities.length;
   const received = batch.authorities.filter((a) => a.responseDate).length;
 
-  let deadlineText = 'Add a sent date to see the __tracker_deadline.';
+  let deadlineText = 'Add a sent date to see the deadline.';
   if (days !== null) {
     if (days < 0) {
       deadlineText = `Overdue by ${Math.abs(days)} day(s). Follow up with authorities.`;
@@ -561,7 +561,7 @@ function renderBatchCard(batch) {
       <span class="status-pill">${total} ${total === 1 ? 'authority' : 'authorities'}</span>
     </header>
     <p class="meta">${escapeHtml(batch.description || 'No description')} — ${batch.sentDate || 'not sent'}</p>
-    <p class="__tracker_deadline${statusCls}">${deadlineText}</p>
+    <p class="deadline${statusCls}">${deadlineText}</p>
     <p class="meta">${received} of ${total} responses received</p>
     <div class="item-actions">
       <button type="button" data-action="view" data-id="${batch.id}">View</button>

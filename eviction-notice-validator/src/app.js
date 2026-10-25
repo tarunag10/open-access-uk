@@ -830,20 +830,20 @@ function initBusinessTenancyUI() {
 
   function updateFields() {
     const type = businessForm?.elements.namedItem('noticeType')?.value;
-    const __tracker_is25 = type === 'section25';
+    const is25 = type === 'section25';
     const is26 = type === 'section26';
     const opposition = businessForm?.elements.namedItem('opposition')?.value === 'opposed';
     const responseOpposes =
       businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
-    const isForm1 = __tracker_is25 && businessForm?.elements.namedItem('noticeForm')?.value === 'form1';
-    if (section25Fields) section25Fields.hidden = !__tracker_is25;
+    const isForm1 = is25 && businessForm?.elements.namedItem('noticeForm')?.value === 'form1';
+    if (section25Fields) section25Fields.hidden = !is25;
     if (section26Fields) section26Fields.hidden = !is26;
     if (form1Fields) form1Fields.hidden = !isForm1;
     if (oppositionFields)
-      oppositionFields.hidden = !(__tracker_is25 && opposition) && !(is26 && responseOpposes);
+      oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
     const fieldRequired = [
-      ['terminationDate', __tracker_is25],
-      ['opposition', __tracker_is25],
+      ['terminationDate', is25],
+      ['opposition', is25],
       ['newTenancyDate', is26],
       ['proposedTerms', is26],
       ['landlordResponse', is26],

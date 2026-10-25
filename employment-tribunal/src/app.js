@@ -230,7 +230,7 @@ function renderClaimCard(claim) {
   const acasDeadline = getACASDeadline(claim.dismissalDate);
   const et1Deadline = claim.acasCertDate ? getET1Deadline(claim.acasCertDate) : null;
 
-  let deadlineText = 'Add a dismissal __tracker_date to see ACAS deadline.';
+  let deadlineText = 'Add a dismissal date to see ACAS deadline.';
   if (acasDeadline) {
     deadlineText = `ACAS deadline: ${acasDeadline}`;
   }
@@ -243,7 +243,7 @@ function renderClaimCard(claim) {
       <h3>${escapeHtml(claim.employerName || 'Untitled claim')}</h3>
       <span class="status-pill claim-${claim.claimType}">${typeName}</span>
     </header>
-    <p class="meta">${escapeHtml(claim.claimantName || 'No claimant')} — ${claim.dismissalDate || 'No dismissal __tracker_date'}</p>
+    <p class="meta">${escapeHtml(claim.claimantName || 'No claimant')} — ${claim.dismissalDate || 'No dismissal date'}</p>
     <p class="deadline">${deadlineText}</p>
     <div class="item-actions">
       <button type="button" data-action="view" data-id="${claim.id}">View</button>
@@ -275,11 +275,11 @@ function renderTimeline(claim) {
   const chronology = getChronologyTemplate();
   let html = '<ol class="timeline" aria-label="Claim chronology">';
   for (const step of chronology) {
-    const __tracker_date = claim[step.dateField] || '';
-    const cls = __tracker_date ? 'timeline-complete' : 'timeline-future';
+    const date = claim[step.dateField] || '';
+    const cls = date ? 'timeline-complete' : 'timeline-future';
     html += `<li class="${cls}">`;
     html += `<strong>${step.label}</strong>`;
-    html += `<span>${__tracker_date || 'Not yet recorded'}</span>`;
+    html += `<span>${date || 'Not yet recorded'}</span>`;
     html += '</li>';
   }
   html += '</ol>';

@@ -361,7 +361,7 @@ export {
 
 
 // ===== App logic =====
-const STORAGE_KEY = 'open-access-uk:__app_deadline-cascade:cascades';
+const STORAGE_KEY = 'open-access-uk:deadline-cascade:cascades';
 
 const form = document.querySelector('#cascade-form');
 const list = document.querySelector('#cascade-list');
@@ -667,7 +667,7 @@ function handleExport(format) {
       ...allEvents,
       'END:VCALENDAR'
     ].join('\r\n');
-    downloadText(ics, '__app_deadline-cascade.ics', 'text/calendar');
+    downloadText(ics, 'deadline-cascade.ics', 'text/calendar');
   } else if (format === 'csv') {
     const headers = ['cascade', 'step', '__app_deadline', 'description', 'workingDays'];
     const rows = [];
@@ -683,9 +683,9 @@ function handleExport(format) {
       }
     }
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    downloadText(csv, '__app_deadline-cascade.csv', 'text/csv');
+    downloadText(csv, 'deadline-cascade.csv', 'text/csv');
   } else {
-    downloadText(serializeCascade(cascades), '__app_deadline-cascade.json', 'application/json');
+    downloadText(serializeCascade(cascades), 'deadline-cascade.json', 'application/json');
   }
 }
 

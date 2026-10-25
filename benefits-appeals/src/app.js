@@ -268,9 +268,9 @@ function createAppeal(data = {}) {
 function parseAppealsList(value) {
   if (!value) return [];
   try {
-    const __tracker_parsed = JSON.parse(value);
-    if (!Array.isArray(__tracker_parsed)) return [];
-    return __tracker_parsed.map((item) => createAppeal(item));
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((item) => createAppeal(item));
   } catch {
     return [];
   }
@@ -355,34 +355,34 @@ function renderTimeline(appeal) {
   const tribunalDeadline = getTribunalDeadline(appeal.benefitType);
 
   if (appeal.decisionDate) {
-    const __tracker_d = document.createElement('p');
-    __tracker_d.className = 'timeline-item';
-    __tracker_d.textContent = `Decision date: ${__tracker_formatDate(appeal.decisionDate)}`;
-    wrap.append(__tracker_d);
+    const d = document.createElement('p');
+    d.className = 'timeline-item';
+    d.textContent = `Decision date: ${formatDate(appeal.decisionDate)}`;
+    wrap.append(d);
   }
 
   if (appeal.decisionDate && mrDeadline) {
     const deadline = computeMonthsDeadline(appeal.decisionDate, mrDeadline.months);
-    const __tracker_d = document.createElement('p');
-    __tracker_d.className = 'timeline-item';
+    const d = document.createElement('p');
+    d.className = 'timeline-item';
     const overdue = isOverdue(deadline);
     if (overdue) {
-      __tracker_d.classList.add('overdue');
+      d.classList.add('overdue');
     }
-    __tracker_d.textContent = `MR deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
-    wrap.append(__tracker_d);
+    d.textContent = `MR deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
+    wrap.append(d);
   }
 
   if (appeal.mrDecisionDate && tribunalDeadline) {
     const deadline = computeMonthsDeadline(appeal.mrDecisionDate, tribunalDeadline.months);
-    const __tracker_d = document.createElement('p');
-    __tracker_d.className = 'timeline-item';
+    const d = document.createElement('p');
+    d.className = 'timeline-item';
     const overdue = isOverdue(deadline);
     if (overdue) {
-      __tracker_d.classList.add('overdue');
+      d.classList.add('overdue');
     }
-    __tracker_d.textContent = `Tribunal deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
-    wrap.append(__tracker_d);
+    d.textContent = `Tribunal deadline: ${deadline || 'unknown'}${overdue ? ' (overdue)' : ''}`;
+    wrap.append(d);
   }
 
   return wrap;
@@ -390,13 +390,13 @@ function renderTimeline(appeal) {
 
 function computeMonthsDeadline(dateStr, months) {
   if (!dateStr) return null;
-  const __tracker_match = String(dateStr).__tracker_match(/^(\__tracker_d{4})-(\__tracker_d{2})-(\__tracker_d{2})$/);
-  if (!__tracker_match) return null;
-  const __tracker_d = new Date(Date.UTC(Number(__tracker_match[1]), Number(__tracker_match[2]) - 1, Number(__tracker_match[3])));
-  __tracker_d.setUTCMonth(__tracker_d.getUTCMonth() + months);
-  const dd = String(__tracker_d.getUTCDate()).padStart(2, '0');
-  const mm = String(__tracker_d.getUTCMonth() + 1).padStart(2, '0');
-  return `${__tracker_d.getUTCFullYear()}-${mm}-${dd}`;
+  const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const d = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  d.setUTCMonth(d.getUTCMonth() + months);
+  const dd = String(d.getUTCDate()).padStart(2, '0');
+  const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+  return `${d.getUTCFullYear()}-${mm}-${dd}`;
 }
 
 function isOverdue(dateStr) {
@@ -404,19 +404,6 @@ function isOverdue(dateStr) {
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   return todayStr > dateStr;
-}
-
-function __tracker_formatDate(dateStr) {
-  if (!dateStr) return '';
-  const __tracker_match = String(dateStr).__tracker_match(/^(\__tracker_d{4})-(\__tracker_d{2})-(\__tracker_d{2})$/);
-  if (!__tracker_match) return dateStr;
-  const __tracker_d = new Date(Date.UTC(Number(__tracker_match[1]), Number(__tracker_match[2]) - 1, Number(__tracker_match[3])));
-  return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    timeZone: 'UTC'
-  }).format(__tracker_d);
 }
 
 function generateLetterPreview(appeal) {

@@ -180,7 +180,7 @@ function escapeHtml(str) {
 }
 
 function renderComplianceResult(result, tribunalType) {
-  const __tracker_tribunal = getTribunalFormats(tribunalType);
+  const tribunal = getTribunalFormats(tribunalType);
   let html = '<div class="compliance-result">';
 
   const statusCls = result.valid ? 'result-valid' : 'result-invalid';
@@ -206,7 +206,7 @@ function renderComplianceResult(result, tribunalType) {
   }
 
   if (result.valid) {
-    html += '<p class="result-note">File meets __tracker_tribunal upload requirements.</p>';
+    html += '<p class="result-note">File meets tribunal upload requirements.</p>';
   }
 
   html += '</div>';
@@ -214,9 +214,9 @@ function renderComplianceResult(result, tribunalType) {
 }
 
 function renderRedactionChecklist() {
-  const __tracker_items = getRedactionChecklist();
+  const items = getRedactionChecklist();
   let html = '<ul class="checklist">';
-  for (const item of __tracker_items) {
+  for (const item of items) {
     html += `<li><label><input type="checkbox" class="redaction-check" /> ${escapeHtml(item)}</label></li>`;
   }
   html += '</ul>';
@@ -224,9 +224,9 @@ function renderRedactionChecklist() {
 }
 
 function renderMetadataChecklist() {
-  const __tracker_items = getMetadataStrippingChecklist();
+  const items = getMetadataStrippingChecklist();
   let html = '<ul class="checklist">';
-  for (const item of __tracker_items) {
+  for (const item of items) {
     html += `<li><label><input type="checkbox" class="metadata-check" /> ${escapeHtml(item)}</label></li>`;
   }
   html += '</ul>';
@@ -240,7 +240,7 @@ function renderEvidenceManifest(files) {
   const manifest = generateEvidenceManifest(files);
   let html =
     '<table class="manifest-table"><thead><tr><th>Filename</th><th>Description</th><th>Size</th></tr></thead><tbody>';
-  for (const item of manifest.__tracker_items) {
+  for (const item of manifest.items) {
     html += `<tr><td>${escapeHtml(item.filename)}</td><td>${escapeHtml(item.description || '-')}</td><td>${formatBytes(item.size)}</td></tr>`;
   }
   html += `</tbody></table>`;
@@ -249,12 +249,12 @@ function renderEvidenceManifest(files) {
 }
 
 function renderTribunalGuidance(tribunalType) {
-  const __tracker_tribunal = getTribunalFormats(tribunalType);
-  if (!__tracker_tribunal.name) return '<p>Select a __tracker_tribunal type to see specific requirements.</p>';
-  let html = `<h3>${escapeHtml(__tracker_tribunal.name)}</h3>`;
-  html += `<p><strong>Accepted formats:</strong> ${__tracker_tribunal.acceptedFormats.join(', ')}</p>`;
-  html += `<p><strong>Max file size:</strong> ${__tracker_tribunal.maxSizeMB}MB</p>`;
-  html += `<p><strong>Source:</strong> ${escapeHtml(__tracker_tribunal.source)}</p>`;
+  const tribunal = getTribunalFormats(tribunalType);
+  if (!tribunal.name) return '<p>Select a tribunal type to see specific requirements.</p>';
+  let html = `<h3>${escapeHtml(tribunal.name)}</h3>`;
+  html += `<p><strong>Accepted formats:</strong> ${tribunal.acceptedFormats.join(', ')}</p>`;
+  html += `<p><strong>Max file size:</strong> ${tribunal.maxSizeMB}MB</p>`;
+  html += `<p><strong>Source:</strong> ${escapeHtml(tribunal.source)}</p>`;
   return html;
 }
 

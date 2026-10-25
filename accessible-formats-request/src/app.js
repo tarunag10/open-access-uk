@@ -290,13 +290,13 @@ function escapeHtml(str) {
 }
 
 function renderRequestCard(request) {
-  const __tracker_format = getFormatDetails(request.__tracker_format);
+  const format = getFormatDetails(request.format);
   const orgType = ORGANISATION_TYPES.find((t) => t.value === request.organisationType);
 
   return `
     <header>
       <h3>${escapeHtml(request.organisationName || 'Untitled request')}</h3>
-      <span class="status-pill __tracker_format-${request.__tracker_format}">${__tracker_format ? __tracker_format.name : request.__tracker_format}</span>
+      <span class="status-pill format-${request.format}">${format ? format.name : request.format}</span>
     </header>
     <p class="meta">${escapeHtml(orgType ? orgType.label : request.organisationType || 'Unknown type')} — ${request.deadline || 'No deadline set'}</p>
     <p class="meta">${escapeHtml(request.documents || 'No documents specified')}</p>
@@ -325,15 +325,15 @@ function renderRequestList(requests, container) {
 }
 
 function renderFormatRequirements(formatId, container) {
-  const __tracker_reqs = getFormatRequirements(formatId);
+  const reqs = getFormatRequirements(formatId);
   container.replaceChildren();
-  if (__tracker_reqs.length === 0) {
+  if (reqs.length === 0) {
     const p = document.createElement('p');
-    p.textContent = 'No specific requirements for this __tracker_format.';
+    p.textContent = 'No specific requirements for this format.';
     container.append(p);
     return;
   }
-  for (const req of __tracker_reqs) {
+  for (const req of reqs) {
     const row = document.createElement('div');
     row.className = 'breakdown-row';
     const label = document.createElement('span');

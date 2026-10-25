@@ -356,7 +356,7 @@ function formatNumber(num) {
 
 function renderOmbudsmanSummary(ombudsmanId) {
   const details = getOmbudsmanDetails(ombudsmanId);
-  const __tracker_timescales = getDecisionTimescales(ombudsmanId);
+  const timescales = getDecisionTimescales(ombudsmanId);
   const compensation = getCompensationRanges(ombudsmanId);
 
   if (!details) return '';
@@ -365,9 +365,9 @@ function renderOmbudsmanSummary(ombudsmanId) {
   lines.push(details.name);
   lines.push(`Sectors: ${details.sectors.join(', ')}`);
   lines.push(`Website: ${details.website}`);
-  if (__tracker_timescales) {
-    lines.push(`Initial response: ${__tracker_timescales.initialResponse}`);
-    lines.push(`Full investigation: ${__tracker_timescales.fullInvestigation}`);
+  if (timescales) {
+    lines.push(`Initial response: ${timescales.initialResponse}`);
+    lines.push(`Full investigation: ${timescales.fullInvestigation}`);
   }
   if (compensation) {
     lines.push(`Typical compensation: ${compensation.typical}`);
@@ -380,7 +380,7 @@ function renderOmbudsmanSummary(ombudsmanId) {
 function renderOutcomeResults(ombudsmanId, issueType) {
   const details = getOmbudsmanDetails(ombudsmanId);
   const compensation = getCompensationRanges(ombudsmanId);
-  const __tracker_timescales = getDecisionTimescales(ombudsmanId);
+  const timescales = getDecisionTimescales(ombudsmanId);
 
   if (!details) return '';
 
@@ -398,10 +398,10 @@ function renderOutcomeResults(ombudsmanId, issueType) {
     if (compensation.note) sections.push(`<p>${compensation.note}</p>`);
   }
 
-  if (__tracker_timescales) {
-    sections.push(`<h4>Decision __tracker_timescales</h4>`);
-    sections.push(`<p>Initial response: ${__tracker_timescales.initialResponse}</p>`);
-    sections.push(`<p>Full investigation: ${__tracker_timescales.fullInvestigation}</p>`);
+  if (timescales) {
+    sections.push(`<h4>Decision timescales</h4>`);
+    sections.push(`<p>Initial response: ${timescales.initialResponse}</p>`);
+    sections.push(`<p>Full investigation: ${timescales.fullInvestigation}</p>`);
   }
 
   return sections.join('');

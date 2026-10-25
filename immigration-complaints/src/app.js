@@ -268,11 +268,6 @@ function nextTheme(current) {
 
 // ===== src/tracker.js (imports resolved) =====
 
-const __tracker_COMPLAINT_TYPES = getComplaintTypes();
-
-function __tracker_typeById(id) {
-  return __tracker_COMPLAINT_TYPES.find((t) => t.id === id) || null;
-}
 
 function calculateDaysRemaining(sentDate, typeId, today = new Date()) {
   const deadline = getComplaintDeadlines(typeId, sentDate);
@@ -306,7 +301,7 @@ function escapeHtml(str) {
 }
 
 function renderComplaintCard(complaint) {
-  const __tracker_type = __tracker_typeById(complaint.complaintType);
+  const type = typeById(complaint.complaintType);
   const days = calculateDaysRemaining(complaint.dateSubmitted, complaint.complaintType);
 
   let deadlineText = 'Add a submission date to see the deadline.';
@@ -325,13 +320,13 @@ function renderComplaintCard(complaint) {
   return `
     <header>
       <h3>${escapeHtml(complaint.complainantName || 'Untitled complaint')}</h3>
-      <span class="status-pill __tracker_type-${complaint.complaintType}">${__tracker_type ? __tracker_type.name : complaint.complaintType}</span>
+      <span class="status-pill type-${complaint.complaintType}">${type ? type.name : complaint.complaintType}</span>
     </header>
     <p class="meta">${escapeHtml(complaint.description || 'No description')} — ${complaint.dateSubmitted || 'not submitted'}</p>
     <p class="deadline${statusCls}">${deadlineText}</p>
     <div class="item-actions">
-      <button __tracker_type="button" data-action="view" data-id="${complaint.id}">View</button>
-      <button __tracker_type="button" data-action="delete" data-id="${complaint.id}" class="secondary">Delete</button>
+      <button type="button" data-action="view" data-id="${complaint.id}">View</button>
+      <button type="button" data-action="delete" data-id="${complaint.id}" class="secondary">Delete</button>
     </div>`;
 }
 
@@ -364,8 +359,8 @@ function renderComplaints(complaints, container) {
 }
 
 export {
-  __tracker_COMPLAINT_TYPES,
-  __tracker_typeById,
+  COMPLAINT_TYPES,
+  typeById,
   calculateDaysRemaining,
   filterByType,
   renderComplaintCard,

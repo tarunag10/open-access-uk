@@ -176,14 +176,14 @@ function isWorkingDay(date) {
 }
 
 function addWorkingDaysLocal(date, days) {
-  const __tracker_result = new Date(date);
+  const result = new Date(date);
   let remaining = days;
   while (remaining > 0) {
-    __tracker_result.setDate(__tracker_result.getDate() + 1);
-    if (isWorkingDay(__tracker_result)) remaining -= 1;
+    result.setDate(result.getDate() + 1);
+    if (isWorkingDay(result)) remaining -= 1;
   }
-  __tracker_result.setHours(0, 0, 0, 0);
-  return __tracker_result;
+  result.setHours(0, 0, 0, 0);
+  return result;
 }
 
 function parseLocalDate(value) {
@@ -203,8 +203,8 @@ function toLocalDateString(date) {
 }
 
 function calculateDaysRemaining(sentDate, stageId, today = new Date()) {
-  const __tracker_stage = getComplaintStages().find((s) => s.id === stageId);
-  if (!__tracker_stage || !sentDate) return null;
+  const stage = getComplaintStages().find((s) => s.id === stageId);
+  if (!stage || !sentDate) return null;
 
   const deadlineInfo = getDeadlineForStage(stageId, sentDate);
   if (!deadlineInfo) return null;
@@ -225,16 +225,16 @@ function calculateDaysRemaining(sentDate, stageId, today = new Date()) {
 
 function filterByStage(complaints, stageId) {
   if (!stageId) return complaints;
-  return complaints.filter((c) => c.__tracker_stage === stageId);
+  return complaints.filter((c) => c.stage === stageId);
 }
 
 function renderTimeline(complaint) {
   const stages = getComplaintStages();
-  const currentIdx = stages.findIndex((s) => s.id === complaint.__tracker_stage);
+  const currentIdx = stages.findIndex((s) => s.id === complaint.stage);
 
   let html = '<ol class="timeline" aria-label="Complaint stages">';
   for (let i = 0; i < stages.length; i++) {
-    const __tracker_stage = stages[i];
+    const stage = stages[i];
     const isComplete = i < currentIdx;
     const isCurrent = i === currentIdx;
     const cls = isComplete
@@ -243,8 +243,8 @@ function renderTimeline(complaint) {
         ? 'timeline-current'
         : 'timeline-future';
     html += `<li class="${cls}" aria-current="${isCurrent ? 'step' : 'false'}">`;
-    html += `<strong>${__tracker_stage.name}</strong>`;
-    html += `<span>${__tracker_stage.description}</span>`;
+    html += `<strong>${stage.name}</strong>`;
+    html += `<span>${stage.description}</span>`;
     html += '</li>';
   }
   html += '</ol>';
@@ -252,8 +252,8 @@ function renderTimeline(complaint) {
 }
 
 function renderComplaintCard(complaint) {
-  const __tracker_stage = getComplaintStages().find((s) => s.id === complaint.__tracker_stage);
-  const days = calculateDaysRemaining(complaint.sentDate, complaint.__tracker_stage);
+  const stage = getComplaintStages().find((s) => s.id === complaint.stage);
+  const days = calculateDaysRemaining(complaint.sentDate, complaint.stage);
 
   let deadlineText = 'Add a sent date to see the deadline.';
   if (days !== null) {
@@ -271,7 +271,7 @@ function renderComplaintCard(complaint) {
   return `
     <header>
       <h3>${escapeHtml(complaint.trustName || 'Untitled complaint')}</h3>
-      <span class="status-pill __tracker_stage-${complaint.__tracker_stage}">${__tracker_stage ? __tracker_stage.name : complaint.__tracker_stage}</span>
+      <span class="status-pill stage-${complaint.stage}">${stage ? stage.name : complaint.stage}</span>
     </header>
     <p class="meta">${escapeHtml(complaint.description || 'No description')} — ${complaint.sentDate || 'not sent'}</p>
     <p class="deadline${statusCls}">${deadlineText}</p>
@@ -292,8 +292,8 @@ function renderComplaints(complaints, container) {
     return;
   }
   const sorted = [...complaints].sort((a, b) => {
-    const aDays = calculateDaysRemaining(a.sentDate, a.__tracker_stage);
-    const bDays = calculateDaysRemaining(b.sentDate, b.__tracker_stage);
+    const aDays = calculateDaysRemaining(a.sentDate, a.stage);
+    const bDays = calculateDaysRemaining(b.sentDate, b.stage);
     const aOverdue = aDays !== null && aDays < 0 ? 0 : 1;
     const bOverdue = bDays !== null && bDays < 0 ? 0 : 1;
     if (aOverdue !== bOverdue) return aOverdue - bOverdue;
@@ -303,7 +303,7 @@ function renderComplaints(complaints, container) {
   for (const complaint of sorted) {
     const item = document.createElement('article');
     item.className = 'complaint-item';
-    const days = calculateDaysRemaining(complaint.sentDate, complaint.__tracker_stage);
+    const days = calculateDaysRemaining(complaint.sentDate, complaint.stage);
     if (days !== null && days < 0) item.classList.add('overdue');
     item.innerHTML = renderComplaintCard(complaint);
     container.append(item);

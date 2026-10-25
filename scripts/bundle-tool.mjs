@@ -132,18 +132,23 @@ function bundleApp(toolDir) {
       sharedNames.add(declaration[1]);
     }
   }
-  for (const name of sharedNames) {
-    const declarationPattern = new RegExp(`\\b(?:const|let|var|function|class)\\s+${name}\\b`);
-    if (declarationPattern.test(trackerHelpers)) {
-      trackerHelpers = trackerHelpers.replace(
-        new RegExp(`\\b${name}\\b`, 'g'),
-        `__tracker_${name}`
+  const removeDuplicateDeclarations = (source) => {
+    for (const name of sharedNames) {
+      const functionPattern = new RegExp(
+        `^function\\s+${name}\\b[^\\n]*\\{[\\s\\S]*?^\\}\\s*`,
+        'm'
       );
+      source = source.replace(functionPattern, '');
+      const variablePattern = new RegExp(
+        `^(?:export\\s+)?(?:const|let|var)\\s+${name}\\b[^\\n]*\\n?`,
+        'm'
+      );
+      source = source.replace(variablePattern, '');
     }
-    if (declarationPattern.test(appLogic)) {
-      appLogic = appLogic.replace(new RegExp(`\\b${name}\\b`, 'g'), `__app_${name}`);
-    }
-  }
+    return source;
+  };
+  trackerHelpers = removeDuplicateDeclarations(trackerHelpers);
+  appLogic = removeDuplicateDeclarations(appLogic);
 
   const bundled =
     banner +

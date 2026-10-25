@@ -276,17 +276,17 @@ export function computeDeadline(appeal) {
     appeal.appealType === 'exclusion-review' ||
     appeal.appealType === 'independent-review-panel'
   ) {
-    const __tracker_schoolDays = getExclusionDeadlines(appeal.exclusionType).__tracker_schoolDays;
+    const schoolDays = getExclusionDeadlines(appeal.exclusionType).schoolDays;
     const date = new Date(appeal.decisionDate);
     if (Number.isNaN(date.getTime())) return null;
-    let remaining = __tracker_schoolDays;
+    let remaining = schoolDays;
     const result = new Date(date);
     while (remaining > 0) {
       result.setDate(result.getDate() + 1);
       const day = result.getDay();
       if (day !== 0 && day !== 6) remaining -= 1;
     }
-    return { targetDate: result.toISOString().slice(0, 10), note: `${__tracker_schoolDays} school days` };
+    return { targetDate: result.toISOString().slice(0, 10), note: `${schoolDays} school days` };
   }
   if (appeal.appealType === 'send-tribunal' || appeal.appealType === 'mediation-request') {
     const { deadline } = getSENDTribunalDeadline(appeal.decisionDate);
