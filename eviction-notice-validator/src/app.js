@@ -245,7 +245,9 @@ function addCalendarMonths(dateString, months) {
   if (!date) return null;
   const day = date.getUTCDate();
   const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
-  const lastDay = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  const lastDay = new Date(
+    Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)
+  ).getUTCDate();
   target.setUTCDate(Math.min(day, lastDay));
   return toLocalDateString(target);
 }
@@ -286,11 +288,15 @@ function validateSection21(data) {
   }
 
   if (!data.proceedingsIssuedDate) {
-    errors.push('For a pre-1 May 2026 Section 21 notice, confirm whether court proceedings were issued by 31 July 2026.');
+    errors.push(
+      'For a pre-1 May 2026 Section 21 notice, confirm whether court proceedings were issued by 31 July 2026.'
+    );
   } else if (data.proceedingsIssuedDate > SECTION_21_COURT_DEADLINE) {
     errors.push('A Section 21 possession claim could not be started after 31 July 2026.');
   } else if (data.possessionDate && data.proceedingsIssuedDate < data.possessionDate) {
-    errors.push('The Section 21 possession claim date is earlier than the date stated in the notice. Check the court record and notice.');
+    errors.push(
+      'The Section 21 possession claim date is earlier than the date stated in the notice. Check the court record and notice.'
+    );
   }
 
   if (!data.possessionDate) {
@@ -298,7 +304,9 @@ function validateSection21(data) {
   } else {
     const earliestAfterNotice = addCalendarMonths(data.noticeServedDate, 2);
     if (earliestAfterNotice && data.possessionDate < earliestAfterNotice) {
-      errors.push(`The Section 21 notice period must be at least 2 calendar months. The earliest date based on service is ${earliestAfterNotice}.`);
+      errors.push(
+        `The Section 21 notice period must be at least 2 calendar months. The earliest date based on service is ${earliestAfterNotice}.`
+      );
     }
   }
   if (!data.prescribedForm) errors.push('Prescribed form (Form 6A) must be served with the notice');
@@ -338,14 +346,22 @@ function validateSection8(data) {
     errors.push('Service method is required (personal or first/second class post)');
   }
   const noticeDate = parseLocalDate(data.noticeServedDate);
-  const expectedForm = noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 'form3a' : 'form3';
+  const expectedForm =
+    noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 'form3a' : 'form3';
   if (data.noticeForm !== expectedForm) {
-    errors.push(`Check that the correct notice form was used for the service date: ${expectedForm === 'form3a' ? 'Form 3A (or substantially similar form)' : 'the pre-1 May 2026 Form 3'}.`);
+    errors.push(
+      `Check that the correct notice form was used for the service date: ${expectedForm === 'form3a' ? 'Form 3A (or substantially similar form)' : 'the pre-1 May 2026 Form 3'}.`
+    );
   }
   const needsPossessionDate = data.ground !== 'ground14';
   if (needsPossessionDate && !data.possessionDate) {
     errors.push('The date the notice requires possession is required to check the notice period.');
-  } else if (needsPossessionDate && noticeDate && data.possessionDate && !['rra-ground-landlord-sale', 'rra-ground-landlord-move-in'].includes(data.ground)) {
+  } else if (
+    needsPossessionDate &&
+    noticeDate &&
+    data.possessionDate &&
+    !['rra-ground-landlord-sale', 'rra-ground-landlord-move-in'].includes(data.ground)
+  ) {
     const isPostCommencement = noticeDate >= parseLocalDate(RRA_COMMENCEMENT);
     const minimumNoticeDays = isPostCommencement
       ? ground.noticeDays
@@ -354,14 +370,18 @@ function validateSection8(data) {
         : ground.noticeDays;
     const allowedDays = daysBetween(data.noticeServedDate, data.possessionDate);
     if (Number.isFinite(allowedDays) && allowedDays < minimumNoticeDays) {
-      errors.push(`${ground.id} requires at least ${minimumNoticeDays} days' notice for this service date. Only ${allowedDays} days are allowed.`);
+      errors.push(
+        `${ground.id} requires at least ${minimumNoticeDays} days' notice for this service date. Only ${allowedDays} days are allowed.`
+      );
     }
   }
 
   // RRA ground: serious arrears (3+ months)
   if (data.ground === 'rra-ground-serious-arrears') {
     if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
-      errors.push('The revised Ground 8 threshold applies to notices served on or after 1 May 2026.');
+      errors.push(
+        'The revised Ground 8 threshold applies to notices served on or after 1 May 2026.'
+      );
     }
     if (!data.rentArrearsMonthsAtNotice || data.rentArrearsMonthsAtNotice < 3) {
       errors.push(
@@ -369,7 +389,9 @@ function validateSection8(data) {
       );
     }
     if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
-      errors.push('Ground 8 also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.');
+      errors.push(
+        'Ground 8 also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.'
+      );
     }
     return { valid: errors.length === 0, errors };
   }
@@ -377,7 +399,9 @@ function validateSection8(data) {
   // RRA grounds: landlord sale or move-in
   if (data.ground === 'rra-ground-landlord-sale' || data.ground === 'rra-ground-landlord-move-in') {
     if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
-      errors.push('Grounds 1 and 1A under the revised law apply to notices served on or after 1 May 2026.');
+      errors.push(
+        'Grounds 1 and 1A under the revised law apply to notices served on or after 1 May 2026.'
+      );
     }
     if (!data.landlordIntentionEvidence) {
       errors.push(
@@ -388,17 +412,23 @@ function validateSection8(data) {
       errors.push('Tenancy start date is required to check the 12-month protected period.');
     }
     if (!data.possessionDate) {
-      errors.push('Intended possession date is required to check notice timing and the 12-month protected period.');
+      errors.push(
+        'Intended possession date is required to check notice timing and the 12-month protected period.'
+      );
     } else if (data.tenancyStartDate) {
       const earliestPossession = new Date(`${data.tenancyStartDate}T00:00:00Z`);
       earliestPossession.setUTCFullYear(earliestPossession.getUTCFullYear() + 1);
       const earliestDate = toLocalDateString(earliestPossession);
       if (data.possessionDate < earliestDate) {
-        errors.push(`For Ground 1 or 1A, possession cannot be required before the tenancy's first anniversary (${earliestDate}).`);
+        errors.push(
+          `For Ground 1 or 1A, possession cannot be required before the tenancy's first anniversary (${earliestDate}).`
+        );
       }
       const earliestAfterNotice = addCalendarMonths(data.noticeServedDate, 4);
       if (earliestAfterNotice && data.possessionDate < earliestAfterNotice) {
-        errors.push(`Ground 1 and 1A require at least 4 calendar months' notice. The earliest date based on service is ${earliestAfterNotice}.`);
+        errors.push(
+          `Ground 1 and 1A require at least 4 calendar months' notice. The earliest date based on service is ${earliestAfterNotice}.`
+        );
       }
     }
     return { valid: errors.length === 0, errors };
@@ -406,15 +436,26 @@ function validateSection8(data) {
 
   // Pre-RRA grounds
   if (data.ground === 'ground8' || data.ground === 'ground10') {
-    const threshold = data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 3 : data.ground === 'ground8' ? 2 : 0;
-    if (data.rentArrearsMonths === undefined || data.rentArrearsMonths < threshold || (data.ground === 'ground10' && data.rentArrearsMonths <= 0)) {
+    const threshold =
+      data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)
+        ? 3
+        : data.ground === 'ground8'
+          ? 2
+          : 0;
+    if (
+      data.rentArrearsMonths === undefined ||
+      data.rentArrearsMonths < threshold ||
+      (data.ground === 'ground10' && data.rentArrearsMonths <= 0)
+    ) {
       errors.push(
         `${ground.id} requires at least ${threshold} month(s) of rent arrears at time of notice`
       );
     }
     if (data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)) {
       if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
-        errors.push('Ground 8 under the revised law also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.');
+        errors.push(
+          'Ground 8 under the revised law also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.'
+        );
       }
     }
   }
@@ -520,8 +561,10 @@ function parseEviction(value) {
 
 
 const BUSINESS_TENANCY_SOURCES = {
-  guidance: 'https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords',
-  prescribedForms: 'https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords/forms-prescribed-under-the-landlord-and-tenant-act-1954-part-2-notices-regulations-2004',
+  guidance:
+    'https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords',
+  prescribedForms:
+    'https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords/forms-prescribed-under-the-landlord-and-tenant-act-1954-part-2-notices-regulations-2004',
   section25: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/25',
   section26: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/26',
   section30: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/30'
@@ -532,7 +575,9 @@ function addMonths(value, months) {
   if (!date) return null;
   const day = date.getUTCDate();
   const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
-  const last = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  const last = new Date(
+    Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)
+  ).getUTCDate();
   target.setUTCDate(Math.min(day, last));
   return toLocalDateString(target);
 }
@@ -541,13 +586,17 @@ function checkNoticeWindow(serviceDate, anchorDate, label, errors) {
   const served = parseLocalDate(serviceDate);
   const anchor = parseLocalDate(anchorDate);
   if (!served || !anchor) {
-    errors.push(`Enter both the date the notice/request was served and the proposed ${label} date to check the 6-to-12-month window.`);
+    errors.push(
+      `Enter both the date the notice/request was served and the proposed ${label} date to check the 6-to-12-month window.`
+    );
     return;
   }
   const earliest = parseLocalDate(addMonths(anchorDate, -12));
   const latest = parseLocalDate(addMonths(anchorDate, -6));
   if (served < earliest || served > latest) {
-    errors.push(`The service date entered falls outside the statutory 6-to-12-month window before the proposed ${label} date. Check the prescribed form, service rules and exact dates.`);
+    errors.push(
+      `The service date entered falls outside the statutory 6-to-12-month window before the proposed ${label} date. Check the prescribed form, service rules and exact dates.`
+    );
   }
 }
 
@@ -564,14 +613,23 @@ function validateBusinessTenancyNotice(data = {}) {
   if (!data.propertyAddress?.trim()) errors.push('Enter the business premises address.');
   if (!data.landlordName?.trim()) errors.push('Enter the landlord name.');
   if (!data.tenantName?.trim()) errors.push('Enter the tenant name.');
-  if (!data.landlordAddressForService?.trim()) errors.push('Enter the landlord address shown on the notice/request.');
-  if (!data.tenantAddressForService?.trim()) errors.push('Enter the tenant address shown on the notice/request.');
+  if (!data.landlordAddressForService?.trim())
+    errors.push('Enter the landlord address shown on the notice/request.');
+  if (!data.tenantAddressForService?.trim())
+    errors.push('Enter the tenant address shown on the notice/request.');
   if (!data.noticeDate) errors.push('Enter the date shown on the notice/request.');
-  if (!data.serviceMethod) errors.push('Record how the notice/request was served. This checklist cannot determine whether that method was valid.');
+  if (!data.serviceMethod)
+    errors.push(
+      'Record how the notice/request was served. This checklist cannot determine whether that method was valid.'
+    );
   if (data.contractedOut === 'yes') {
-    errors.push('The form indicates that the tenancy may have been contracted out of Part II. The renewal procedure may not apply; review the lease and contracting-out documents with a specialist.');
+    errors.push(
+      'The form indicates that the tenancy may have been contracted out of Part II. The renewal procedure may not apply; review the lease and contracting-out documents with a specialist.'
+    );
   } else if (data.contractedOut === 'unsure') {
-    warnings.push('It is not known whether the tenancy was contracted out of Part II. Review the lease and contracting-out documents before relying on the renewal procedure.');
+    warnings.push(
+      'It is not known whether the tenancy was contracted out of Part II. Review the lease and contracting-out documents before relying on the renewal procedure.'
+    );
   } else if (data.contractedOut !== 'no') {
     errors.push('State whether the tenancy was contracted out of Part II, or select “Not sure”.');
   }
@@ -586,56 +644,89 @@ function validateBusinessTenancyNotice(data = {}) {
 
     const proposed = parseLocalDate(data[dateField]);
     const expiry = parseLocalDate(data.leaseExpiryDate);
-    if (!expiry) errors.push('Enter the current lease expiry date so the proposed date can be checked.');
+    if (!expiry)
+      errors.push('Enter the current lease expiry date so the proposed date can be checked.');
     else if (proposed && proposed < expiry) {
-      errors.push(`The proposed ${dateLabel} date is before the lease expiry date entered. Verify the lease and statutory date rules.`);
+      errors.push(
+        `The proposed ${dateLabel} date is before the lease expiry date entered. Verify the lease and statutory date rules.`
+      );
     }
   }
 
   if (is25) {
-    const expectedForm = data.opposition === 'opposed' ? ['form2', 'form7'] : data.opposition === 'unopposed' ? ['form1'] : [];
+    const expectedForm =
+      data.opposition === 'opposed'
+        ? ['form2', 'form7']
+        : data.opposition === 'unopposed'
+          ? ['form1']
+          : [];
     if (!data.noticeForm) errors.push('Select which prescribed Section 25 form was used.');
-    else if (expectedForm.length && !expectedForm.includes(data.noticeForm)) errors.push('The selected Section 25 form does not match whether the landlord opposes renewal. Confirm the current prescribed form and notice wording.');
-    if (data.noticeForm === 'form7') warnings.push('Form 7 applies to a special case where the tenant may have rights under the Leasehold Reform Act 1967. This checklist does not assess eligibility.');
+    else if (expectedForm.length && !expectedForm.includes(data.noticeForm))
+      errors.push(
+        'The selected Section 25 form does not match whether the landlord opposes renewal. Confirm the current prescribed form and notice wording.'
+      );
+    if (data.noticeForm === 'form7')
+      warnings.push(
+        'Form 7 applies to a special case where the tenant may have rights under the Leasehold Reform Act 1967. This checklist does not assess eligibility.'
+      );
     if (!['opposed', 'unopposed'].includes(data.opposition)) {
       errors.push('State whether the landlord opposes the grant of a new tenancy.');
     }
     if (data.opposition === 'opposed' && !data.oppositionGrounds?.trim()) {
-      errors.push('For an opposed Section 25 notice, enter the Section 30 ground or grounds stated in the notice.');
+      errors.push(
+        'For an opposed Section 25 notice, enter the Section 30 ground or grounds stated in the notice.'
+      );
     }
     if (data.opposition === 'unopposed' && !data.landlordProposedTerms?.trim()) {
       errors.push('For Form 1, enter the landlord’s proposed new tenancy terms from the schedule.');
     }
     if (data.opposition === 'unopposed' && data.oppositionGrounds?.trim()) {
-      warnings.push('The landlord has selected an unopposed notice but entered opposition grounds. Check the notice type and its prescribed wording.');
+      warnings.push(
+        'The landlord has selected an unopposed notice but entered opposition grounds. Check the notice type and its prescribed wording.'
+      );
     }
   }
 
   if (data.noticeType === 'section26') {
-    if (data.noticeForm !== 'form3') errors.push('Select the prescribed Section 26 Form 3 used, and check it against the current official version.');
-    if (!data.proposedProperty?.trim()) errors.push('Enter the property (or part of the property) proposed for the new tenancy.');
-    if (!data.proposedTerms?.trim()) errors.push('Enter the tenant’s proposed terms for the new tenancy.');
+    if (data.noticeForm !== 'form3')
+      errors.push(
+        'Select the prescribed Section 26 Form 3 used, and check it against the current official version.'
+      );
+    if (!data.proposedProperty?.trim())
+      errors.push('Enter the property (or part of the property) proposed for the new tenancy.');
+    if (!data.proposedTerms?.trim())
+      errors.push('Enter the tenant’s proposed terms for the new tenancy.');
     if (data.landlordResponse === 'opposes' && !data.counterNoticeDate) {
-      errors.push('Enter the date the landlord served a counter-notice opposing the Section 26 request.');
+      errors.push(
+        'Enter the date the landlord served a counter-notice opposing the Section 26 request.'
+      );
     }
     const requestDate = parseLocalDate(data.serviceDate);
     const responseDate = parseLocalDate(data.counterNoticeDate);
     if (requestDate && responseDate) {
       const twoMonthsAfter = parseLocalDate(addMonths(data.serviceDate, 2));
       if (responseDate > twoMonthsAfter) {
-        errors.push('The counter-notice date entered is more than two calendar months after the request date. Verify service, any agreed extension and court orders.');
+        errors.push(
+          'The counter-notice date entered is more than two calendar months after the request date. Verify service, any agreed extension and court orders.'
+        );
       }
     }
     if (data.landlordResponse === 'opposes' && !data.oppositionGrounds?.trim()) {
-      errors.push('Record the Section 30 ground or grounds stated in the landlord’s counter-notice.');
+      errors.push(
+        'Record the Section 30 ground or grounds stated in the landlord’s counter-notice.'
+      );
     }
     if (data.landlordResponse === 'unknown') {
-      warnings.push('A landlord wishing to oppose a Section 26 request generally must serve a counter-notice within two months. Confirm the response and calculate all court deadlines urgently.');
+      warnings.push(
+        'A landlord wishing to oppose a Section 26 request generally must serve a counter-notice within two months. Confirm the response and calculate all court deadlines urgently.'
+      );
     }
   }
 
   if (data.telecomTenancy === 'yes') {
-    warnings.push('GOV.UK guidance updated 30 July 2026: for certain legacy telecommunications tenancies, references to “the court” in prescribed forms must be read as references to the tribunal with jurisdiction. Confirm whether this tenancy falls within that class.');
+    warnings.push(
+      'GOV.UK guidance updated 30 July 2026: for certain legacy telecommunications tenancies, references to “the court” in prescribed forms must be read as references to the tribunal with jurisdiction. Confirm whether this tenancy falls within that class.'
+    );
   }
 
   return {
@@ -643,10 +734,17 @@ function validateBusinessTenancyNotice(data = {}) {
     errors,
     warnings,
     status: errors.length === 0 ? 'check-required' : 'review-required',
-    checkedFields: ['noticeType', 'parties', 'serviceDate', 'proposed date', 'lease expiry', 'contracting out', 'opposition details']
+    checkedFields: [
+      'noticeType',
+      'parties',
+      'serviceDate',
+      'proposed date',
+      'lease expiry',
+      'contracting out',
+      'opposition details'
+    ]
   };
 }
-
 
 
 // ===== ../../shared/theme/index.mjs =====
@@ -735,15 +833,21 @@ function initBusinessTenancyUI() {
     const is25 = type === 'section25';
     const is26 = type === 'section26';
     const opposition = businessForm?.elements.namedItem('opposition')?.value === 'opposed';
-    const responseOpposes = businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
+    const responseOpposes =
+      businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
     const isForm1 = is25 && businessForm?.elements.namedItem('noticeForm')?.value === 'form1';
     if (section25Fields) section25Fields.hidden = !is25;
     if (section26Fields) section26Fields.hidden = !is26;
     if (form1Fields) form1Fields.hidden = !isForm1;
-    if (oppositionFields) oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
+    if (oppositionFields)
+      oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
     const fieldRequired = [
-      ['terminationDate', is25], ['opposition', is25], ['newTenancyDate', is26],
-      ['proposedTerms', is26], ['landlordResponse', is26], ['proposedProperty', is26],
+      ['terminationDate', is25],
+      ['opposition', is25],
+      ['newTenancyDate', is26],
+      ['proposedTerms', is26],
+      ['landlordResponse', is26],
+      ['proposedProperty', is26],
       ['landlordProposedTerms', isForm1]
     ];
     for (const [name, required] of fieldRequired) {
@@ -754,7 +858,10 @@ function initBusinessTenancyUI() {
 
   businessTab?.addEventListener('click', () => selectWorkflow('business'));
   residentialTab?.addEventListener('click', () => selectWorkflow('residential'));
-  for (const [button, workflow] of [[businessTab, 'business'], [residentialTab, 'residential']]) {
+  for (const [button, workflow] of [
+    [businessTab, 'business'],
+    [residentialTab, 'residential']
+  ]) {
     button?.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         event.preventDefault();
@@ -768,7 +875,9 @@ function initBusinessTenancyUI() {
   businessForm?.addEventListener('input', updateFields);
   businessForm?.addEventListener('submit', (event) => {
     event.preventDefault();
-    const result = validateBusinessTenancyNotice(Object.fromEntries(new FormData(businessForm).entries()));
+    const result = validateBusinessTenancyNotice(
+      Object.fromEntries(new FormData(businessForm).entries())
+    );
     const heading = document.createElement('p');
     heading.textContent = result.valid
       ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
@@ -787,7 +896,8 @@ function initBusinessTenancyUI() {
   businessForm?.addEventListener('reset', () => {
     queueMicrotask(() => {
       updateFields();
-      if (businessResult) businessResult.textContent = 'Complete the form to see date and completeness checks.';
+      if (businessResult)
+        businessResult.textContent = 'Complete the form to see date and completeness checks.';
       if (businessStatus) businessStatus.textContent = 'Business tenancy form cleared.';
     });
   });

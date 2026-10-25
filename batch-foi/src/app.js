@@ -155,6 +155,7 @@ function parseBatchFOI(value) {
   }
 }
 
+
 // ===== ../../shared/deadlines/index.mjs =====
 /**
  * Deadline calculation engine for UK public-law, complaint, and tribunal time limits.
@@ -162,6 +163,7 @@ function parseBatchFOI(value) {
  * Bank holidays sourced from data/generated/bank-holidays.json (ingested from GOV.UK).
  * Law-change scheduling: rules carry valid_from/valid_until for automatic transitions.
  */
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..', '..');
@@ -281,7 +283,7 @@ const LAW_CHANGE_RULES = [
     day_type: 'calendar',
     valid_from: '2026-10-01',
     conservative_note:
-      'New 6-month limit under ERA 2025. Wrongful dismissal claims retain the 3-month limit. This rule is provisional pending the commencement SI.',
+      'New 6-month limit under ERA 2025 for most claims with a relevant date on or after 1 October 2026. Transitional and claim-specific exceptions apply; verify the claim type, jurisdiction and current guidance.',
     explanation:
       'Employment Rights Act 2025 extends the unfair dismissal time limit from 3 months to 6 months for most claim types.',
     provisional: true
@@ -415,12 +417,12 @@ function removeUndefined(obj) {
 }
 
 function calculateETDeadline(effectiveDateOfTermination, earlyConciliationDays = 0) {
-  const todayStr = toLocalDateString(new Date());
-  const sixMonthRule = LAW_CHANGE_RULES.find((r) => r.id === 'et-claim-limit-6m');
-  const useSixMonth = sixMonthRule && todayStr >= sixMonthRule.valid_from;
-
   const date = parseLocalDate(effectiveDateOfTermination);
   if (!date) return null;
+
+  const sixMonthRule = LAW_CHANGE_RULES.find((r) => r.id === 'et-claim-limit-6m');
+  const relevantDate = toLocalDateString(date);
+  const useSixMonth = sixMonthRule && relevantDate >= sixMonthRule.valid_from;
 
   const months = useSixMonth ? 6 : 3;
   const deadline = addMonthsCorresponding(date, months);
@@ -486,6 +488,7 @@ function buildICS(title, dateStr, description = '') {
   ].join('\r\n');
 }
 
+
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -501,7 +504,9 @@ function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
 
+
 // ===== src/tracker.js (imports resolved) =====
+
 
 function calculateDaysRemaining(sentDate, today = new Date()) {
   if (!sentDate) return null;
@@ -608,6 +613,7 @@ export {
   renderBatches,
   formatDateForDisplay
 };
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

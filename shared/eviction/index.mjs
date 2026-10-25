@@ -242,7 +242,9 @@ function addCalendarMonths(dateString, months) {
   if (!date) return null;
   const day = date.getUTCDate();
   const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
-  const lastDay = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+  const lastDay = new Date(
+    Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)
+  ).getUTCDate();
   target.setUTCDate(Math.min(day, lastDay));
   return toLocalDateString(target);
 }
@@ -283,11 +285,15 @@ export function validateSection21(data) {
   }
 
   if (!data.proceedingsIssuedDate) {
-    errors.push('For a pre-1 May 2026 Section 21 notice, confirm whether court proceedings were issued by 31 July 2026.');
+    errors.push(
+      'For a pre-1 May 2026 Section 21 notice, confirm whether court proceedings were issued by 31 July 2026.'
+    );
   } else if (data.proceedingsIssuedDate > SECTION_21_COURT_DEADLINE) {
     errors.push('A Section 21 possession claim could not be started after 31 July 2026.');
   } else if (data.possessionDate && data.proceedingsIssuedDate < data.possessionDate) {
-    errors.push('The Section 21 possession claim date is earlier than the date stated in the notice. Check the court record and notice.');
+    errors.push(
+      'The Section 21 possession claim date is earlier than the date stated in the notice. Check the court record and notice.'
+    );
   }
 
   if (!data.possessionDate) {
@@ -295,7 +301,9 @@ export function validateSection21(data) {
   } else {
     const earliestAfterNotice = addCalendarMonths(data.noticeServedDate, 2);
     if (earliestAfterNotice && data.possessionDate < earliestAfterNotice) {
-      errors.push(`The Section 21 notice period must be at least 2 calendar months. The earliest date based on service is ${earliestAfterNotice}.`);
+      errors.push(
+        `The Section 21 notice period must be at least 2 calendar months. The earliest date based on service is ${earliestAfterNotice}.`
+      );
     }
   }
   if (!data.prescribedForm) errors.push('Prescribed form (Form 6A) must be served with the notice');
@@ -335,14 +343,22 @@ export function validateSection8(data) {
     errors.push('Service method is required (personal or first/second class post)');
   }
   const noticeDate = parseLocalDate(data.noticeServedDate);
-  const expectedForm = noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 'form3a' : 'form3';
+  const expectedForm =
+    noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 'form3a' : 'form3';
   if (data.noticeForm !== expectedForm) {
-    errors.push(`Check that the correct notice form was used for the service date: ${expectedForm === 'form3a' ? 'Form 3A (or substantially similar form)' : 'the pre-1 May 2026 Form 3'}.`);
+    errors.push(
+      `Check that the correct notice form was used for the service date: ${expectedForm === 'form3a' ? 'Form 3A (or substantially similar form)' : 'the pre-1 May 2026 Form 3'}.`
+    );
   }
   const needsPossessionDate = data.ground !== 'ground14';
   if (needsPossessionDate && !data.possessionDate) {
     errors.push('The date the notice requires possession is required to check the notice period.');
-  } else if (needsPossessionDate && noticeDate && data.possessionDate && !['rra-ground-landlord-sale', 'rra-ground-landlord-move-in'].includes(data.ground)) {
+  } else if (
+    needsPossessionDate &&
+    noticeDate &&
+    data.possessionDate &&
+    !['rra-ground-landlord-sale', 'rra-ground-landlord-move-in'].includes(data.ground)
+  ) {
     const isPostCommencement = noticeDate >= parseLocalDate(RRA_COMMENCEMENT);
     const minimumNoticeDays = isPostCommencement
       ? ground.noticeDays
@@ -351,14 +367,18 @@ export function validateSection8(data) {
         : ground.noticeDays;
     const allowedDays = daysBetween(data.noticeServedDate, data.possessionDate);
     if (Number.isFinite(allowedDays) && allowedDays < minimumNoticeDays) {
-      errors.push(`${ground.id} requires at least ${minimumNoticeDays} days' notice for this service date. Only ${allowedDays} days are allowed.`);
+      errors.push(
+        `${ground.id} requires at least ${minimumNoticeDays} days' notice for this service date. Only ${allowedDays} days are allowed.`
+      );
     }
   }
 
   // RRA ground: serious arrears (3+ months)
   if (data.ground === 'rra-ground-serious-arrears') {
     if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
-      errors.push('The revised Ground 8 threshold applies to notices served on or after 1 May 2026.');
+      errors.push(
+        'The revised Ground 8 threshold applies to notices served on or after 1 May 2026.'
+      );
     }
     if (!data.rentArrearsMonthsAtNotice || data.rentArrearsMonthsAtNotice < 3) {
       errors.push(
@@ -366,7 +386,9 @@ export function validateSection8(data) {
       );
     }
     if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
-      errors.push('Ground 8 also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.');
+      errors.push(
+        'Ground 8 also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.'
+      );
     }
     return { valid: errors.length === 0, errors };
   }
@@ -374,7 +396,9 @@ export function validateSection8(data) {
   // RRA grounds: landlord sale or move-in
   if (data.ground === 'rra-ground-landlord-sale' || data.ground === 'rra-ground-landlord-move-in') {
     if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
-      errors.push('Grounds 1 and 1A under the revised law apply to notices served on or after 1 May 2026.');
+      errors.push(
+        'Grounds 1 and 1A under the revised law apply to notices served on or after 1 May 2026.'
+      );
     }
     if (!data.landlordIntentionEvidence) {
       errors.push(
@@ -385,17 +409,23 @@ export function validateSection8(data) {
       errors.push('Tenancy start date is required to check the 12-month protected period.');
     }
     if (!data.possessionDate) {
-      errors.push('Intended possession date is required to check notice timing and the 12-month protected period.');
+      errors.push(
+        'Intended possession date is required to check notice timing and the 12-month protected period.'
+      );
     } else if (data.tenancyStartDate) {
       const earliestPossession = new Date(`${data.tenancyStartDate}T00:00:00Z`);
       earliestPossession.setUTCFullYear(earliestPossession.getUTCFullYear() + 1);
       const earliestDate = toLocalDateString(earliestPossession);
       if (data.possessionDate < earliestDate) {
-        errors.push(`For Ground 1 or 1A, possession cannot be required before the tenancy's first anniversary (${earliestDate}).`);
+        errors.push(
+          `For Ground 1 or 1A, possession cannot be required before the tenancy's first anniversary (${earliestDate}).`
+        );
       }
       const earliestAfterNotice = addCalendarMonths(data.noticeServedDate, 4);
       if (earliestAfterNotice && data.possessionDate < earliestAfterNotice) {
-        errors.push(`Ground 1 and 1A require at least 4 calendar months' notice. The earliest date based on service is ${earliestAfterNotice}.`);
+        errors.push(
+          `Ground 1 and 1A require at least 4 calendar months' notice. The earliest date based on service is ${earliestAfterNotice}.`
+        );
       }
     }
     return { valid: errors.length === 0, errors };
@@ -403,15 +433,26 @@ export function validateSection8(data) {
 
   // Pre-RRA grounds
   if (data.ground === 'ground8' || data.ground === 'ground10') {
-    const threshold = data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 3 : data.ground === 'ground8' ? 2 : 0;
-    if (data.rentArrearsMonths === undefined || data.rentArrearsMonths < threshold || (data.ground === 'ground10' && data.rentArrearsMonths <= 0)) {
+    const threshold =
+      data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)
+        ? 3
+        : data.ground === 'ground8'
+          ? 2
+          : 0;
+    if (
+      data.rentArrearsMonths === undefined ||
+      data.rentArrearsMonths < threshold ||
+      (data.ground === 'ground10' && data.rentArrearsMonths <= 0)
+    ) {
       errors.push(
         `${ground.id} requires at least ${threshold} month(s) of rent arrears at time of notice`
       );
     }
     if (data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)) {
       if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
-        errors.push('Ground 8 under the revised law also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.');
+        errors.push(
+          'Ground 8 under the revised law also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.'
+        );
       }
     }
   }

@@ -42,7 +42,11 @@ test('getNoticeTypes returns all 9 notice types', () => {
 test('form exposes every notice type and conditional RRA evidence field', () => {
   const html = readFileSync(fileURLToPath(new URL('../index.html', import.meta.url)), 'utf8');
   for (const notice of getNoticeTypes()) {
-    assert.match(html, new RegExp(`<option value="${notice.id}">`), `${notice.id} is missing from the form`);
+    assert.match(
+      html,
+      new RegExp(`<option value="${notice.id}">`),
+      `${notice.id} is missing from the form`
+    );
   }
   assert.match(html, /name="landlordIntentionEvidence"/);
   assert.match(html, /name="rentArrearsMonthsAtHearing"/);
@@ -54,16 +58,19 @@ test('form exposes every notice type and conditional RRA evidence field', () => 
 });
 
 test('form mapping passes landlord evidence, tenancy and both arrears snapshots', () => {
-  const mapped = toSection8ValidationData({
-    noticeServedDate: '2026-06-01',
-    noticeForm: 'form3a',
-    possessionDate: '2027-01-01',
-    tenancyStartDate: '2025-01-01',
-    serviceMethod: 'personal',
-    rentArrearsMonths: '3',
-    rentArrearsMonthsAtHearing: '3.5',
-    landlordIntentionEvidence: 'Instructed estate agent'
-  }, 'rra-ground-landlord-sale');
+  const mapped = toSection8ValidationData(
+    {
+      noticeServedDate: '2026-06-01',
+      noticeForm: 'form3a',
+      possessionDate: '2027-01-01',
+      tenancyStartDate: '2025-01-01',
+      serviceMethod: 'personal',
+      rentArrearsMonths: '3',
+      rentArrearsMonthsAtHearing: '3.5',
+      landlordIntentionEvidence: 'Instructed estate agent'
+    },
+    'rra-ground-landlord-sale'
+  );
   assert.equal(mapped.ground, 'rra-ground-landlord-sale');
   assert.equal(mapped.noticeForm, 'form3a');
   assert.equal(mapped.landlordIntentionEvidence, 'Instructed estate agent');
@@ -135,7 +142,14 @@ test('validateSection21 valid pre-abolition notice returns no errors', () => {
 });
 
 test('Section 21 transition permits only pre-abolition notices with proceedings issued by 31 July', () => {
-  const base = { noticeServedDate: '2026-04-30', possessionDate: '2026-06-30', prescribedForm: true, depositProtected: true, epcProvided: true, gasSafetyCertificate: true };
+  const base = {
+    noticeServedDate: '2026-04-30',
+    possessionDate: '2026-06-30',
+    prescribedForm: true,
+    depositProtected: true,
+    epcProvided: true,
+    gasSafetyCertificate: true
+  };
   assert.equal(validateSection21({ ...base, proceedingsIssuedDate: '2026-07-31' }).valid, true);
   const late = validateSection21({ ...base, proceedingsIssuedDate: '2026-08-01' });
   assert.equal(late.valid, false);

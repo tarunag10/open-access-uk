@@ -9,7 +9,10 @@ import {
   serializeEviction,
   parseEviction
 } from '../../shared/eviction/index.mjs';
-import { BUSINESS_TENANCY_SOURCES, validateBusinessTenancyNotice } from '../../shared/eviction/business-tenancy.mjs';
+import {
+  BUSINESS_TENANCY_SOURCES,
+  validateBusinessTenancyNotice
+} from '../../shared/eviction/business-tenancy.mjs';
 
 const DEPOSIT_SCHEMES = [
   { value: 'dps', label: 'Deposit Protection Service (DPS)' },
@@ -79,15 +82,21 @@ function initBusinessTenancyUI() {
     const is25 = type === 'section25';
     const is26 = type === 'section26';
     const opposition = businessForm?.elements.namedItem('opposition')?.value === 'opposed';
-    const responseOpposes = businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
+    const responseOpposes =
+      businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
     const isForm1 = is25 && businessForm?.elements.namedItem('noticeForm')?.value === 'form1';
     if (section25Fields) section25Fields.hidden = !is25;
     if (section26Fields) section26Fields.hidden = !is26;
     if (form1Fields) form1Fields.hidden = !isForm1;
-    if (oppositionFields) oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
+    if (oppositionFields)
+      oppositionFields.hidden = !(is25 && opposition) && !(is26 && responseOpposes);
     const fieldRequired = [
-      ['terminationDate', is25], ['opposition', is25], ['newTenancyDate', is26],
-      ['proposedTerms', is26], ['landlordResponse', is26], ['proposedProperty', is26],
+      ['terminationDate', is25],
+      ['opposition', is25],
+      ['newTenancyDate', is26],
+      ['proposedTerms', is26],
+      ['landlordResponse', is26],
+      ['proposedProperty', is26],
       ['landlordProposedTerms', isForm1]
     ];
     for (const [name, required] of fieldRequired) {
@@ -98,7 +107,10 @@ function initBusinessTenancyUI() {
 
   businessTab?.addEventListener('click', () => selectWorkflow('business'));
   residentialTab?.addEventListener('click', () => selectWorkflow('residential'));
-  for (const [button, workflow] of [[businessTab, 'business'], [residentialTab, 'residential']]) {
+  for (const [button, workflow] of [
+    [businessTab, 'business'],
+    [residentialTab, 'residential']
+  ]) {
     button?.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         event.preventDefault();
@@ -112,7 +124,9 @@ function initBusinessTenancyUI() {
   businessForm?.addEventListener('input', updateFields);
   businessForm?.addEventListener('submit', (event) => {
     event.preventDefault();
-    const result = validateBusinessTenancyNotice(Object.fromEntries(new FormData(businessForm).entries()));
+    const result = validateBusinessTenancyNotice(
+      Object.fromEntries(new FormData(businessForm).entries())
+    );
     const heading = document.createElement('p');
     heading.textContent = result.valid
       ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
@@ -131,7 +145,8 @@ function initBusinessTenancyUI() {
   businessForm?.addEventListener('reset', () => {
     queueMicrotask(() => {
       updateFields();
-      if (businessResult) businessResult.textContent = 'Complete the form to see date and completeness checks.';
+      if (businessResult)
+        businessResult.textContent = 'Complete the form to see date and completeness checks.';
       if (businessStatus) businessStatus.textContent = 'Business tenancy form cleared.';
     });
   });

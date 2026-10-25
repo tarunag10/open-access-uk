@@ -28,7 +28,6 @@ Legal/civic suite; shared contracts, accessible UI, source freshness, and CI.
 
 Global coordination: [portfolio-global-plan.md](https://github.com/tarunag10/ai-switchboard/blob/main/docs/portfolio-global-plan.md)
 
-
 ## Eviction notice validator reconstruction — 25 October 2026
 
 Implemented in the shared eviction module and regenerated browser bundle:
@@ -63,6 +62,6 @@ Automated evidence covers Section 25 unopposed/opposed Form 1/Form 2 paths, Sect
 
 ## Employment Tribunal deadline transition verification — 25 October 2026
 
-The first CI run after the eviction/business-tenancy push exposed a stale shared deadline calculation: it selected the six-month period from the current date rather than the relevant event date. Updated the selection to follow the event date and added 30 September/1 October 2026 boundary tests. This preserves the three-month period for relevant dates before commencement and applies the general six-month change from 1 October 2026; claim-specific and jurisdictional exceptions still need checking.
+The first CI run after the eviction/business-tenancy push exposed a stale shared deadline calculation: it selected the six-month period from the current date rather than the relevant event date. Updated the selection to follow the event date, kept the Employment Tribunal helper browser-safe and self-contained, and added 30 September/1 October 2026 boundary tests. This preserves the three-month period for relevant dates before commencement and applies the general six-month change from 1 October 2026; claim-specific and jurisdictional exceptions still need checking.
 
 Source: [Employment Rights Act 2025 (Commencement No. 5) Regulations 2026](https://www.legislation.gov.uk/uksi/2026/954/made/data.html), regulation 3 brings section 152 and Schedule 12 into force on 1 October 2026, and regulation 4 sets the transition for relevant dates before that date. See also the [GOV.UK implementation timeline](https://www.gov.uk/government/publications/implementing-the-plan-to-make-work-pay-and-employment-rights-act/plan-to-make-work-pay-and-employment-rights-act-timeline-update).

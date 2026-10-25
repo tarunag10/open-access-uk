@@ -301,6 +301,7 @@ function parseOmbudsman(value) {
 const serializeOmbudsmanOutcomes = serializeOmbudsman;
 const parseOmbudsmanOutcomes = parseOmbudsman;
 
+
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -315,6 +316,7 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
+
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -437,6 +439,7 @@ export {
   renderOutcomeResults,
   escapeHtml
 };
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

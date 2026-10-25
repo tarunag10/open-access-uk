@@ -55,6 +55,11 @@ test('getACASDeadline returns 3 months minus 1 day from dismissal', () => {
   assert.equal(deadline.months, 3);
 });
 
+test('getACASDeadline applies the six-month rule by relevant-date boundary', () => {
+  assert.equal(getACASDeadline('2026-09-30').targetDate, '2026-12-29');
+  assert.equal(getACASDeadline('2026-10-01').targetDate, '2027-03-31');
+});
+
 test('getACASDeadline handles year boundary', () => {
   const deadline = getACASDeadline('2025-12-15');
   assert.equal(deadline.targetDate, '2026-03-14');

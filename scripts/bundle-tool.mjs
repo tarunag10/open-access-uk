@@ -94,7 +94,7 @@ function bundleApp(toolDir) {
   // 3. Extract app logic: everything after the inlined shared/tracker section
   //    The marker is typically "// ===== App logic =====" or the first section after tracker.js
   //    Look for the first line that isn't a comment or whitespace after the inlined section
-  const appLogicStart = currentApp.search(/\n\/\/ ===== (?:App logic|Theme init)/);
+  const appLogicStart = currentApp.search(/\n\/\/ ===== (?:App logic|Theme init|src\/app\.js)/);
   const appLogic = appLogicStart >= 0 ? currentApp.slice(appLogicStart + 1) : currentApp;
 
   // 4. Build the banner and assemble

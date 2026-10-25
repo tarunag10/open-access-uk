@@ -144,6 +144,7 @@ function parseComplaints(value) {
   }
 }
 
+
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -158,6 +159,7 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
+
 
 // ===== src/tracker.js (imports resolved) =====
 
@@ -338,6 +340,7 @@ export {
   serializeComplaints,
   parseComplaints
 };
+
 
 // ===== Theme init =====
 function initTheme(toggleSelector = '#theme-toggle') {

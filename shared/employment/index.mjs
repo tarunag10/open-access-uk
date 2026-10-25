@@ -1,5 +1,3 @@
-import { calculateETDeadline } from '../deadlines/index.mjs';
-
 const CLAIM_TYPES = [
   {
     id: 'unfair-dismissal',
@@ -73,7 +71,32 @@ export function getClaimTypes() {
  * may last up to 12 weeks and pauses the statutory time limit.
  */
 export function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
-  return calculateETDeadline(dismissalDate, earlyConciliationDays);
+  const date = parseLocalDate(dismissalDate);
+  if (!date) return null;
+
+  // The statutory transition turns on the relevant event date, not today's date.
+  // The six-month period applies to most claim types from 1 October 2026; check
+  // claim-specific and jurisdictional exceptions separately.
+  const months = dismissalDate >= '2026-10-01' ? 6 : 3;
+  const day = date.getUTCDate();
+  const targetMonth = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
+  const lastDay = new Date(
+    Date.UTC(targetMonth.getUTCFullYear(), targetMonth.getUTCMonth() + 1, 0)
+  ).getUTCDate();
+  targetMonth.setUTCDate(Math.min(day, lastDay) - 1);
+  if (earlyConciliationDays > 0) {
+    targetMonth.setUTCDate(targetMonth.getUTCDate() + Number(earlyConciliationDays));
+  }
+
+  return {
+    targetDate: toLocalDateString(targetMonth),
+    months,
+    earlyConciliationDays,
+    note:
+      months === 6
+        ? 'Six-month time limit for most claims from 1 October 2026; confirm claim-specific and jurisdictional exceptions.'
+        : 'Three months less one day from the effective date of termination. ACAS Early Conciliation pauses the clock.'
+  };
 }
 
 export function getET1Deadline(acasCertDate) {
