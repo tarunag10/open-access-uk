@@ -70,14 +70,15 @@ export function getClaimTypes() {
  * with optional early conciliation clock-stop. Since 1 Dec 2025, early conciliation
  * may last up to 12 weeks and pauses the statutory time limit.
  */
-export function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
+export function getACASDeadline(dismissalDate, earlyConciliationDays = 0, claimType = null) {
   const date = parseLocalDate(dismissalDate);
   if (!date) return null;
 
   // The statutory transition turns on the relevant event date, not today's date.
   // The six-month period applies to most claim types from 1 October 2026; check
   // claim-specific and jurisdictional exceptions separately.
-  const months = dismissalDate >= '2026-10-01' ? 6 : 3;
+  const legacyMonths = CLAIM_TYPES.find((claim) => claim.id === claimType)?.deadlineMonths || 3;
+  const months = dismissalDate >= '2026-10-01' ? 6 : legacyMonths;
   const day = date.getUTCDate();
   const targetMonth = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
   const lastDay = new Date(
@@ -99,6 +100,28 @@ export function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
   };
 }
 
+export function formatDateForDisplay(value) {
+  const date = parseLocalDate(value);
+  if (!date) return '';
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'
+  }).format(date);
+}
+
+export function getCompletedServiceYears(startDate, endDate) {
+  const start = parseLocalDate(startDate);
+  const end = parseLocalDate(endDate);
+  if (!start || !end || end < start) return null;
+  let years = end.getUTCFullYear() - start.getUTCFullYear();
+  const anniversary = new Date(Date.UTC(
+    start.getUTCFullYear() + years, start.getUTCMonth(), start.getUTCDate()
+  ));
+  // For a 29 February start, the anniversary is treated as 28 February in non-leap years.
+  if (anniversary.getUTCMonth() !== start.getUTCMonth()) anniversary.setUTCDate(0);
+  if (end < anniversary) years--;
+  return Math.max(0, years);
+}
+
 export function getET1Deadline(acasCertDate) {
   const date = parseLocalDate(acasCertDate);
   if (!date) return null;
@@ -107,16 +130,30 @@ export function getET1Deadline(acasCertDate) {
 }
 
 export function getRemedyCalculator(data) {
-  const age = Number(data?.age) || 0;
-  const yearsOfService = Math.min(Number(data?.yearsOfService) || 0, 20);
-  const weeklyPay = Number(data?.weeklyPay) || 0;
-  const compensatory = Number(data?.compensatory) || 0;
-  const basicAward = age * yearsOfService * weeklyPay;
-  const compensatoryAward = compensatory;
+  const age = Number(data?.ageAtDismissal);
+  const yearsOfService = Number(data?.yearsOfService);
+  const weeklyPay = Number(data?.weeklyPay);
+  const dismissalDate = parseLocalDate(data?.dismissalDate);
+  if (!Number.isInteger(age) || age < 16 || age > 120 ||
+      !Number.isFinite(yearsOfService) || yearsOfService < 0 ||
+      !Number.isFinite(weeklyPay) || weeklyPay < 0 || !dismissalDate ||
+      data.dismissalDate < '2025-04-06') {
+    return { basicAward: null, compensatoryAward: null, total: null };
+  }
+  const cappedYears = Math.min(Math.floor(yearsOfService), 20);
+  const weeklyPayLimit = data.dismissalDate >= '2026-04-06' ? 751 : 719;
+  const cappedWeeklyPay = Math.min(weeklyPay, weeklyPayLimit);
+  let weeks = 0;
+  for (let year = 0; year < cappedYears; year++) {
+    const ageForYear = age - year;
+    weeks += ageForYear >= 41 ? 1.5 : ageForYear >= 22 ? 1 : 0.5;
+  }
+  const basicAward = Math.round(weeks * cappedWeeklyPay * 100) / 100;
+  const compensatoryAward = null;
   return {
     basicAward,
     compensatoryAward,
-    total: basicAward + compensatoryAward
+    total: null
   };
 }
 

@@ -88,45 +88,51 @@ test('getET1Deadline returns null for invalid date', () => {
   assert.equal(getET1Deadline('not-a-date'), null);
 });
 
-test('getRemedyCalculator calculates basic award', () => {
+test('getRemedyCalculator applies statutory age bands and capped weekly pay', () => {
   const result = getRemedyCalculator({
-    age: 40,
+    ageAtDismissal: 42,
     yearsOfService: 10,
-    weeklyPay: 500,
-    compensatory: 10000
+    weeklyPay: 900,
+    dismissalDate: '2026-10-01'
   });
   assert.equal(typeof result, 'object');
-  assert.equal(result.basicAward, 10 * 40 * 500);
-  assert.equal(result.compensatoryAward, 10000);
-  assert.equal(result.total, result.basicAward + result.compensatoryAward);
+  assert.equal(result.basicAward, 8261);
+  assert.equal(result.compensatoryAward, null);
+  assert.equal(result.total, null);
 });
 
-test('getRemedyCalculator caps basic award years at 20', () => {
+test('getRemedyCalculator caps basic award service at 20 years', () => {
   const result = getRemedyCalculator({
-    age: 50,
+    ageAtDismissal: 60,
     yearsOfService: 25,
-    weeklyPay: 400,
-    compensatory: 0
+    weeklyPay: 900,
+    dismissalDate: '2026-10-01'
   });
-  assert.equal(result.basicAward, 50 * 20 * 400);
+  assert.equal(result.basicAward, 22530);
 });
 
-test('getRemedyCalculator handles zero compensatory', () => {
+test('getRemedyCalculator never calculates compensatory damages from a single input', () => {
   const result = getRemedyCalculator({
-    age: 35,
+    ageAtDismissal: 35,
     yearsOfService: 5,
     weeklyPay: 600,
-    compensatory: 0
+    dismissalDate: '2026-10-01',
+    compensatory: 50000
   });
-  assert.equal(result.compensatoryAward, 0);
-  assert.equal(result.total, result.basicAward);
+  assert.equal(result.compensatoryAward, null);
+  assert.equal(result.total, null);
 });
 
-test('getRemedyCalculator defaults missing fields', () => {
+test('getRemedyCalculator returns no estimate if required facts are missing', () => {
   const result = getRemedyCalculator({});
-  assert.equal(result.basicAward, 0);
-  assert.equal(result.compensatoryAward, 0);
-  assert.equal(result.total, 0);
+  assert.equal(result.basicAward, null);
+});
+
+test('getRemedyCalculator withholds estimate when historical pay cap is not covered', () => {
+  const result = getRemedyCalculator({
+    ageAtDismissal: 45, yearsOfService: 2, weeklyPay: 500, dismissalDate: '2025-04-05'
+  });
+  assert.equal(result.basicAward, null);
 });
 
 test('generateET1Text generates ET1 claim text with all fields', () => {

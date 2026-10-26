@@ -74,14 +74,15 @@ function getClaimTypes() {
  * with optional early conciliation clock-stop. Since 1 Dec 2025, early conciliation
  * may last up to 12 weeks and pauses the statutory time limit.
  */
-function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
+function getACASDeadline(dismissalDate, earlyConciliationDays = 0, claimType = null) {
   const date = parseLocalDate(dismissalDate);
   if (!date) return null;
 
   // The statutory transition turns on the relevant event date, not today's date.
   // The six-month period applies to most claim types from 1 October 2026; check
   // claim-specific and jurisdictional exceptions separately.
-  const months = dismissalDate >= '2026-10-01' ? 6 : 3;
+  const legacyMonths = CLAIM_TYPES.find((claim) => claim.id === claimType)?.deadlineMonths || 3;
+  const months = dismissalDate >= '2026-10-01' ? 6 : legacyMonths;
   const day = date.getUTCDate();
   const targetMonth = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
   const lastDay = new Date(
@@ -103,6 +104,28 @@ function getACASDeadline(dismissalDate, earlyConciliationDays = 0) {
   };
 }
 
+function formatDateForDisplay(value) {
+  const date = parseLocalDate(value);
+  if (!date) return '';
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'
+  }).format(date);
+}
+
+function getCompletedServiceYears(startDate, endDate) {
+  const start = parseLocalDate(startDate);
+  const end = parseLocalDate(endDate);
+  if (!start || !end || end < start) return null;
+  let years = end.getUTCFullYear() - start.getUTCFullYear();
+  const anniversary = new Date(Date.UTC(
+    start.getUTCFullYear() + years, start.getUTCMonth(), start.getUTCDate()
+  ));
+  // For a 29 February start, the anniversary is treated as 28 February in non-leap years.
+  if (anniversary.getUTCMonth() !== start.getUTCMonth()) anniversary.setUTCDate(0);
+  if (end < anniversary) years--;
+  return Math.max(0, years);
+}
+
 function getET1Deadline(acasCertDate) {
   const date = parseLocalDate(acasCertDate);
   if (!date) return null;
@@ -111,16 +134,30 @@ function getET1Deadline(acasCertDate) {
 }
 
 function getRemedyCalculator(data) {
-  const age = Number(data?.age) || 0;
-  const yearsOfService = Math.min(Number(data?.yearsOfService) || 0, 20);
-  const weeklyPay = Number(data?.weeklyPay) || 0;
-  const compensatory = Number(data?.compensatory) || 0;
-  const basicAward = age * yearsOfService * weeklyPay;
-  const compensatoryAward = compensatory;
+  const age = Number(data?.ageAtDismissal);
+  const yearsOfService = Number(data?.yearsOfService);
+  const weeklyPay = Number(data?.weeklyPay);
+  const dismissalDate = parseLocalDate(data?.dismissalDate);
+  if (!Number.isInteger(age) || age < 16 || age > 120 ||
+      !Number.isFinite(yearsOfService) || yearsOfService < 0 ||
+      !Number.isFinite(weeklyPay) || weeklyPay < 0 || !dismissalDate ||
+      data.dismissalDate < '2025-04-06') {
+    return { basicAward: null, compensatoryAward: null, total: null };
+  }
+  const cappedYears = Math.min(Math.floor(yearsOfService), 20);
+  const weeklyPayLimit = data.dismissalDate >= '2026-04-06' ? 751 : 719;
+  const cappedWeeklyPay = Math.min(weeklyPay, weeklyPayLimit);
+  let weeks = 0;
+  for (let year = 0; year < cappedYears; year++) {
+    const ageForYear = age - year;
+    weeks += ageForYear >= 41 ? 1.5 : ageForYear >= 22 ? 1 : 0.5;
+  }
+  const basicAward = Math.round(weeks * cappedWeeklyPay * 100) / 100;
+  const compensatoryAward = null;
   return {
     basicAward,
     compensatoryAward,
-    total: basicAward + compensatoryAward
+    total: null
   };
 }
 
@@ -227,15 +264,15 @@ function renderClaimCard(claim) {
   const claimType = claimTypes.find((c) => c.id === claim.claimType);
   const typeName = claimType ? claimType.name : claim.claimType || 'Unknown';
 
-  const acasDeadline = getACASDeadline(claim.dismissalDate);
+  const acasDeadline = getACASDeadline(claim.dismissalDate, 0, claim.claimType);
   const et1Deadline = claim.acasCertDate ? getET1Deadline(claim.acasCertDate) : null;
 
   let deadlineText = 'Add a dismissal date to see ACAS deadline.';
   if (acasDeadline) {
-    deadlineText = `ACAS deadline: ${acasDeadline}`;
+    deadlineText = `ACAS deadline: ${formatDateForDisplay(acasDeadline.targetDate)}`;
   }
   if (et1Deadline) {
-    deadlineText += ` | ET1 deadline: ${et1Deadline}`;
+    deadlineText += ` | ET1 deadline: ${formatDateForDisplay(et1Deadline)}`;
   }
 
   return `
@@ -290,6 +327,8 @@ export {
   getClaimTypes,
   getACASDeadline,
   getET1Deadline,
+  formatDateForDisplay,
+  getCompletedServiceYears,
   getRemedyCalculator,
   generateET1Text,
   generateACASText,
@@ -394,7 +433,7 @@ function renderSummary(claims) {
         const label = document.createElement('span');
         label.textContent = ct.name;
         const value = document.createElement('span');
-        value.textContent = `${ct.deadlineMonths} months`;
+        value.textContent = 'Claim-specific';
         row.append(label, value);
         return row;
       })
@@ -430,15 +469,20 @@ function renderDetail(claim) {
   const claimType = CLAIM_TYPES.find((c) => c.id === claim.claimType);
   const typeName = claimType ? claimType.name : claim.claimType || 'Unknown';
 
-  const acasDeadline = getACASDeadline(claim.dismissalDate);
+  const acasDeadline = getACASDeadline(claim.dismissalDate, 0, claim.claimType);
   const et1Deadline = claim.acasCertDate ? getET1Deadline(claim.acasCertDate) : null;
 
   const remedy = getRemedyCalculator({
-    age: claim.age || 0,
-    yearsOfService: claim.yearsOfService || 0,
+    ageAtDismissal: claim.ageAtDismissal || '',
+    yearsOfService: getCompletedServiceYears(claim.employmentStartDate, claim.dismissalDate),
     weeklyPay: claim.weeklyPay || 0,
-    compensatory: claim.compensatory || 0
+    dismissalDate: claim.dismissalDate
   });
+  const basicAwardDisplay = claim.claimType !== 'unfair-dismissal'
+    ? 'Only relevant to an unfair dismissal claim'
+    : remedy.basicAward === null
+      ? 'Add age, start date, dismissal date and weekly pay'
+      : `£${remedy.basicAward.toLocaleString()}`;
 
   const header = document.createElement('div');
   const title = document.createElement('h2');
@@ -458,11 +502,12 @@ function renderDetail(claim) {
     ['Employment end', claim.employmentEndDate || 'Not recorded'],
     ['Dismissal date', claim.dismissalDate || 'Not recorded'],
     ['Weekly pay', claim.weeklyPay ? `£${claim.weeklyPay}` : 'Not specified'],
-    ['ACAS deadline', acasDeadline || 'Add dismissal date'],
-    ['ET1 deadline', et1Deadline || 'Complete ACAS conciliation first'],
-    ['Basic award', `£${remedy.basicAward.toLocaleString()}`],
-    ['Compensatory award', `£${remedy.compensatoryAward.toLocaleString()}`],
-    ['Total estimated remedy', `£${remedy.total.toLocaleString()}`],
+    ['ACAS deadline', acasDeadline ? formatDateForDisplay(acasDeadline.targetDate) : 'Add dismissal date'],
+    ['ET1 deadline', et1Deadline ? formatDateForDisplay(et1Deadline) : 'Complete ACAS conciliation first'],
+    ['Age at dismissal', claim.ageAtDismissal || 'Not recorded'],
+    ['Completed service', getCompletedServiceYears(claim.employmentStartDate, claim.dismissalDate) ?? 'Not available'],
+    ['Basic award estimate', basicAwardDisplay],
+    ['Compensatory award', 'Not estimated: this depends on evidenced past and future loss'],
     ['Created', new Date(claim.createdAt).toLocaleString()]
   ];
   for (const [label, value] of fields) {

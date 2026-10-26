@@ -2,6 +2,8 @@ import {
   getClaimTypes,
   getACASDeadline,
   getET1Deadline,
+  formatDateForDisplay,
+  getCompletedServiceYears,
   getRemedyCalculator,
   generateET1Text,
   generateACASText,
@@ -29,15 +31,15 @@ function renderClaimCard(claim) {
   const claimType = claimTypes.find((c) => c.id === claim.claimType);
   const typeName = claimType ? claimType.name : claim.claimType || 'Unknown';
 
-  const acasDeadline = getACASDeadline(claim.dismissalDate);
+  const acasDeadline = getACASDeadline(claim.dismissalDate, 0, claim.claimType);
   const et1Deadline = claim.acasCertDate ? getET1Deadline(claim.acasCertDate) : null;
 
   let deadlineText = 'Add a dismissal date to see ACAS deadline.';
   if (acasDeadline) {
-    deadlineText = `ACAS deadline: ${acasDeadline}`;
+    deadlineText = `ACAS deadline: ${formatDateForDisplay(acasDeadline.targetDate)}`;
   }
   if (et1Deadline) {
-    deadlineText += ` | ET1 deadline: ${et1Deadline}`;
+    deadlineText += ` | ET1 deadline: ${formatDateForDisplay(et1Deadline)}`;
   }
 
   return `
@@ -92,6 +94,8 @@ export {
   getClaimTypes,
   getACASDeadline,
   getET1Deadline,
+  formatDateForDisplay,
+  getCompletedServiceYears,
   getRemedyCalculator,
   generateET1Text,
   generateACASText,

@@ -11,6 +11,8 @@ import {
   parseEmployment,
   escapeHtml,
   renderClaimCard,
+  formatDateForDisplay,
+  getCompletedServiceYears,
   renderTimeline
 } from '../src/tracker.js';
 
@@ -33,6 +35,33 @@ test('getACASDeadline returns 3 months minus 1 day from dismissal', () => {
   assert.equal(deadline.months, 3);
 });
 
+test('claim cards render the calculated ACAS deadline date, not the deadline object', () => {
+  const html = renderClaimCard({
+    id: 'deadline-1', claimType: 'unfair-dismissal', dismissalDate: '2026-10-01'
+  });
+  assert.match(html, /ACAS deadline: 31 March 2027/);
+  assert.doesNotMatch(html, /\[object Object\]/);
+});
+
+test('October 2026 transition uses six months less one day from the event date', () => {
+  assert.equal(getACASDeadline('2026-09-30').targetDate, '2026-12-29');
+  assert.equal(getACASDeadline('2026-10-01').targetDate, '2027-03-31');
+});
+
+test('pre-transition claim types already carrying six months retain that limit', () => {
+  assert.equal(getACASDeadline('2026-09-30', 0, 'breach-of-contract').targetDate, '2027-03-29');
+});
+
+test('completed service counts full anniversaries only', () => {
+  assert.equal(getCompletedServiceYears('2020-01-15', '2026-01-14'), 5);
+  assert.equal(getCompletedServiceYears('2020-01-15', '2026-01-15'), 6);
+  assert.equal(getCompletedServiceYears('2020-02-29', '2021-02-28'), 1);
+});
+
+test('formatted dates are stable and human readable', () => {
+  assert.equal(formatDateForDisplay('2027-03-31'), '31 March 2027');
+});
+
 test('getACASDeadline returns null for invalid date', () => {
   assert.equal(getACASDeadline(''), null);
   assert.equal(getACASDeadline(null), null);
@@ -49,33 +78,44 @@ test('getET1Deadline returns null for invalid date', () => {
   assert.equal(getET1Deadline(null), null);
 });
 
-test('getRemedyCalculator calculates basic and compensatory awards', () => {
+test('getRemedyCalculator applies the 22 to 40 age band and weekly pay', () => {
   const result = getRemedyCalculator({
-    age: 40,
+    ageAtDismissal: 40,
     yearsOfService: 5,
     weeklyPay: 500,
-    compensatory: 10000
+    dismissalDate: '2026-10-01'
   });
-  assert.equal(result.basicAward, 100000);
-  assert.equal(result.compensatoryAward, 10000);
-  assert.equal(result.total, 110000);
+  assert.equal(result.basicAward, 2500);
 });
 
-test('getRemedyCalculator caps years of service at 20', () => {
+test('getRemedyCalculator uses age bands and statutory weekly-pay cap', () => {
   const result = getRemedyCalculator({
-    age: 30,
-    yearsOfService: 25,
-    weeklyPay: 400,
-    compensatory: 0
+    ageAtDismissal: 42,
+    yearsOfService: 3,
+    weeklyPay: 900,
+    dismissalDate: '2026-10-01'
   });
-  assert.equal(result.basicAward, 240000);
+  assert.equal(result.basicAward, 3004);
 });
 
-test('getRemedyCalculator handles missing/zero values', () => {
-  const result = getRemedyCalculator({});
-  assert.equal(result.basicAward, 0);
-  assert.equal(result.compensatoryAward, 0);
-  assert.equal(result.total, 0);
+test('getRemedyCalculator caps service at 20 years and does not invent compensatory totals', () => {
+  const result = getRemedyCalculator({
+    ageAtDismissal: 60, yearsOfService: 25, weeklyPay: 900, dismissalDate: '2026-10-01'
+  });
+  assert.equal(result.basicAward, 22530);
+  assert.equal(result.compensatoryAward, null);
+  assert.equal(result.total, null);
+});
+
+test('getRemedyCalculator uses the pre-April 2026 weekly pay limit', () => {
+  const result = getRemedyCalculator({
+    ageAtDismissal: 41, yearsOfService: 1, weeklyPay: 900, dismissalDate: '2026-04-05'
+  });
+  assert.equal(result.basicAward, 1078.5);
+});
+
+test('getRemedyCalculator withholds an estimate when required inputs are missing', () => {
+  assert.equal(getRemedyCalculator({}).basicAward, null);
 });
 
 test('generateET1Text includes key fields', () => {
