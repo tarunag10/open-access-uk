@@ -130,7 +130,10 @@ test('getRemedyCalculator returns no estimate if required facts are missing', ()
 
 test('getRemedyCalculator withholds estimate when historical pay cap is not covered', () => {
   const result = getRemedyCalculator({
-    ageAtDismissal: 45, yearsOfService: 2, weeklyPay: 500, dismissalDate: '2025-04-05'
+    ageAtDismissal: 45,
+    yearsOfService: 2,
+    weeklyPay: 500,
+    dismissalDate: '2025-04-05'
   });
   assert.equal(result.basicAward, null);
 });
