@@ -35,8 +35,8 @@
           <h1>Court and Tribunal Fee Calculator</h1>
           <p>
             Calculate fees for county court, employment tribunal, family court, immigration
-            tribunal, and property tribunal claims. Check Help with Fees eligibility. Everything
-            runs in your browser.
+            tribunal, and property tribunal claims. Find official Help with Fees guidance.
+            Everything runs in your browser.
           </p>
           <div class="hero-actions">
             <a class="button" href="#tool">Calculate a fee</a>
@@ -64,49 +64,31 @@
             <option value="property-tribunal">Property Tribunal</option>
           </select>
 
-          <label for="claimAmount">Claim amount (£)</label>
-          <input
-            id="claimAmount"
-            name="claimAmount"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="e.g. 5000"
-            required
-          />
-
-          <label for="applicantType">Applicant type</label>
-          <select id="applicantType" name="applicantType">
-            <option value="individual">Individual</option>
-            <option value="organisation">Organisation</option>
-          </select>
-
-          <label for="benefitsStatus">Receiving qualifying benefits?</label>
-          <select id="benefitsStatus" name="benefitsStatus">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-          </select>
-
-          <label for="monthlyIncome">Monthly income (£)</label>
-          <input
-            id="monthlyIncome"
-            name="monthlyIncome"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="e.g. 2000"
-          />
-
-          <label for="savingsAmount">Total savings (£)</label>
-          <input
-            id="savingsAmount"
-            name="savingsAmount"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="e.g. 5000"
-          />
-
+          <label for="application">Application or proceeding</label>
+          <select id="application" name="application" required></select>
+          <div id="amount-fields" hidden>
+            <label for="claimAmount">Claim amount including interest (£)</label>
+            <input
+              id="claimAmount"
+              name="claimAmount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              inputmode="decimal"
+            />
+          </div>
+          <div id="hearing-fields" hidden>
+            <label for="hearing">Include Property Tribunal hearing fee?</label>
+            <select id="hearing" name="hearing">
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+          <p>
+            Fees checked against official guidance on 27 October 2026. Select the specific
+            proceeding; separate fees and exemptions may apply. General application fees apply only
+            where no other fee is specified.
+          </p>
           <div class="actions" aria-label="Form actions">
             <button type="submit">Calculate fee</button>
             <button id="clearForm" type="button" class="secondary">Clear</button>
@@ -119,12 +101,16 @@
             <h3>Fee estimate</h3>
             <div id="fee-result" class="fee-result">
               <p class="empty-state">
-                Enter a claim amount and click Calculate to see the fee estimate.
+                Select a proceeding and click Calculate to see the fee estimate.
               </p>
             </div>
           </section>
           <section id="history" class="panel" aria-label="Calculation history">
             <h3>Recent calculations</h3>
+            <p>
+              Saved on this device. Older estimates may be inaccurate; recalculate before relying on
+              them.
+            </p>
             <div id="calc-list" class="calc-list"></div>
           </section>
         </div>
@@ -142,17 +128,37 @@
             </p>
           </article>
           <article class="card">
-            <h3>Help with fees</h3>
+            <h3>Help with Fees and exemptions</h3>
             <p>
-              If you are on a low income or receiving qualifying benefits, you may not have to pay
-              court fees. Apply using form EX160 before or at the time of filing.
+              Eligibility depends on your circumstances, the fee and the court or tribunal. This
+              calculator does not assess eligibility.
+              <a href="https://www.gov.uk/get-help-with-court-fees"
+                >Check Help with Fees on GOV.UK</a
+              >. Immigration appeals have
+              <a
+                href="https://www.gov.uk/guidance/get-help-to-pay-or-reduce-your-visa-or-immigration-appeal-fee"
+                >separate fee exemption guidance</a
+              >.
             </p>
           </article>
           <article class="card">
-            <h3>Exemptions</h3>
+            <h3>Official fee schedules</h3>
             <p>
-              Some people are automatically exempt from fees, including asylum seekers, victims of
-              domestic violence, and those receiving certain benefits.
+              <a
+                href="https://www.gov.uk/government/publications/fees-in-the-civil-and-family-courts-main-fees-ex50/civil-court-fees-ex50"
+                >Civil fees</a
+              >,
+              <a
+                href="https://www.gov.uk/government/publications/fees-in-the-civil-and-family-courts-main-fees-ex50/family-court-fees-ex50"
+                >family fees</a
+              >,
+              <a
+                href="https://www.gov.uk/government/news/court-and-tribunal-fees-updates-from-july-2026"
+                >property tribunal fees</a
+              >, and
+              <a href="https://www.gov.uk/immigration-asylum-tribunal/appeal-decision-online"
+                >immigration appeal fees</a
+              >.
             </p>
           </article>
           <article class="card">

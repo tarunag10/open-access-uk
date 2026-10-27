@@ -1,113 +1,59 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  getFeeCategories,
-  getFeeSchedules,
-  calculateFee,
-  getHelpWithFeesEligibility,
-  getExemptions,
-  generateFeeEstimate,
-  getFeeRemissionForm,
-  serializeFeesCalculator,
-  parseFeesCalculator
-} from './index.mjs';
+import { calculateFee, getHelpWithFeesEligibility } from './index.mjs';
 
-test('getFeeCategories returns all categories', () => {
-  const cats = getFeeCategories();
-  assert.ok(Array.isArray(cats));
-  assert.deepEqual(cats, [
-    'county-court',
-    'employment-tribunal',
-    'family-court',
-    'immigration-tribunal',
-    'property-tribunal'
-  ]);
+test('money claim fee bands and percentage', () => {
+  for (const [amount, fee] of [
+    [300, 35],
+    [300.01, 50],
+    [500, 50],
+    [500.01, 70],
+    [1000, 70],
+    [1000.01, 80],
+    [1500, 80],
+    [1500.01, 115],
+    [3000, 115],
+    [3000.01, 205],
+    [5000, 205],
+    [5000.01, 455],
+    [10000, 455],
+    [10000.01, 500],
+    [25000, 1250],
+    [75000, 3750],
+    [200000, 10000],
+    [200000.01, 10000]
+  ])
+    assert.equal(calculateFee('county-court', amount), fee);
+});
+test('missing and invalid amounts do not produce a fee', () => {
+  for (const amount of ['', null, undefined, -1, Infinity, 'abc'])
+    assert.equal(calculateFee('county-court', amount), null);
+});
+test('other proceedings require an identified application', () => {
+  assert.equal(calculateFee('family-court', 5000), null);
+  assert.equal(calculateFee('immigration-tribunal', 5000), null);
+  assert.equal(calculateFee('property-tribunal', 5000), null);
+});
+test('Help with Fees cannot be decided from incomplete circumstances', () => {
+  assert.equal(getHelpWithFeesEligibility('', '', true).eligible, null);
 });
 
-test('getFeeSchedules returns fees for known category', () => {
-  const fees = getFeeSchedules('county-court');
-  assert.ok(Array.isArray(fees));
-  assert.ok(fees.length > 0);
-  assert.ok(typeof fees[0].fee === 'number');
-  assert.ok(typeof fees[0].claimRange === 'string');
+test('selected application and hearing fees are specific to proceedings', async () => {
+  const { calculateSelection } = await import('./index.mjs');
+  assert.equal(calculateSelection('county-court', 'possession').total, 415);
+  assert.equal(calculateSelection('county-court', 'n244-notice').total, 321);
+  assert.equal(calculateSelection('county-court', 'n244-consent').total, 126);
+  assert.equal(calculateSelection('county-court', 'small-hearing', 300.01).total, 59);
+  assert.equal(calculateSelection('county-court', 'warrant-control').total, 96);
+  assert.equal(calculateSelection('family-court', 'divorce').total, 628);
+  assert.equal(calculateSelection('family-court', 'non-molestation').total, 0);
+  assert.equal(calculateSelection('immigration-tribunal', 'paper').total, 82);
+  assert.equal(calculateSelection('immigration-tribunal', 'hearing').total, 144);
+  assert.equal(calculateSelection('property-tribunal', 'service-charge', '', true).total, 341);
+  assert.equal(calculateSelection('property-tribunal', 'pitch', '', true).total, 23);
+  assert.equal(calculateSelection('county-court', 'money', ''), null);
 });
-
-test('getFeeSchedules returns empty array for unknown category', () => {
-  assert.deepEqual(getFeeSchedules('nonexistent'), []);
-});
-
-test('calculateFee returns correct fee for claim amount', () => {
-  assert.equal(calculateFee('county-court', 200), 35);
-  assert.equal(calculateFee('county-court', 500), 80);
-  assert.equal(calculateFee('county-court', 3000), 115);
-  assert.equal(calculateFee('county-court', 7500), 205);
-  assert.equal(calculateFee('county-court', 25000), 455);
-  assert.equal(calculateFee('county-court', 75000), 10000);
-});
-
-test('calculateFee returns 0 for employment tribunal (no fee)', () => {
-  assert.equal(calculateFee('employment-tribunal', 5000), 0);
-});
-
-test('calculateFee returns null for unknown category', () => {
-  assert.equal(calculateFee('unknown', 100), null);
-});
-
-test('calculateFee returns null for negative amount', () => {
-  assert.equal(calculateFee('county-court', -50), null);
-});
-
-test('getHelpWithFeesEligibility returns eligible for low income', () => {
-  const result = getHelpWithFeesEligibility(1000, 500, false);
-  assert.equal(result.eligible, true);
-  assert.ok(typeof result.reason === 'string');
-});
-
-test('getHelpWithFeesEligibility returns ineligible for high income', () => {
-  const result = getHelpWithFeesEligibility(50000, 10000, false);
-  assert.equal(result.eligible, false);
-});
-
-test('getHelpWithFeesEligibility returns eligible if receiving benefits', () => {
-  const result = getHelpWithFeesEligibility(30000, 10000, true);
-  assert.equal(result.eligible, true);
-});
-
-test('getExemptions returns exemption categories', () => {
-  const exemptions = getExemptions();
-  assert.ok(Array.isArray(exemptions));
-  assert.ok(exemptions.includes('domestic-violence'));
-  assert.ok(exemptions.includes('asylum'));
-  assert.ok(exemptions.includes('benefits'));
-  assert.ok(exemptions.includes('low-income'));
-});
-
-test('generateFeeEstimate returns detailed breakdown', () => {
-  const estimate = generateFeeEstimate('county-court', 5000, { hearing: true });
-  assert.ok(typeof estimate === 'object');
-  assert.ok(typeof estimate.category === 'string');
-  assert.ok(typeof estimate.claimAmount === 'number');
-  assert.ok(typeof estimate.totalFee === 'number');
-  assert.ok(Array.isArray(estimate.items));
-  assert.ok(estimate.items.length > 0);
-  assert.ok(typeof estimate.items[0].description === 'string');
-  assert.ok(typeof estimate.items[0].amount === 'number');
-});
-
-test('getFeeRemissionForm returns EX160', () => {
-  const form = getFeeRemissionForm();
-  assert.equal(form.reference, 'EX160');
-  assert.ok(typeof form.name === 'string');
-});
-
-test('serializeFeesCalculator and parseFeesCalculator roundtrip', () => {
-  const data = { category: 'county-court', amount: 5000 };
-  const serialized = serializeFeesCalculator(data);
-  assert.equal(typeof serialized, 'string');
-  const parsed = parseFeesCalculator(serialized);
-  assert.deepEqual(parsed, data);
-});
-
-test('parseFeesCalculator returns null for invalid input', () => {
-  assert.equal(parseFeesCalculator('not-json'), null);
+test('percentage fee rounds down to the penny', () => {
+  assert.equal(calculateFee('county-court', 10000.19), 500.0);
+  assert.equal(calculateFee('county-court', 10000.39), 500.01);
 });

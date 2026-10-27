@@ -2,169 +2,122 @@
 // Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs fee-calculator
 
 // ===== ../../shared/fees-calculator/index.mjs =====
-const FEE_SCHEDULES = {
+// Fees checked against HMCTS guidance on 27 October 2026.
+const OPTIONS = {
   'county-court': [
-    { claimRange: 'Up to £300', fee: 35, source: 'hmcts-county-court-fees' },
-    { claimRange: '£300.01 - £1,000', fee: 80, source: 'hmcts-county-court-fees' },
-    { claimRange: '£1,000.01 - £5,000', fee: 115, source: 'hmcts-county-court-fees' },
-    { claimRange: '£5,000.01 - £10,000', fee: 205, source: 'hmcts-county-court-fees' },
-    { claimRange: '£10,000.01 - £50,000', fee: 455, source: 'hmcts-county-court-fees' },
-    { claimRange: '£50,000.01 - £100,000', fee: 10000, source: 'hmcts-county-court-fees' }
-  ],
-  'employment-tribunal': [
-    { claimRange: 'No fee (discrimination)', fee: 0, source: 'et-fee-exemption' },
-    { claimRange: 'No fee (all claims from 2017)', fee: 0, source: 'et-fee-exemption' }
+    ['money', 'Money claim issue fee', null],
+    ['possession', 'Possession claim', 415],
+    ['n244-notice', 'General application on notice (N244, where no other fee applies)', 321],
+    [
+      'n244-consent',
+      'General application by consent or without notice (N244, where no other fee applies)',
+      126
+    ],
+    ['vary', 'Vary judgment or suspend enforcement', 16],
+    ['small-hearing', 'Small claims track hearing', null],
+    ['fast-hearing', 'Fast track hearing', 619],
+    ['multi-hearing', 'Intermediate or multi-track hearing', 1334],
+    ['warrant-control', 'Warrant of control', 96],
+    ['warrant-possession', 'Warrant of possession', 152],
+    ['warrant-delivery', 'Warrant of delivery', 152],
+    ['attachment', 'Attachment of earnings', 139],
+    ['charging', 'Charging order', 139],
+    ['third-party', 'Third-party debt order', 139],
+    ['information', 'Order to obtain information from debtor', 69]
   ],
   'family-court': [
-    { claimRange: 'Under £1,000', fee: 215, source: 'hmcts-family-court-fees' },
-    { claimRange: '£1,000 - £5,000', fee: 335, source: 'hmcts-family-court-fees' },
-    { claimRange: '£5,001 - £15,000', fee: 335, source: 'hmcts-family-court-fees' },
-    { claimRange: '£15,001 - £50,000', fee: 335, source: 'hmcts-family-court-fees' },
-    { claimRange: 'Over £50,000', fee: 335, source: 'hmcts-family-court-fees' }
+    ['divorce', 'Divorce, nullity or dissolution', 628],
+    ['separation', 'Judicial separation', 426],
+    ['financial', 'Financial order (not by consent)', 321],
+    ['consent', 'Financial order by consent', 62],
+    ['children', 'New Children Act application (specified orders)', 270],
+    ['non-molestation', 'Non-molestation order', 0],
+    ['occupation', 'Occupation order', 0]
   ],
   'immigration-tribunal': [
-    { claimRange: 'Tier 1 (Asylum)', fee: 80, source: 'hmcts-immigration-fees' },
-    { claimRange: 'Tier 2 (Immigration)', fee: 140, source: 'hmcts-immigration-fees' }
+    ['paper', 'First-tier appeal without a hearing', 82],
+    ['hearing', 'First-tier appeal with a hearing', 144]
   ],
   'property-tribunal': [
-    { claimRange: 'Under £30,000', fee: 0, source: 'property-tribunal-fee' },
-    { claimRange: '£30,000 - £100,000', fee: 0, source: 'property-tribunal-fee' },
-    { claimRange: 'Over £100,000', fee: 0, source: 'property-tribunal-fee' }
-  ]
-};
-
-const FEE_BANDS = {
-  'county-court': [
-    { min: 0, max: 300, fee: 35 },
-    { min: 300.01, max: 1000, fee: 80 },
-    { min: 1000.01, max: 5000, fee: 115 },
-    { min: 5000.01, max: 10000, fee: 205 },
-    { min: 10000.01, max: 50000, fee: 455 },
-    { min: 50000.01, max: 100000, fee: 10000 }
+    ['service-charge', 'Leasehold service charge or administration charge application', 114, 227],
+    ['enfranchisement', 'Leasehold enfranchisement application', 114, 227],
+    ['pitch', 'Mobile home pitch fee determination', 23, 0],
+    ['mobile-terms', 'Mobile homes: written statement or terms order (PH1–PH3)', 114, 227],
+    ['rent-increase', 'Appeal a rent increase', 47, 0],
+    ['electrical', 'Electrical safety standards application', 200, 300]
   ],
-  'employment-tribunal': [{ min: 0, max: Infinity, fee: 0 }],
-  'family-court': [{ min: 0, max: Infinity, fee: 335 }],
-  'immigration-tribunal': [{ min: 0, max: Infinity, fee: 140 }],
-  'property-tribunal': [{ min: 0, max: Infinity, fee: 0 }]
+  'employment-tribunal': [['claim', 'Employment tribunal claim', 0]]
 };
-
-const EXEMPTIONS = [
-  {
-    id: 'domestic-violence',
-    name: 'Domestic Violence',
-    description: 'Fee waiver for victims of domestic violence'
-  },
-  {
-    id: 'asylum',
-    name: 'Asylum Seekers',
-    description: 'Fee exemption for asylum seekers and refugees'
-  },
-  {
-    id: 'benefits',
-    name: 'Benefits Recipients',
-    description: 'Fee waiver for those receiving qualifying benefits'
-  },
-  {
-    id: 'low-income',
-    name: 'Low Income',
-    description: 'Fee reduction or waiver based on low income'
-  }
-];
-
 function getFeeCategories() {
-  return Object.keys(FEE_SCHEDULES);
+  return Object.keys(OPTIONS);
 }
-
 function getFeeSchedules(category) {
-  return FEE_SCHEDULES[category] || [];
+  return OPTIONS[category] || [];
 }
-
-function calculateFee(category, claimAmount) {
-  const amount = Number(claimAmount);
-  if (Number.isNaN(amount) || amount < 0) return null;
-
-  const bands = FEE_BANDS[category];
-  if (!bands) return null;
-
-  for (const band of bands) {
-    if (amount >= band.min && amount <= band.max) {
-      return band.fee;
-    }
-  }
-  return null;
+function validAmount(value) {
+  return (
+    value !== null &&
+    value !== undefined &&
+    String(value).trim() !== '' &&
+    Number.isFinite(Number(value)) &&
+    Number(value) > 0 &&
+    Math.abs(Math.round(Number(value) * 100) - Number(value) * 100) < 1e-7
+  );
 }
-
-function getHelpWithFeesEligibility(income, savings, benefits) {
-  const monthlyIncome = Number(income);
-  const totalSavings = Number(savings);
-  const receivingBenefits = Boolean(benefits);
-
-  if (receivingBenefits) {
-    return {
-      eligible: true,
-      reason:
-        'Eligible: receiving qualifying benefits (Universal Credit, income-based JSA, income-based ESA, Income Support, Pension Guarantee Credit, Working Tax Credit, 24+ Advanced Learning Loan)'
-    };
+function calculateFee(category, amount) {
+  if (category !== 'county-court' || !validAmount(amount)) return null;
+  const n = Number(amount);
+  for (const [max, fee] of [
+    [300, 35],
+    [500, 50],
+    [1000, 70],
+    [1500, 80],
+    [3000, 115],
+    [5000, 205],
+    [10000, 455]
+  ])
+    if (n <= max) return fee;
+  return n <= 200000 ? Math.floor(Math.round(n * 100) / 20) / 100 : 10000;
+}
+function calculateSelection(category, type, amount, hearing = false) {
+  const option = OPTIONS[category]?.find((x) => x[0] === type);
+  if (!option) return null;
+  let fee = option[2];
+  if (type === 'money' && category === 'county-court') fee = calculateFee(category, amount);
+  if (type === 'small-hearing' && category === 'county-court') {
+    if (!validAmount(amount)) return null;
+    const n = Number(amount);
+    fee = n <= 300 ? 27 : n <= 500 ? 59 : n <= 1000 ? 85 : n <= 1500 ? 123 : n <= 3000 ? 181 : 346;
   }
-
-  const threshold = 3000;
-  const savingsThreshold = 16000;
-
-  if (monthlyIncome < threshold && totalSavings < savingsThreshold) {
-    return {
-      eligible: true,
-      reason: `Eligible: monthly income (£${monthlyIncome}) below threshold (£${threshold}) and savings (£${totalSavings}) below threshold (£${savingsThreshold})`
-    };
-  }
-
+  if (fee === null) return null;
   return {
-    eligible: false,
-    reason: `Not eligible: income (£${monthlyIncome}) or savings (£${totalSavings}) exceed Help with Fees thresholds`
+    label: option[1],
+    fee,
+    hearing: category === 'property-tribunal' && hearing ? option[3] : 0,
+    total: fee + (category === 'property-tribunal' && hearing ? option[3] : 0)
   };
 }
-
-function getExemptions() {
-  return EXEMPTIONS.map((e) => e.id);
+function getHelpWithFeesEligibility() {
+  return {
+    eligible: null,
+    reason: 'Eligibility depends on your circumstances. Use the official Help with Fees service.'
+  };
 }
-
-function generateFeeEstimate(category, claimAmount, extras = {}) {
-  const items = [];
-  const baseFee = calculateFee(category, claimAmount);
-
-  if (baseFee !== null) {
-    items.push({ description: `Court/Tribunal fee (${category})`, amount: baseFee });
-  }
-
-  if (extras.hearing) {
-    items.push({ description: 'Additional hearing fee', amount: 50 });
-  }
-
-  if (extras.expedited) {
-    items.push({ description: 'Expedited procedure fee', amount: 100 });
-  }
-
-  if (extras.witness) {
-    const witnessFee = typeof extras.witness === 'number' ? extras.witness : 25;
-    items.push({ description: 'Witness fee', amount: witnessFee });
-  }
-
-  const totalFee = items.reduce((sum, item) => sum + item.amount, 0);
-
+function getExemptions() {
+  return [];
+}
+function generateFeeEstimate(category, claimAmount) {
+  const fee = calculateFee(category, claimAmount);
   return {
     category,
-    claimAmount: Number(claimAmount),
-    items,
-    totalFee
+    claimAmount,
+    items: fee === null ? [] : [{ description: 'Money claim issue fee', amount: fee }],
+    totalFee: fee
   };
 }
-
 function getFeeRemissionForm() {
-  return {
-    reference: 'EX160',
-    name: 'Request for a fee remission'
-  };
+  return { reference: 'EX160', name: 'Help with Fees' };
 }
-
 function serializeFeesCalculator(value) {
   try {
     return JSON.stringify(value);
@@ -172,7 +125,6 @@ function serializeFeesCalculator(value) {
     return null;
   }
 }
-
 function parseFeesCalculator(value) {
   try {
     return JSON.parse(value);
@@ -199,259 +151,81 @@ function nextTheme(current) {
 
 
 // ===== src/tracker.js (imports resolved) =====
-
-const CATEGORY_LABELS = {
-  'county-court': 'County Court',
-  'employment-tribunal': 'Employment Tribunal',
-  'family-court': 'Family Court',
-  'immigration-tribunal': 'Immigration Tribunal',
-  'property-tribunal': 'Property Tribunal'
-};
-
-function formatCurrency(amount) {
-  return `£${Number(amount).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
-function escapeHtml(str) {
-  if (typeof document !== 'undefined') {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function renderFeeResult(estimate, eligibility) {
-  let html = '<div class="fee-breakdown">';
-  html += `<p class="fee-total">${formatCurrency(estimate.totalFee)}</p>`;
-  html += `<p class="fee-category">${escapeHtml(CATEGORY_LABELS[estimate.category] || estimate.category)} — Claim: ${formatCurrency(estimate.claimAmount)}</p>`;
-
-  if (estimate.items.length > 1) {
-    html += '<ul class="fee-items">';
-    for (const item of estimate.items) {
-      html += `<li>${escapeHtml(item.description)}: ${formatCurrency(item.amount)}</li>`;
-    }
-    html += '</ul>';
-  }
-
-  if (eligibility) {
-    html += `<div class="hwf-result ${eligibility.eligible ? 'eligible' : 'ineligible'}">`;
-    html += `<strong>Help with Fees:</strong> ${eligibility.eligible ? 'Likely eligible' : 'Not eligible'}`;
-    html += `<br/><span>${escapeHtml(eligibility.reason)}</span>`;
-    html += '</div>';
-
-    if (eligibility.eligible) {
-      const form = getFeeRemissionForm();
-      html += `<p class="hwf-form">Apply using form <strong>${escapeHtml(form.reference)}</strong> (${escapeHtml(form.name)})</p>`;
-    }
-  }
-
-  html += '</div>';
-  return html;
-}
-
-function renderCalcCard(calc) {
-  const label = CATEGORY_LABELS[calc.category] || calc.category;
-  return `
-    <header>
-      <h4>${escapeHtml(label)}</h4>
-      <span class="fee-badge">${formatCurrency(calc.totalFee)}</span>
-    </header>
-    <p class="meta">Claim: ${formatCurrency(calc.claimAmount)} — ${calc.createdAt}</p>
-    <div class="item-actions">
-      <button type="button" data-action="recalc" data-category="${escapeHtml(calc.category)}" data-amount="${calc.claimAmount}">Recalculate</button>
-      <button type="button" data-action="delete" data-id="${calc.id}" class="secondary">Delete</button>
-    </div>`;
-}
-
-function renderCalcList(calcs, container) {
-  container.replaceChildren();
-  if (calcs.length === 0) {
-    const empty = document.createElement('p');
-    empty.className = 'empty-state';
-    empty.textContent = 'No calculations yet. Use the form above to calculate a fee.';
-    container.append(empty);
-    return;
-  }
-  const sorted = [...calcs].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-  for (const calc of sorted) {
-    const item = document.createElement('article');
-    item.className = 'complaint-item';
-    item.innerHTML = renderCalcCard(calc);
-    container.append(item);
-  }
-}
-
-export {
-  CATEGORY_LABELS,
-  formatCurrency,
-  escapeHtml,
-  renderFeeResult,
-  renderCalcCard,
-  renderCalcList,
-  getFeeCategories,
-  getFeeSchedules,
-  calculateFee,
-  getHelpWithFeesEligibility,
-  getExemptions,
-  generateFeeEstimate,
-  getFeeRemissionForm,
-  serializeFeesCalculator,
-  parseFeesCalculator
-};
+export { OPTIONS, calculateSelection };
 
 
 // ===== App logic =====
-const STORAGE_KEY = 'open-access-uk:fee-calculator:calculations';
-const FORM_KEY = 'open-access-uk:fee-calculator:form-draft';
-
 const form = document.querySelector('#fee-form');
-const resultEl = document.querySelector('#fee-result');
-const calcList = document.querySelector('#calc-list');
+const result = document.querySelector('#fee-result');
 const statusEl = document.querySelector('#form-status');
-
-function loadAll() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+const category = form.elements.category;
+const application = form.elements.application;
+const amount = form.elements.claimAmount;
+const hearing = form.elements.hearing;
+const amountFields = document.querySelector('#amount-fields');
+const hearingFields = document.querySelector('#hearing-fields');
+function updateFields() {
+  const needsAmount = category.value === 'county-court' && ['money', 'small-hearing'].includes(application.value);
+  amountFields.hidden = !needsAmount;
+  amount.required = needsAmount;
+  hearingFields.hidden = category.value !== 'property-tribunal';
+}
+function updateOptions() {
+  application.replaceChildren();
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Select a proceeding';
+  application.append(placeholder);
+  for (const [id, label] of OPTIONS[category.value] || []) {
+    const option = document.createElement('option');
+    option.value = id;
+    option.textContent = label;
+    application.append(option);
   }
+  updateFields();
 }
-
-function saveAll(calcs) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(calcs));
-}
-
-function values() {
-  return Object.fromEntries(new FormData(form).entries());
-}
-
-function generateId() {
-  return 'fee-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
-}
-
-function renderAll() {
-  const calcs = loadAll();
-  renderCalcList(calcs, calcList);
-  calcList.querySelectorAll('[data-action="recalc"]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      form.elements.category.value = btn.dataset.category;
-      form.elements.claimAmount.value = btn.dataset.amount;
-      form.dispatchEvent(new Event('submit'));
-    });
-  });
-  calcList.querySelectorAll('[data-action="delete"]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const remaining = loadAll().filter((c) => c.id !== btn.dataset.id);
-      saveAll(remaining);
-      statusEl.textContent = 'Calculation deleted.';
-      renderAll();
-    });
-  });
-}
-
-function saveFormDraft() {
-  if (!form) return;
-  try {
-    localStorage.setItem(FORM_KEY, JSON.stringify(values()));
-  } catch {
-    /* ignore */
-  }
-}
-
-function restoreFormDraft() {
-  if (!form) return;
-  try {
-    const raw = localStorage.getItem(FORM_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    for (const [name, value] of Object.entries(data)) {
-      const field = form.elements.namedItem(name);
-      if (field && value) field.value = value;
-    }
-  } catch {
-    /* ignore */
-  }
-}
-
-function clearFormDraft() {
-  localStorage.removeItem(FORM_KEY);
-}
-
-function handleCalculate(event) {
+category.addEventListener('change', updateOptions);
+application.addEventListener('change', updateFields);
+form.addEventListener('submit', event => {
   event.preventDefault();
-  const data = values();
-  const category = data.category;
-  const claimAmount = Number(data.claimAmount);
-
-  if (!claimAmount || claimAmount < 0) {
-    statusEl.textContent = 'Enter a valid claim amount.';
-    return;
+  const estimate = calculateSelection(category.value, application.value, amount.value, hearing.value === 'yes');
+  if (!estimate) { statusEl.textContent = 'Select a proceeding and enter a valid amount where required.'; result.textContent = ''; return; }
+  const currency = value => new Intl.NumberFormat('en-GB', {style:'currency',currency:'GBP'}).format(value);
+  result.replaceChildren();
+  const total = document.createElement('p'); total.className = 'fee-total'; total.textContent = currency(estimate.total); result.append(total);
+  const detail = document.createElement('p'); detail.textContent = estimate.label + ': ' + currency(estimate.fee) + (category.value === 'property-tribunal' && hearing.value === 'yes' ? '; hearing: ' + currency(estimate.hearing) : ''); result.append(detail);
+  statusEl.textContent = 'Fee estimate: ' + currency(estimate.total);
+  try {
+    const entries = loadHistory();
+    entries.push({id: 'fee-' + Date.now() + '-' + Math.random().toString(36).slice(2), version: 2, label: estimate.label, total: estimate.total, date: new Date().toISOString().slice(0,10)});
+    localStorage.setItem(historyKey, JSON.stringify(entries.slice(-20))); renderHistory();
+  } catch { statusEl.textContent += '. Could not save to browser history.'; }
+});
+document.querySelector('#clearForm').addEventListener('click', () => { form.reset(); updateOptions(); result.textContent = 'Select a proceeding and click Calculate.'; statusEl.textContent = ''; });
+const historyKey = 'open-access-uk:fee-calculator:calculations';
+const list = document.querySelector('#calc-list');
+function loadHistory() { try { const value = JSON.parse(localStorage.getItem(historyKey) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } }
+function renderHistory() {
+  list.replaceChildren();
+  const entries = loadHistory();
+  if (!entries.length) { list.textContent = 'No saved calculations.'; return; }
+  for (const entry of entries.slice().reverse()) {
+    const item = document.createElement('article'); item.className = 'complaint-item';
+    const description = document.createElement('p');
+    description.textContent = entry.version === 2 ? `${entry.label}: £${Number(entry.total).toFixed(2)} (${entry.date})` : `Older calculation (${entry.createdAt || 'date unknown'}): fee may be incorrect. Recalculate using the form.`;
+    item.append(description);
+    const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Delete';
+    remove.addEventListener('click', () => { localStorage.setItem(historyKey, JSON.stringify(loadHistory().filter(x => x.id !== entry.id))); renderHistory(); });
+    item.append(remove); list.append(item);
   }
-
-  const estimate = generateFeeEstimate(category, claimAmount);
-  let eligibility = null;
-  if (
-    data.benefitsStatus === 'yes' ||
-    (Number(data.monthlyIncome) < 3000 && Number(data.savingsAmount) < 16000)
-  ) {
-    eligibility = getHelpWithFeesEligibility(
-      data.monthlyIncome || 0,
-      data.savingsAmount || 0,
-      data.benefitsStatus === 'yes'
-    );
-  }
-
-  resultEl.innerHTML = renderFeeResult(estimate, eligibility);
-  statusEl.textContent = `Fee estimated: ${formatCurrency(estimate.totalFee)}`;
-
-  const calc = {
-    id: generateId(),
-    category,
-    claimAmount,
-    applicantType: data.applicantType,
-    totalFee: estimate.totalFee,
-    eligibility,
-    createdAt: new Date().toISOString().slice(0, 10)
-  };
-
-  const calcs = loadAll();
-  calcs.push(calc);
-  if (calcs.length > 20) calcs.splice(0, calcs.length - 20);
-  saveAll(calcs);
-  renderAll();
 }
-
-function handleClear() {
-  form.reset();
-  clearFormDraft();
-  resultEl.innerHTML =
-    '<p class="empty-state">Enter a claim amount and click Calculate to see the fee estimate.</p>';
-  statusEl.textContent = '';
-}
-
-// ===== Initialise =====
-restoreFormDraft();
-
-form.addEventListener('submit', handleCalculate);
-form.addEventListener('input', saveFormDraft);
-document.querySelector('#clearForm')?.addEventListener('click', handleClear);
-
-renderAll();
-initTheme('#theme-toggle');
-
+renderHistory();
+updateOptions();
+const themeButton = document.querySelector('#theme-toggle');
+function applyTheme(theme) { document.documentElement.dataset.theme = theme; themeButton.setAttribute('aria-pressed', String(theme === 'dark')); themeButton.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme'; }
+let currentTheme = resolveInitialTheme({stored: localStorage.getItem(THEME_STORAGE_KEY), prefersDark: matchMedia('(prefers-color-scheme: dark)').matches});
+applyTheme(currentTheme);
+themeButton.addEventListener('click', () => { currentTheme = nextTheme(currentTheme); localStorage.setItem(THEME_STORAGE_KEY, currentTheme); applyTheme(currentTheme); });
 const navToggle = document.querySelector('.nav-toggle');
 const primaryNav = document.querySelector('#primary-nav');
-navToggle?.addEventListener('click', () => {
-  const open = navToggle.getAttribute('aria-expanded') !== 'true';
-  navToggle.setAttribute('aria-expanded', String(open));
-  primaryNav?.classList.toggle('is-open', open);
-});
+navToggle?.addEventListener('click', () => { const open = navToggle.getAttribute('aria-expanded') !== 'true'; navToggle.setAttribute('aria-expanded', String(open)); primaryNav?.classList.toggle('is-open', open); });

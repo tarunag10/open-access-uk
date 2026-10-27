@@ -1,166 +1,119 @@
-const FEE_SCHEDULES = {
+// Fees checked against HMCTS guidance on 27 October 2026.
+export const OPTIONS = {
   'county-court': [
-    { claimRange: 'Up to £300', fee: 35, source: 'hmcts-county-court-fees' },
-    { claimRange: '£300.01 - £1,000', fee: 80, source: 'hmcts-county-court-fees' },
-    { claimRange: '£1,000.01 - £5,000', fee: 115, source: 'hmcts-county-court-fees' },
-    { claimRange: '£5,000.01 - £10,000', fee: 205, source: 'hmcts-county-court-fees' },
-    { claimRange: '£10,000.01 - £50,000', fee: 455, source: 'hmcts-county-court-fees' },
-    { claimRange: '£50,000.01 - £100,000', fee: 10000, source: 'hmcts-county-court-fees' }
-  ],
-  'employment-tribunal': [
-    { claimRange: 'No fee (discrimination)', fee: 0, source: 'et-fee-exemption' },
-    { claimRange: 'No fee (all claims from 2017)', fee: 0, source: 'et-fee-exemption' }
+    ['money', 'Money claim issue fee', null],
+    ['possession', 'Possession claim', 415],
+    ['n244-notice', 'General application on notice (N244, where no other fee applies)', 321],
+    [
+      'n244-consent',
+      'General application by consent or without notice (N244, where no other fee applies)',
+      126
+    ],
+    ['vary', 'Vary judgment or suspend enforcement', 16],
+    ['small-hearing', 'Small claims track hearing', null],
+    ['fast-hearing', 'Fast track hearing', 619],
+    ['multi-hearing', 'Intermediate or multi-track hearing', 1334],
+    ['warrant-control', 'Warrant of control', 96],
+    ['warrant-possession', 'Warrant of possession', 152],
+    ['warrant-delivery', 'Warrant of delivery', 152],
+    ['attachment', 'Attachment of earnings', 139],
+    ['charging', 'Charging order', 139],
+    ['third-party', 'Third-party debt order', 139],
+    ['information', 'Order to obtain information from debtor', 69]
   ],
   'family-court': [
-    { claimRange: 'Under £1,000', fee: 215, source: 'hmcts-family-court-fees' },
-    { claimRange: '£1,000 - £5,000', fee: 335, source: 'hmcts-family-court-fees' },
-    { claimRange: '£5,001 - £15,000', fee: 335, source: 'hmcts-family-court-fees' },
-    { claimRange: '£15,001 - £50,000', fee: 335, source: 'hmcts-family-court-fees' },
-    { claimRange: 'Over £50,000', fee: 335, source: 'hmcts-family-court-fees' }
+    ['divorce', 'Divorce, nullity or dissolution', 628],
+    ['separation', 'Judicial separation', 426],
+    ['financial', 'Financial order (not by consent)', 321],
+    ['consent', 'Financial order by consent', 62],
+    ['children', 'New Children Act application (specified orders)', 270],
+    ['non-molestation', 'Non-molestation order', 0],
+    ['occupation', 'Occupation order', 0]
   ],
   'immigration-tribunal': [
-    { claimRange: 'Tier 1 (Asylum)', fee: 80, source: 'hmcts-immigration-fees' },
-    { claimRange: 'Tier 2 (Immigration)', fee: 140, source: 'hmcts-immigration-fees' }
+    ['paper', 'First-tier appeal without a hearing', 82],
+    ['hearing', 'First-tier appeal with a hearing', 144]
   ],
   'property-tribunal': [
-    { claimRange: 'Under £30,000', fee: 0, source: 'property-tribunal-fee' },
-    { claimRange: '£30,000 - £100,000', fee: 0, source: 'property-tribunal-fee' },
-    { claimRange: 'Over £100,000', fee: 0, source: 'property-tribunal-fee' }
-  ]
-};
-
-const FEE_BANDS = {
-  'county-court': [
-    { min: 0, max: 300, fee: 35 },
-    { min: 300.01, max: 1000, fee: 80 },
-    { min: 1000.01, max: 5000, fee: 115 },
-    { min: 5000.01, max: 10000, fee: 205 },
-    { min: 10000.01, max: 50000, fee: 455 },
-    { min: 50000.01, max: 100000, fee: 10000 }
+    ['service-charge', 'Leasehold service charge or administration charge application', 114, 227],
+    ['enfranchisement', 'Leasehold enfranchisement application', 114, 227],
+    ['pitch', 'Mobile home pitch fee determination', 23, 0],
+    ['mobile-terms', 'Mobile homes: written statement or terms order (PH1–PH3)', 114, 227],
+    ['rent-increase', 'Appeal a rent increase', 47, 0],
+    ['electrical', 'Electrical safety standards application', 200, 300]
   ],
-  'employment-tribunal': [{ min: 0, max: Infinity, fee: 0 }],
-  'family-court': [{ min: 0, max: Infinity, fee: 335 }],
-  'immigration-tribunal': [{ min: 0, max: Infinity, fee: 140 }],
-  'property-tribunal': [{ min: 0, max: Infinity, fee: 0 }]
+  'employment-tribunal': [['claim', 'Employment tribunal claim', 0]]
 };
-
-const EXEMPTIONS = [
-  {
-    id: 'domestic-violence',
-    name: 'Domestic Violence',
-    description: 'Fee waiver for victims of domestic violence'
-  },
-  {
-    id: 'asylum',
-    name: 'Asylum Seekers',
-    description: 'Fee exemption for asylum seekers and refugees'
-  },
-  {
-    id: 'benefits',
-    name: 'Benefits Recipients',
-    description: 'Fee waiver for those receiving qualifying benefits'
-  },
-  {
-    id: 'low-income',
-    name: 'Low Income',
-    description: 'Fee reduction or waiver based on low income'
-  }
-];
-
 export function getFeeCategories() {
-  return Object.keys(FEE_SCHEDULES);
+  return Object.keys(OPTIONS);
 }
-
 export function getFeeSchedules(category) {
-  return FEE_SCHEDULES[category] || [];
+  return OPTIONS[category] || [];
 }
-
-export function calculateFee(category, claimAmount) {
-  const amount = Number(claimAmount);
-  if (Number.isNaN(amount) || amount < 0) return null;
-
-  const bands = FEE_BANDS[category];
-  if (!bands) return null;
-
-  for (const band of bands) {
-    if (amount >= band.min && amount <= band.max) {
-      return band.fee;
-    }
-  }
-  return null;
+function validAmount(value) {
+  return (
+    value !== null &&
+    value !== undefined &&
+    String(value).trim() !== '' &&
+    Number.isFinite(Number(value)) &&
+    Number(value) > 0 &&
+    Math.abs(Math.round(Number(value) * 100) - Number(value) * 100) < 1e-7
+  );
 }
-
-export function getHelpWithFeesEligibility(income, savings, benefits) {
-  const monthlyIncome = Number(income);
-  const totalSavings = Number(savings);
-  const receivingBenefits = Boolean(benefits);
-
-  if (receivingBenefits) {
-    return {
-      eligible: true,
-      reason:
-        'Eligible: receiving qualifying benefits (Universal Credit, income-based JSA, income-based ESA, Income Support, Pension Guarantee Credit, Working Tax Credit, 24+ Advanced Learning Loan)'
-    };
+export function calculateFee(category, amount) {
+  if (category !== 'county-court' || !validAmount(amount)) return null;
+  const n = Number(amount);
+  for (const [max, fee] of [
+    [300, 35],
+    [500, 50],
+    [1000, 70],
+    [1500, 80],
+    [3000, 115],
+    [5000, 205],
+    [10000, 455]
+  ])
+    if (n <= max) return fee;
+  return n <= 200000 ? Math.floor(Math.round(n * 100) / 20) / 100 : 10000;
+}
+export function calculateSelection(category, type, amount, hearing = false) {
+  const option = OPTIONS[category]?.find((x) => x[0] === type);
+  if (!option) return null;
+  let fee = option[2];
+  if (type === 'money' && category === 'county-court') fee = calculateFee(category, amount);
+  if (type === 'small-hearing' && category === 'county-court') {
+    if (!validAmount(amount)) return null;
+    const n = Number(amount);
+    fee = n <= 300 ? 27 : n <= 500 ? 59 : n <= 1000 ? 85 : n <= 1500 ? 123 : n <= 3000 ? 181 : 346;
   }
-
-  const threshold = 3000;
-  const savingsThreshold = 16000;
-
-  if (monthlyIncome < threshold && totalSavings < savingsThreshold) {
-    return {
-      eligible: true,
-      reason: `Eligible: monthly income (£${monthlyIncome}) below threshold (£${threshold}) and savings (£${totalSavings}) below threshold (£${savingsThreshold})`
-    };
-  }
-
+  if (fee === null) return null;
   return {
-    eligible: false,
-    reason: `Not eligible: income (£${monthlyIncome}) or savings (£${totalSavings}) exceed Help with Fees thresholds`
+    label: option[1],
+    fee,
+    hearing: category === 'property-tribunal' && hearing ? option[3] : 0,
+    total: fee + (category === 'property-tribunal' && hearing ? option[3] : 0)
   };
 }
-
-export function getExemptions() {
-  return EXEMPTIONS.map((e) => e.id);
+export function getHelpWithFeesEligibility() {
+  return {
+    eligible: null,
+    reason: 'Eligibility depends on your circumstances. Use the official Help with Fees service.'
+  };
 }
-
-export function generateFeeEstimate(category, claimAmount, extras = {}) {
-  const items = [];
-  const baseFee = calculateFee(category, claimAmount);
-
-  if (baseFee !== null) {
-    items.push({ description: `Court/Tribunal fee (${category})`, amount: baseFee });
-  }
-
-  if (extras.hearing) {
-    items.push({ description: 'Additional hearing fee', amount: 50 });
-  }
-
-  if (extras.expedited) {
-    items.push({ description: 'Expedited procedure fee', amount: 100 });
-  }
-
-  if (extras.witness) {
-    const witnessFee = typeof extras.witness === 'number' ? extras.witness : 25;
-    items.push({ description: 'Witness fee', amount: witnessFee });
-  }
-
-  const totalFee = items.reduce((sum, item) => sum + item.amount, 0);
-
+export function getExemptions() {
+  return [];
+}
+export function generateFeeEstimate(category, claimAmount) {
+  const fee = calculateFee(category, claimAmount);
   return {
     category,
-    claimAmount: Number(claimAmount),
-    items,
-    totalFee
+    claimAmount,
+    items: fee === null ? [] : [{ description: 'Money claim issue fee', amount: fee }],
+    totalFee: fee
   };
 }
-
 export function getFeeRemissionForm() {
-  return {
-    reference: 'EX160',
-    name: 'Request for a fee remission'
-  };
+  return { reference: 'EX160', name: 'Help with Fees' };
 }
-
 export function serializeFeesCalculator(value) {
   try {
     return JSON.stringify(value);
@@ -168,7 +121,6 @@ export function serializeFeesCalculator(value) {
     return null;
   }
 }
-
 export function parseFeesCalculator(value) {
   try {
     return JSON.parse(value);
