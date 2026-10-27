@@ -10,7 +10,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   browser = await chromium.launch();
-  const page = await browser.newPage();
+  const context = await browser.newContext();
+  const page = await context.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('http://127.0.0.1:8765/fee-calculator/');
