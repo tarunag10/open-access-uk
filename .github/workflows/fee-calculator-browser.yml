@@ -5,6 +5,7 @@ on:
       - 'fee-calculator/**'
       - 'shared/fees-calculator/**'
       - '.github/workflows/fee-calculator-browser.yml'
+      - 'scripts/fee-calculator-browser.mjs'
 jobs:
   browser:
     runs-on: ubuntu-latest
