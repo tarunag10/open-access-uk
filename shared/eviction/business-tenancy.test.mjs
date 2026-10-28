@@ -317,4 +317,10 @@ test('business tenancy tab exposes accessible fields and official forms links', 
   assert.match(html, /business lease renewal guide/);
   assert.match(html, /section 29B/);
   assert.match(html, /application deadline \(preliminary estimate\)/i);
+  const tracker = readFileSync(
+    fileURLToPath(new URL('../../eviction-notice-validator/src/tracker.js', import.meta.url)),
+    'utf8'
+  );
+  assert.match(tracker, /Deadline or extension details need review\./);
+  assert.match(tracker, /applicationDeadline\.status === 'calculated'/);
 });

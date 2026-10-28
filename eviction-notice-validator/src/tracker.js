@@ -128,9 +128,14 @@ function initBusinessTenancyUI() {
       Object.fromEntries(new FormData(businessForm).entries())
     );
     const heading = document.createElement('p');
-    heading.textContent = result.valid
-      ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
-      : `${result.errors.length} item(s) need review.`;
+    heading.textContent =
+      result.valid &&
+      result.applicationDeadline.status === 'calculated' &&
+      result.applicationDeadline.jurisdiction === 'court'
+        ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
+        : result.errors.length
+          ? `${result.errors.length} item(s) need review.`
+          : 'Deadline or extension details need review.';
     const deadlineHeading = document.createElement('h3');
     deadlineHeading.textContent = 'Application deadline (preliminary estimate)';
     const deadlineSummary = document.createElement('p');
