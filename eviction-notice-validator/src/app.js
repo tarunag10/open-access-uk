@@ -609,7 +609,11 @@ function calculateApplicationDeadline(data, warnings) {
   if (is26 && parseLocalDate(data.serviceDate)) {
     result.earliestDate = addMonths(data.serviceDate, 2);
     const counterNoticeDate = parseLocalDate(data.counterNoticeDate);
-    if (counterNoticeDate && data.landlordResponse === 'opposes') {
+    if (
+      counterNoticeDate &&
+      data.landlordResponse === 'opposes' &&
+      counterNoticeDate < parseLocalDate(result.earliestDate)
+    ) {
       result.earliestDate = data.counterNoticeDate;
       warnings.push(
         'A Section 24(1) application may be issued before the usual two-month waiting period only after the landlord has given a Section 26(6) counter-notice. The date entered cannot establish the time it was given or the counter-notice’s validity.'
@@ -620,7 +624,8 @@ function calculateApplicationDeadline(data, warnings) {
   if (data.extensionStatus === 'yes') {
     const agreementDate = parseLocalDate(data.extensionAgreementDate);
     const extensionDate = parseLocalDate(data.extendedPeriodEndDate);
-    if (!agreementDate || !extensionDate || !statutoryDate) {
+    const serviceDate = parseLocalDate(data.serviceDate);
+    if (!agreementDate || !extensionDate || !statutoryDate || !serviceDate) {
       result.status = 'incomplete';
       warnings.push(
         'Enter the date of the Section 29B agreement and the agreed extended period end date. The extension cannot be assessed from incomplete dates.'
@@ -628,7 +633,12 @@ function calculateApplicationDeadline(data, warnings) {
     } else {
       // The Section 26 statutory period ends immediately before its proposed start date.
       const statutoryEndBoundary = is25 ? data.terminationDate : addDays(data.newTenancyDate, -1);
-      if (agreementDate > parseLocalDate(statutoryEndBoundary)) {
+      if (agreementDate < serviceDate) {
+        result.status = 'review-required';
+        warnings.push(
+          'The recorded first Section 29B agreement predates service of the notice/request. Section 29B permits an extension agreement only after the notice or request; do not rely on the displayed extension date.'
+        );
+      } else if (agreementDate > parseLocalDate(statutoryEndBoundary)) {
         result.status = 'review-required';
         warnings.push(
           'The recorded Section 29B agreement date is after the statutory period. It may not extend time under section 29B(1); obtain urgent advice and do not rely on the displayed extended date.'
@@ -684,7 +694,7 @@ function calculateApplicationDeadline(data, warnings) {
 
   if (data.telecomTenancy === 'yes') {
     const possiblyWithinSpecialJurisdiction =
-      data.telecomSubsistingAgreement !== 'no' || data.telecomPrimaryPurposeCodeRights !== 'no';
+      data.telecomSubsistingAgreement !== 'no' && data.telecomPrimaryPurposeCodeRights !== 'no';
     if (possiblyWithinSpecialJurisdiction) {
       result.jurisdiction = 'tribunal-review-required';
       warnings.push(

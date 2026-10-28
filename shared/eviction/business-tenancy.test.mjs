@@ -93,6 +93,12 @@ test('Section 29B reports a timely agreed extension and rejects an unverified la
   const late = validateBusinessTenancyNotice({ ...details, extensionAgreementDate: '2027-10-01' });
   assert.equal(late.applicationDeadline.status, 'review-required');
   assert.ok(late.warnings.some((warning) => warning.includes('29B')));
+  const beforeService = validateBusinessTenancyNotice({
+    ...details,
+    extensionAgreementDate: '2026-12-01'
+  });
+  assert.equal(beforeService.applicationDeadline.extensionDate, null);
+  assert.equal(beforeService.applicationDeadline.status, 'review-required');
   const further = validateBusinessTenancyNotice({
     ...details,
     extendedPeriodEndDate: '2027-11-30',
@@ -156,6 +162,7 @@ test('Section 26 two-month boundary and counter-notice boundary are preserved', 
     extensionStatus: 'no'
   });
   assert.ok(beyondWindow.errors.some((error) => error.includes('two calendar months')));
+  assert.equal(beyondWindow.applicationDeadline.earliestDate, '2027-03-31');
 });
 
 test('telecom jurisdiction check distinguishes possible code-rights cases', () => {
@@ -173,6 +180,24 @@ test('telecom jurisdiction check distinguishes possible code-rights cases', () =
   });
   assert.equal(result.applicationDeadline.jurisdiction, 'tribunal-review-required');
   assert.ok(result.warnings.some((warning) => warning.includes('First-tier Tribunal')));
+  const excluded = validateBusinessTenancyNotice({
+    ...base,
+    noticeType: 'section25',
+    noticeForm: 'form1',
+    serviceDate: '2027-01-15',
+    terminationDate: '2027-09-30',
+    opposition: 'unopposed',
+    landlordProposedTerms: 'Five years',
+    extensionStatus: 'no',
+    telecomTenancy: 'yes',
+    telecomSubsistingAgreement: 'no',
+    telecomPrimaryPurposeCodeRights: 'yes'
+  });
+  assert.equal(excluded.applicationDeadline.jurisdiction, 'court');
+  assert.equal(
+    excluded.warnings.some((warning) => warning.includes('First-tier Tribunal')),
+    false
+  );
 });
 
 test('unopposed Section 25 checklist accepts a complete in-window Form 1', () => {
