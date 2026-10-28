@@ -109,6 +109,20 @@ test('deadline stays uncalculated when dates are missing or malformed', () => {
   assert.equal(result.applicationDeadline.status, 'incomplete');
 });
 
+test('unsupported notice types do not receive a Section 25 or Section 26 deadline', () => {
+  const result = validateBusinessTenancyNotice({
+    ...base,
+    noticeType: 'unknown',
+    newTenancyDate: '2027-10-01',
+    serviceDate: '2027-01-15',
+    extensionStatus: 'no'
+  });
+  assert.equal(result.applicationDeadline.statutoryDate, null);
+  assert.equal(result.applicationDeadline.earliestDate, null);
+  assert.equal(result.applicationDeadline.statutoryEndpoint, 'not-calculated');
+  assert.equal(result.applicationDeadline.status, 'incomplete');
+});
+
 test('Section 26 two-month boundary and counter-notice boundary are preserved', () => {
   const withinWindow = validateBusinessTenancyNotice({
     ...base,

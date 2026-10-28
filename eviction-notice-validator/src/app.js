@@ -585,7 +585,10 @@ function addDays(value, days) {
 
 function calculateApplicationDeadline(data, warnings) {
   const is25 = data.noticeType === 'section25';
-  const statutoryDate = parseLocalDate(is25 ? data.terminationDate : data.newTenancyDate);
+  const is26 = data.noticeType === 'section26';
+  const statutoryDate = parseLocalDate(
+    is25 ? data.terminationDate : is26 ? data.newTenancyDate : null
+  );
   const result = {
     statutoryDate: statutoryDate
       ? is25
@@ -594,14 +597,16 @@ function calculateApplicationDeadline(data, warnings) {
       : null,
     statutoryEndpoint: is25
       ? 'on-or-before-termination-date'
-      : 'immediately-before-new-tenancy-date',
+      : is26
+        ? 'immediately-before-new-tenancy-date'
+        : 'not-calculated',
     extensionDate: null,
     earliestDate: null,
     status: statutoryDate ? 'calculated' : 'incomplete',
     jurisdiction: 'court'
   };
 
-  if (data.noticeType === 'section26' && parseLocalDate(data.serviceDate)) {
+  if (is26 && parseLocalDate(data.serviceDate)) {
     result.earliestDate = addMonths(data.serviceDate, 2);
     const counterNoticeDate = parseLocalDate(data.counterNoticeDate);
     if (counterNoticeDate && data.landlordResponse === 'opposes') {
