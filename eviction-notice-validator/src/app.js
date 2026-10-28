@@ -612,6 +612,7 @@ function calculateApplicationDeadline(data, warnings) {
     if (
       counterNoticeDate &&
       data.landlordResponse === 'opposes' &&
+      counterNoticeDate >= parseLocalDate(data.serviceDate) &&
       counterNoticeDate < parseLocalDate(result.earliestDate)
     ) {
       result.earliestDate = data.counterNoticeDate;
@@ -840,7 +841,11 @@ function validateBusinessTenancyNotice(data = {}) {
     const responseDate = parseLocalDate(data.counterNoticeDate);
     if (requestDate && responseDate) {
       const twoMonthsAfter = parseLocalDate(addMonths(data.serviceDate, 2));
-      if (responseDate > twoMonthsAfter) {
+      if (responseDate < requestDate) {
+        errors.push(
+          'The counter-notice date entered is before the request date. Verify the documents and dates.'
+        );
+      } else if (responseDate > twoMonthsAfter) {
         errors.push(
           'The counter-notice date entered is more than two calendar months after the request date. Verify service, any agreed extension and court orders.'
         );

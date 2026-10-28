@@ -92,7 +92,12 @@ test('Section 29B reports a timely agreed extension and rejects an unverified la
   assert.equal(extended.applicationDeadline.status, 'review-required');
   const late = validateBusinessTenancyNotice({ ...details, extensionAgreementDate: '2027-10-01' });
   assert.equal(late.applicationDeadline.status, 'review-required');
-  assert.ok(late.warnings.some((warning) => warning.includes('29B')));
+  assert.equal(late.applicationDeadline.extensionDate, null);
+  assert.ok(
+    late.warnings.some((warning) =>
+      warning.includes('agreement date is after the statutory period')
+    )
+  );
   const beforeService = validateBusinessTenancyNotice({
     ...details,
     extensionAgreementDate: '2026-12-01'
@@ -163,6 +168,21 @@ test('Section 26 two-month boundary and counter-notice boundary are preserved', 
   });
   assert.ok(beyondWindow.errors.some((error) => error.includes('two calendar months')));
   assert.equal(beyondWindow.applicationDeadline.earliestDate, '2027-03-31');
+  const beforeRequest = validateBusinessTenancyNotice({
+    ...base,
+    noticeType: 'section26',
+    noticeForm: 'form3',
+    serviceDate: '2027-01-15',
+    newTenancyDate: '2027-10-01',
+    proposedTerms: 'Three years',
+    proposedProperty: 'Whole premises',
+    landlordResponse: 'opposes',
+    counterNoticeDate: '2027-01-14',
+    oppositionGrounds: 'Ground 30(1)(g)',
+    extensionStatus: 'no'
+  });
+  assert.equal(beforeRequest.applicationDeadline.earliestDate, '2027-03-15');
+  assert.ok(beforeRequest.errors.some((error) => error.includes('before the request date')));
 });
 
 test('telecom jurisdiction check distinguishes possible code-rights cases', () => {
@@ -342,6 +362,9 @@ test('business tenancy tab exposes accessible fields and official forms links', 
   assert.match(html, /business lease renewal guide/);
   assert.match(html, /section 29B/);
   assert.match(html, /application deadline \(preliminary estimate\)/i);
+  assert.match(html, /section\/29A/);
+  assert.match(html, /section\/29B/);
+  assert.match(html, /rules\/part56/);
   const tracker = readFileSync(
     fileURLToPath(new URL('../../eviction-notice-validator/src/tracker.js', import.meta.url)),
     'utf8'
