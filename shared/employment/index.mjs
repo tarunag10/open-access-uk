@@ -104,7 +104,10 @@ export function formatDateForDisplay(value) {
   const date = parseLocalDate(value);
   if (!date) return '';
   return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC'
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC'
   }).format(date);
 }
 
@@ -113,9 +116,9 @@ export function getCompletedServiceYears(startDate, endDate) {
   const end = parseLocalDate(endDate);
   if (!start || !end || end < start) return null;
   let years = end.getUTCFullYear() - start.getUTCFullYear();
-  const anniversary = new Date(Date.UTC(
-    start.getUTCFullYear() + years, start.getUTCMonth(), start.getUTCDate()
-  ));
+  const anniversary = new Date(
+    Date.UTC(start.getUTCFullYear() + years, start.getUTCMonth(), start.getUTCDate())
+  );
   // For a 29 February start, the anniversary is treated as 28 February in non-leap years.
   if (anniversary.getUTCMonth() !== start.getUTCMonth()) anniversary.setUTCDate(0);
   if (end < anniversary) years--;
@@ -134,10 +137,17 @@ export function getRemedyCalculator(data) {
   const yearsOfService = Number(data?.yearsOfService);
   const weeklyPay = Number(data?.weeklyPay);
   const dismissalDate = parseLocalDate(data?.dismissalDate);
-  if (!Number.isInteger(age) || age < 16 || age > 120 ||
-      !Number.isFinite(yearsOfService) || yearsOfService < 0 ||
-      !Number.isFinite(weeklyPay) || weeklyPay < 0 || !dismissalDate ||
-      data.dismissalDate < '2025-04-06') {
+  if (
+    !Number.isInteger(age) ||
+    age < 16 ||
+    age > 120 ||
+    !Number.isFinite(yearsOfService) ||
+    yearsOfService < 0 ||
+    !Number.isFinite(weeklyPay) ||
+    weeklyPay < 0 ||
+    !dismissalDate ||
+    data.dismissalDate < '2025-04-06'
+  ) {
     return { basicAward: null, compensatoryAward: null, total: null };
   }
   const cappedYears = Math.min(Math.floor(yearsOfService), 20);

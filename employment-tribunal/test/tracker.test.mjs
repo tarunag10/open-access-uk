@@ -37,7 +37,9 @@ test('getACASDeadline returns 3 months minus 1 day from dismissal', () => {
 
 test('claim cards render the calculated ACAS deadline date, not the deadline object', () => {
   const html = renderClaimCard({
-    id: 'deadline-1', claimType: 'unfair-dismissal', dismissalDate: '2026-10-01'
+    id: 'deadline-1',
+    claimType: 'unfair-dismissal',
+    dismissalDate: '2026-10-01'
   });
   assert.match(html, /ACAS deadline: 31 March 2027/);
   assert.doesNotMatch(html, /\[object Object\]/);
@@ -100,7 +102,10 @@ test('getRemedyCalculator uses age bands and statutory weekly-pay cap', () => {
 
 test('getRemedyCalculator caps service at 20 years and does not invent compensatory totals', () => {
   const result = getRemedyCalculator({
-    ageAtDismissal: 60, yearsOfService: 25, weeklyPay: 900, dismissalDate: '2026-10-01'
+    ageAtDismissal: 60,
+    yearsOfService: 25,
+    weeklyPay: 900,
+    dismissalDate: '2026-10-01'
   });
   assert.equal(result.basicAward, 22530);
   assert.equal(result.compensatoryAward, null);
@@ -109,7 +114,10 @@ test('getRemedyCalculator caps service at 20 years and does not invent compensat
 
 test('getRemedyCalculator uses the pre-April 2026 weekly pay limit', () => {
   const result = getRemedyCalculator({
-    ageAtDismissal: 41, yearsOfService: 1, weeklyPay: 900, dismissalDate: '2026-04-05'
+    ageAtDismissal: 41,
+    yearsOfService: 1,
+    weeklyPay: 900,
+    dismissalDate: '2026-04-05'
   });
   assert.equal(result.basicAward, 1078.5);
 });
