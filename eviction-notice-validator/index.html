@@ -524,16 +524,65 @@
               >.
             </p>
           </div>
-          <label for="telecomTenancy"
-            >Does this involve a legacy telecommunications agreement?</label
+          <label for="extensionStatus"
+            >Was the application period extended by written agreement under section 29B?</label
           >
+          <select id="extensionStatus" name="extensionStatus" required>
+            <option value="">Select...</option>
+            <option value="no">No known agreement</option>
+            <option value="yes">Yes</option>
+            <option value="unsure">Not sure</option>
+          </select>
+          <label for="extensionAgreementDate"
+            >Date the first written extension agreement was made</label
+          >
+          <input id="extensionAgreementDate" name="extensionAgreementDate" type="date" />
+          <label for="extendedPeriodEndDate"
+            >End date specified in the first extension agreement</label
+          >
+          <input id="extendedPeriodEndDate" name="extendedPeriodEndDate" type="date" />
+          <label for="furtherExtensionAgreementDate"
+            >Date of one further extension agreement, if made</label
+          >
+          <input
+            id="furtherExtensionAgreementDate"
+            name="furtherExtensionAgreementDate"
+            type="date"
+          />
+          <label for="finalExtendedPeriodEndDate"
+            >End date specified in that further agreement</label
+          >
+          <input id="finalExtendedPeriodEndDate" name="finalExtendedPeriodEndDate" type="date" />
+          <p>
+            If there were additional extensions, record and check the full sequence. This checklist
+            compares one further extension only. Each further agreement must be made before the
+            then-current period expires.
+          </p>
+          <label for="telecomTenancy">Does this involve a telecommunications agreement?</label>
           <select id="telecomTenancy" name="telecomTenancy">
-            <option value="no">No / not known to be telecommunications land</option>
+            <option value="no">No</option>
             <option value="yes">Yes or possibly</option>
           </select>
+          <label for="telecomSubsistingAgreement"
+            >Is it a subsisting agreement under the Digital Economy Act 2017?</label
+          >
+          <select id="telecomSubsistingAgreement" name="telecomSubsistingAgreement">
+            <option value="">Not known</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+          <label for="telecomPrimaryPurposeCodeRights"
+            >Is its primary purpose to confer electronic communications code rights?</label
+          >
+          <select id="telecomPrimaryPurposeCodeRights" name="telecomPrimaryPurposeCodeRights">
+            <option value="">Not known</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
           <p>
-            If yes, the 30 July 2026 guidance update may affect whether a prescribed form refers to
-            a court or tribunal. Get advice on whether the special tribunal jurisdiction applies.
+            The special First-tier Tribunal and Upper Tribunal jurisdiction applies only if both
+            statutory conditions are met. Check the agreement and code rights; these answers do not
+            determine jurisdiction.
           </p>
 
           <div class="actions" aria-label="Business tenancy form actions">
@@ -547,6 +596,50 @@
           <div id="business-result" aria-live="polite">
             Complete the form to see date and completeness checks.
           </div>
+          <h3>Application deadline (preliminary estimate)</h3>
+          <ul>
+            <li>
+              Section 25: the statutory period ends on the termination date stated in the notice.
+            </li>
+            <li>
+              Section 26: the statutory period ends immediately before the proposed new tenancy
+              date. A tenant’s Section 24(1) application generally cannot be made until two months
+              after the request unless the landlord has given a Section 26(6) counter-notice.
+            </li>
+            <li>
+              Section 29B can extend the application period by agreement. Check the timing and terms
+              of every written agreement.
+            </li>
+          </ul>
+          <p>
+            Read the statutory wording in
+            <a
+              href="https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/29A"
+              target="_blank"
+              rel="noopener noreferrer"
+              >section 29A</a
+            >
+            and
+            <a
+              href="https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/29B"
+              target="_blank"
+              rel="noopener noreferrer"
+              >section 29B</a
+            >, and the claim procedure in
+            <a
+              href="https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part56"
+              target="_blank"
+              rel="noopener noreferrer"
+              >CPR Part 56</a
+            >
+            and
+            <a
+              href="https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part56/pd_part56"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Practice Direction 56</a
+            >.
+          </p>
           <h3>Key procedure points</h3>
           <ul>
             <li>
@@ -562,8 +655,9 @@
               counter-notice within two months.
             </li>
             <li>
-              Either party may need to apply to court by the statutory deadline. Written extensions
-              and transition rules can affect the deadline; this checklist does not calculate it.
+              Applications must be started by the applicable statutory or agreed date. The result
+              below is a preliminary date calculation, not confirmation that an application is
+              valid, correctly issued or within time.
             </li>
           </ul>
           <p>

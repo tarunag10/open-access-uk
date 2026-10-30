@@ -128,19 +128,64 @@ function initBusinessTenancyUI() {
       Object.fromEntries(new FormData(businessForm).entries())
     );
     const heading = document.createElement('p');
-    heading.textContent = result.valid
-      ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
-      : `${result.errors.length} item(s) need review.`;
+    heading.textContent =
+      result.valid &&
+      result.applicationDeadline.status === 'calculated' &&
+      result.applicationDeadline.jurisdiction === 'court'
+        ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
+        : result.errors.length
+          ? `${result.errors.length} item(s) need review.`
+          : 'Deadline or extension details need review.';
+    const deadlineHeading = document.createElement('h3');
+    deadlineHeading.textContent = 'Application deadline (preliminary estimate)';
+    const deadlineSummary = document.createElement('p');
+    deadlineSummary.textContent =
+      result.applicationDeadline.status === 'incomplete'
+        ? 'Deadline not calculated. Enter the relevant notice date and confirm any agreed extension.'
+        : `Deadline status: ${result.applicationDeadline.status.replaceAll('-', ' ')}. This is not confirmation that an application is valid or in time.`;
+    const deadlineList = document.createElement('dl');
+    function addDeadline(label, value) {
+      if (!value) return;
+      const term = document.createElement('dt');
+      term.textContent = label;
+      const description = document.createElement('dd');
+      const time = document.createElement('time');
+      time.dateTime = value;
+      time.textContent = new Intl.DateTimeFormat('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC'
+      }).format(new Date(`${value}T00:00:00Z`));
+      description.append(time);
+      deadlineList.append(term, description);
+    }
+    addDeadline('Section 29A statutory period ends', result.applicationDeadline.statutoryDate);
+    addDeadline(
+      'Latest date indicated by recorded Section 29B agreement',
+      result.applicationDeadline.extensionDate
+    );
+    addDeadline('Earliest Section 24(1) application date', result.applicationDeadline.earliestDate);
+    const jurisdiction = document.createElement('p');
+    jurisdiction.textContent = `Forum indicated for review: ${result.applicationDeadline.jurisdiction === 'court' ? 'court, subject to jurisdiction checks' : 'tribunal jurisdiction may apply; specialist forum check required'}.`;
     const list = document.createElement('ul');
     for (const message of [...result.errors, ...result.warnings]) {
       const item = document.createElement('li');
       item.textContent = message;
       list.append(item);
     }
-    businessResult?.replaceChildren(heading, list);
-    businessStatus.textContent = result.valid
-      ? 'Checklist complete. Verify the notice against the current prescribed form and obtain legal advice as needed.'
-      : 'Some details need review. This checklist does not determine legal validity.';
+    businessResult?.replaceChildren(
+      heading,
+      deadlineHeading,
+      deadlineSummary,
+      deadlineList,
+      jurisdiction,
+      list
+    );
+    businessStatus.textContent =
+      result.valid && result.applicationDeadline.status === 'calculated'
+        ? 'Checklist complete. Verify the notice against the current prescribed form and obtain legal advice as needed.'
+        : 'Some dates or legal details need review. This checklist does not determine legal validity.';
   });
   businessForm?.addEventListener('reset', () => {
     queueMicrotask(() => {

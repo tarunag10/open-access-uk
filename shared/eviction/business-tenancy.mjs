@@ -13,8 +13,144 @@ export const BUSINESS_TENANCY_SOURCES = {
     'https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords/forms-prescribed-under-the-landlord-and-tenant-act-1954-part-2-notices-regulations-2004',
   section25: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/25',
   section26: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/26',
-  section30: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/30'
+  section30: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/30',
+  section29A: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/29A',
+  section29B: 'https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/29B',
+  part56: 'https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part56',
+  practiceDirection56:
+    'https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part56/pd_part56',
+  telecomJurisdiction: 'https://www.legislation.gov.uk/uksi/2026/569/regulation/3/made'
 };
+
+function addDays(value, days) {
+  const date = parseLocalDate(value);
+  if (!date) return null;
+  date.setUTCDate(date.getUTCDate() + days);
+  return toLocalDateString(date);
+}
+
+function calculateApplicationDeadline(data, warnings) {
+  const is25 = data.noticeType === 'section25';
+  const is26 = data.noticeType === 'section26';
+  const statutoryDate = parseLocalDate(
+    is25 ? data.terminationDate : is26 ? data.newTenancyDate : null
+  );
+  const result = {
+    statutoryDate: statutoryDate
+      ? is25
+        ? data.terminationDate
+        : addDays(data.newTenancyDate, -1)
+      : null,
+    statutoryEndpoint: is25
+      ? 'on-or-before-termination-date'
+      : is26
+        ? 'immediately-before-new-tenancy-date'
+        : 'not-calculated',
+    extensionDate: null,
+    earliestDate: null,
+    status: statutoryDate ? 'calculated' : 'incomplete',
+    jurisdiction: 'court'
+  };
+
+  if (is26 && parseLocalDate(data.serviceDate)) {
+    result.earliestDate = addMonths(data.serviceDate, 2);
+    const counterNoticeDate = parseLocalDate(data.counterNoticeDate);
+    if (
+      counterNoticeDate &&
+      data.landlordResponse === 'opposes' &&
+      counterNoticeDate >= parseLocalDate(data.serviceDate) &&
+      counterNoticeDate < parseLocalDate(result.earliestDate)
+    ) {
+      result.earliestDate = data.counterNoticeDate;
+      warnings.push(
+        'A Section 24(1) application may be issued before the usual two-month waiting period only after the landlord has given a Section 26(6) counter-notice. The date entered cannot establish the time it was given or the counter-notice’s validity.'
+      );
+    }
+  }
+
+  if (data.extensionStatus === 'yes') {
+    const agreementDate = parseLocalDate(data.extensionAgreementDate);
+    const extensionDate = parseLocalDate(data.extendedPeriodEndDate);
+    const serviceDate = parseLocalDate(data.serviceDate);
+    if (!agreementDate || !extensionDate || !statutoryDate || !serviceDate) {
+      result.status = 'incomplete';
+      warnings.push(
+        'Enter the date of the Section 29B agreement and the agreed extended period end date. The extension cannot be assessed from incomplete dates.'
+      );
+    } else {
+      // The Section 26 statutory period ends immediately before its proposed start date.
+      const statutoryEndBoundary = is25 ? data.terminationDate : addDays(data.newTenancyDate, -1);
+      if (agreementDate < serviceDate) {
+        result.status = 'review-required';
+        warnings.push(
+          'The recorded first Section 29B agreement predates service of the notice/request. Section 29B permits an extension agreement only after the notice or request; do not rely on the displayed extension date.'
+        );
+      } else if (agreementDate > parseLocalDate(statutoryEndBoundary)) {
+        result.status = 'review-required';
+        warnings.push(
+          'The recorded Section 29B agreement date is after the statutory period. It may not extend time under section 29B(1); obtain urgent advice and do not rely on the displayed extended date.'
+        );
+      } else if (extensionDate <= parseLocalDate(statutoryEndBoundary)) {
+        result.status = 'review-required';
+        warnings.push(
+          'The recorded extended period end date does not fall after the statutory period as section 29B requires. Check the written agreement.'
+        );
+      } else {
+        const furtherAgreementDate = parseLocalDate(data.furtherExtensionAgreementDate);
+        const finalExtensionDate = parseLocalDate(data.finalExtendedPeriodEndDate);
+        if (
+          Boolean(data.furtherExtensionAgreementDate) !== Boolean(data.finalExtendedPeriodEndDate)
+        ) {
+          result.status = 'incomplete';
+          warnings.push(
+            'Enter both dates for the further section 29B extension, or clear both fields.'
+          );
+        } else if (furtherAgreementDate && finalExtensionDate) {
+          if (furtherAgreementDate > extensionDate || finalExtensionDate <= extensionDate) {
+            result.status = 'review-required';
+            warnings.push(
+              'The further extension dates do not show an agreement made before the earlier period ended and a later new end date. Check the written agreements urgently.'
+            );
+          } else {
+            result.extensionDate = data.finalExtendedPeriodEndDate;
+            result.status = 'review-required';
+          }
+        } else {
+          result.extensionDate = data.extendedPeriodEndDate;
+          result.status = 'review-required';
+        }
+        warnings.push(
+          'The displayed extended date is a preliminary estimate from the dates entered. Check that each agreement satisfies section 29B and that no further extension changes the current period.'
+        );
+      }
+    }
+  } else if (data.extensionStatus === 'unsure') {
+    result.status = statutoryDate ? 'review-required' : 'incomplete';
+    warnings.push(
+      'It is not known whether the parties made a Section 29B agreement extending the application period. Check all written agreements before relying on the statutory date.'
+    );
+  } else if (data.extensionStatus && data.extensionStatus !== 'no') {
+    result.status = statutoryDate ? 'review-required' : 'incomplete';
+    warnings.push('State whether the parties agreed an extension under section 29B.');
+  } else if (!data.extensionStatus) {
+    result.status = statutoryDate ? 'review-required' : 'incomplete';
+    warnings.push(
+      'Confirm whether the parties agreed any extension under section 29B before relying on the displayed statutory date.'
+    );
+  }
+
+  if (data.telecomTenancy === 'yes') {
+    const possiblyWithinSpecialJurisdiction =
+      data.telecomSubsistingAgreement !== 'no' && data.telecomPrimaryPurposeCodeRights !== 'no';
+    if (possiblyWithinSpecialJurisdiction) {
+      result.jurisdiction = 'tribunal-review-required';
+      warnings.push(
+        'From 30 July 2026, specified proceedings for a subsisting telecommunications agreement whose primary purpose is to confer electronic communications code rights are heard by the First-tier Tribunal or Upper Tribunal. Confirm whether this agreement meets both statutory conditions; this checker cannot determine the correct forum or tribunal procedure.'
+      );
+    }
+  }
+  return result;
+}
 
 function addMonths(value, months) {
   const date = parseLocalDate(value);
@@ -49,7 +185,7 @@ function checkNoticeWindow(serviceDate, anchorDate, label, errors) {
 export function validateBusinessTenancyNotice(data = {}) {
   const errors = [];
   const warnings = [
-    'This is a preliminary checklist only. It does not confirm that Part II applies, that the tenancy qualifies for renewal, that a notice was correctly completed or served, or that a court/tribunal deadline has been met.',
+    'This is a preliminary checklist only. It does not confirm that Part II applies, that the tenancy qualifies for renewal, that a notice was correctly completed or served, or that a court/tribunal application is valid or in time.',
     'Check the current prescribed notice form and the full GOV.UK guidance. The parties should obtain specialist advice before serving a notice or allowing a court deadline to expire.'
   ];
 
@@ -151,7 +287,11 @@ export function validateBusinessTenancyNotice(data = {}) {
     const responseDate = parseLocalDate(data.counterNoticeDate);
     if (requestDate && responseDate) {
       const twoMonthsAfter = parseLocalDate(addMonths(data.serviceDate, 2));
-      if (responseDate > twoMonthsAfter) {
+      if (responseDate < requestDate) {
+        errors.push(
+          'The counter-notice date entered is before the request date. Verify the documents and dates.'
+        );
+      } else if (responseDate > twoMonthsAfter) {
         errors.push(
           'The counter-notice date entered is more than two calendar months after the request date. Verify service, any agreed extension and court orders.'
         );
@@ -164,21 +304,18 @@ export function validateBusinessTenancyNotice(data = {}) {
     }
     if (data.landlordResponse === 'unknown') {
       warnings.push(
-        'A landlord wishing to oppose a Section 26 request generally must serve a counter-notice within two months. Confirm the response and calculate all court deadlines urgently.'
+        'A landlord wishing to oppose a Section 26 request generally must serve a counter-notice within two months. Confirm the response and check the calculated earliest application date.'
       );
     }
   }
 
-  if (data.telecomTenancy === 'yes') {
-    warnings.push(
-      'GOV.UK guidance updated 30 July 2026: for certain legacy telecommunications tenancies, references to “the court” in prescribed forms must be read as references to the tribunal with jurisdiction. Confirm whether this tenancy falls within that class.'
-    );
-  }
+  const applicationDeadline = calculateApplicationDeadline(data, warnings);
 
   return {
     valid: errors.length === 0,
     errors,
     warnings,
+    applicationDeadline,
     status: errors.length === 0 ? 'check-required' : 'review-required',
     checkedFields: [
       'noticeType',

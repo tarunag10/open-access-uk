@@ -58,6 +58,23 @@ Sources checked 25 October 2026:
 - [GOV.UK prescribed forms under the 1954 Act](https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords/forms-prescribed-under-the-landlord-and-tenant-act-1954-part-2-notices-regulations-2004), updated 30 July 2026. The guidance explains that references to the court in prescribed forms are read as tribunal references for specified legacy telecommunications disputes.
 - [Landlord and Tenant Act 1954, sections 25](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/25), [26](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/26) and [30](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/section/30); [2004 prescribed-form Regulations](https://www.legislation.gov.uk/uksi/2004/1005).
 
+## Business tenancy application deadline update — 28 October 2026
+
+Extended the business-tenancy checklist to show a preliminary Section 29A application-period endpoint: for a Section 25 notice this is the stated termination date; for a Section 26 request it is the day immediately before the proposed new tenancy date. A Section 26 result also shows the usual earliest tenant application date two months after the request, or the entered counter-notice date where the landlord has given a Section 26(6) notice. Missing dates leave the estimate uncalculated.
+
+The form records the date and end date of an initial Section 29B agreement and one further extension. It checks the recorded dates against the statutory period and each other, labels extended dates as preliminary, and requires review because dates alone cannot establish the written agreement’s legal effect or an unrecorded further extension. Section 56.3 and Practice Direction 56 paragraph 3.4 require the claim to state the statutory or agreed extended period expiry date; Part 56 specifies Part 8 for unopposed claims and Part 7 for opposed claims.
+
+The telecommunications prompt now asks whether both statutory conditions may apply: a subsisting agreement whose primary purpose is to confer electronic communications code rights. If either condition is unknown or potentially met, the result flags First-tier Tribunal/Upper Tribunal jurisdiction for review and does not decide the forum.
+
+Sources checked 28 October 2026:
+
+- [Landlord and Tenant Act 1954, sections 29A and 29B](https://www.legislation.gov.uk/ukpga/Eliz2/2-3/56/part/II/england/2026-07-30).
+- [Civil Procedure Rules Part 56](https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part56) and [Practice Direction 56](https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part56/pd_part56).
+- [2026 telecommunications jurisdiction regulations, regulation 3](https://www.legislation.gov.uk/uksi/2026/569/regulation/3/made).
+- [GOV.UK business lease guide, updated 30 July 2026](https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords).
+
+Automated regressions cover Section 25 and 26 endpoints, Section 26 early-application boundaries, one and two Section 29B extensions, missing information, telecom jurisdiction flags, and accessible form fields. The browser continues to process details locally and does not save or transmit business-tenancy form data. These estimates do not determine whether an application is valid, in time, correctly issued, or within court or tribunal jurisdiction.
+
 Automated evidence covers Section 25 unopposed/opposed Form 1/Form 2 paths, Section 26 Form 3, date boundaries, contracting-out flags, the telecom update, and accessible form controls. This workflow remains an educational triage aid, not a substitute for checking statutory forms or specialist review.
 
 ## Employment Tribunal deadline transition verification — 25 October 2026
