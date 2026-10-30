@@ -552,6 +552,7 @@ function parseEviction(value) {
 }
 
 
+
 // ===== ../../shared/eviction/business-tenancy.mjs =====
 /**
  * Preliminary checks for business tenancy renewal notices under Part II of
@@ -883,6 +884,8 @@ function validateBusinessTenancyNotice(data = {}) {
   };
 }
 
+
+
 // ===== ../../shared/theme/index.mjs =====
 // shared/theme/index.mjs
 const THEME_STORAGE_KEY = 'open-access-uk:theme';
@@ -897,6 +900,7 @@ function resolveInitialTheme({ stored, prefersDark } = {}) {
 function nextTheme(current) {
   return current === 'dark' ? 'light' : 'dark';
 }
+
 
 
 // ===== src/tracker.js (imports resolved) =====
@@ -1104,6 +1108,7 @@ export {
   initBusinessTenancyUI,
   toSection8ValidationData
 };
+
 
 
 // ===== App logic =====
