@@ -93,7 +93,7 @@ function calculateApplicationDeadline(data, warnings) {
       } else if (extensionDate <= parseLocalDate(statutoryEndBoundary)) {
         result.status = 'review-required';
         warnings.push(
-          'The recorded extended period end date does not fall after the statutory period as section 29B requires. Check the written agreement.'
+          'The recorded extended period end date does not fall after the statutory period as section 29B requires. Check the agreement terms.'
         );
       } else {
         const furtherAgreementDate = parseLocalDate(data.furtherExtensionAgreementDate);
@@ -109,7 +109,7 @@ function calculateApplicationDeadline(data, warnings) {
           if (furtherAgreementDate > extensionDate || finalExtensionDate <= extensionDate) {
             result.status = 'review-required';
             warnings.push(
-              'The further extension dates do not show an agreement made before the earlier period ended and a later new end date. Check the written agreements urgently.'
+              'The further extension dates do not show an agreement made before the earlier period ended and a later new end date. Check the agreements urgently.'
             );
           } else {
             result.extensionDate = data.finalExtendedPeriodEndDate;
@@ -127,7 +127,7 @@ function calculateApplicationDeadline(data, warnings) {
   } else if (data.extensionStatus === 'unsure') {
     result.status = statutoryDate ? 'review-required' : 'incomplete';
     warnings.push(
-      'It is not known whether the parties made a Section 29B agreement extending the application period. Check all written agreements before relying on the statutory date.'
+      'It is not known whether the parties made a Section 29B agreement extending the application period. Check all agreements before relying on the statutory date.'
     );
   } else if (data.extensionStatus && data.extensionStatus !== 'no') {
     result.status = statutoryDate ? 'review-required' : 'incomplete';
