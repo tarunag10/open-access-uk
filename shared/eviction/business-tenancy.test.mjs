@@ -361,6 +361,9 @@ test('business tenancy tab exposes accessible fields and official forms links', 
   assert.match(html, /forms-prescribed-under-the-landlord-and-tenant-act-1954/);
   assert.match(html, /business lease renewal guide/);
   assert.match(html, /section 29B/);
+  assert.match(html, /Was the application period extended by agreement under section 29B\\?/i);
+  assert.doesNotMatch(html, /extended by written agreement under section 29B/i);
+  assert.doesNotMatch(html, /Date the first written extension agreement was made/i);
   assert.match(html, /application deadline \(preliminary estimate\)/i);
   assert.match(html, /section\/29A/);
   assert.match(html, /section\/29B/);
