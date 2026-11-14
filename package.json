@@ -22,7 +22,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "^1.45.0",
+    "@playwright/test": "^1.63.0",
     "esbuild": "^0.28.1",
     "eslint": "^10.6.0",
     "http-server": "^14.1.1",
