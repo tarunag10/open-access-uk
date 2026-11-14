@@ -1,4 +1,6 @@
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
+import { THEME_STORAGE_KEY, resolveInitialTheme, nextTheme } from '../../shared/theme/index.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -40,7 +42,10 @@ test('getNoticeTypes returns all 9 notice types', () => {
 });
 
 test('form exposes every notice type and conditional RRA evidence field', () => {
-  const html = readFileSync(fileURLToPath(new URL('../index.html', import.meta.url)), 'utf8');
+  const html = readFileSync(
+    fileURLToPath(new URL('../index.html', import.meta.url)),
+    'utf8'
+  ).replace(/\s+/g, ' ');
   for (const notice of getNoticeTypes()) {
     assert.match(
       html,
@@ -49,12 +54,12 @@ test('form exposes every notice type and conditional RRA evidence field', () => 
     );
   }
   assert.match(html, /name="landlordIntentionEvidence"/);
-  assert.match(html, /name="rentArrearsMonthsAtHearing"/);
+  assert.match(html, /name="arrearsAmountAtHearing"/);
   assert.match(html, /name="possessionDate"/);
-  assert.match(html, /name="proceedingsIssuedDate"/);
+  assert.match(html, /name="claimRequestedDate"/);
   assert.match(html, /name="noticeForm"/);
   assert.match(html, /guidance\/assured-tenancy-forms/);
-  assert.match(html, /Legal sources last checked: 25 October 2026/);
+  assert.match(html, /Other checklist content was last reviewed on 25 October 2026/);
 });
 
 test('form mapping passes landlord evidence, tenancy and both arrears snapshots', () => {
@@ -65,8 +70,15 @@ test('form mapping passes landlord evidence, tenancy and both arrears snapshots'
       possessionDate: '2027-01-01',
       tenancyStartDate: '2025-01-01',
       serviceMethod: 'personal',
-      rentArrearsMonths: '3',
-      rentArrearsMonthsAtHearing: '3.5',
+      tenancyType: 'private-assured',
+      rentFrequency: 'fortnightly',
+      rentAmount: '200',
+      arrearsAmountAtNotice: '1300',
+      arrearsAmountAtHearing: '1400',
+      qualifyingUcArrearsAtNotice: '0',
+      qualifyingUcArrearsAtHearing: '100',
+      claimRequestedDate: '2026-07-01',
+      orderEffectiveDate: '2026-07-15',
       landlordIntentionEvidence: 'Instructed estate agent'
     },
     'rra-ground-landlord-sale'
@@ -75,8 +87,15 @@ test('form mapping passes landlord evidence, tenancy and both arrears snapshots'
   assert.equal(mapped.noticeForm, 'form3a');
   assert.equal(mapped.landlordIntentionEvidence, 'Instructed estate agent');
   assert.equal(mapped.tenancyStartDate, '2025-01-01');
-  assert.equal(mapped.rentArrearsMonthsAtNotice, 3);
-  assert.equal(mapped.rentArrearsMonthsAtHearing, 3.5);
+  assert.equal(mapped.tenancyType, 'private-assured');
+  assert.equal(mapped.rentFrequency, 'fortnightly');
+  assert.equal(mapped.rentAmount, 200);
+  assert.equal(mapped.arrearsAmountAtNotice, 1300);
+  assert.equal(mapped.arrearsAmountAtHearing, 1400);
+  assert.equal(mapped.qualifyingUcArrearsAtNotice, 0);
+  assert.equal(mapped.qualifyingUcArrearsAtHearing, 100);
+  assert.equal(mapped.claimRequestedDate, '2026-07-01');
+  assert.equal(mapped.orderEffectiveDate, '2026-07-15');
 });
 
 test('getNoticeTypes includes section21', () => {
@@ -127,6 +146,7 @@ test('getDepositProtectionChecklist each item has id and description', () => {
 
 test('validateSection21 valid pre-abolition notice returns no errors', () => {
   const result = validateSection21({
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     noticeForm: 'form3',
     possessionDate: '2026-06-15',
@@ -135,7 +155,7 @@ test('validateSection21 valid pre-abolition notice returns no errors', () => {
     hmoLicense: true,
     epcProvided: true,
     gasSafetyCertificate: true,
-    proceedingsIssuedDate: '2026-07-31'
+    claimRequestedDate: '2026-07-31'
   });
   assert.equal(result.valid, true);
   assert.equal(result.errors.length, 0);
@@ -143,6 +163,7 @@ test('validateSection21 valid pre-abolition notice returns no errors', () => {
 
 test('Section 21 transition permits only pre-abolition notices with proceedings issued by 31 July', () => {
   const base = {
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-30',
     possessionDate: '2026-06-30',
     prescribedForm: true,
@@ -150,8 +171,8 @@ test('Section 21 transition permits only pre-abolition notices with proceedings 
     epcProvided: true,
     gasSafetyCertificate: true
   };
-  assert.equal(validateSection21({ ...base, proceedingsIssuedDate: '2026-07-31' }).valid, true);
-  const late = validateSection21({ ...base, proceedingsIssuedDate: '2026-08-01' });
+  assert.equal(validateSection21({ ...base, claimRequestedDate: '2026-07-31' }).valid, true);
+  const late = validateSection21({ ...base, claimRequestedDate: '2026-08-01' });
   assert.equal(late.valid, false);
   assert.ok(late.errors.some((error) => error.includes('31 July 2026')));
   assert.equal(validateSection21(base).valid, false, 'missing court issue date must not pass');
@@ -171,6 +192,7 @@ test('validateSection21 missing noticeServedDate returns error', () => {
 
 test('validateSection21 notice period less than 62 days returns error', () => {
   const result = validateSection21({
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     possessionDate: '2026-05-10',
     prescribedForm: true,
@@ -187,6 +209,7 @@ test('validateSection21 notice period less than 62 days returns error', () => {
 
 test('validateSection21 missing prescribed form returns error', () => {
   const result = validateSection21({
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     prescribedForm: false,
     depositProtected: true,
@@ -200,6 +223,7 @@ test('validateSection21 missing prescribed form returns error', () => {
 
 test('validateSection21 deposit not protected returns error', () => {
   const result = validateSection21({
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     prescribedForm: true,
     depositProtected: false,
@@ -214,10 +238,17 @@ test('validateSection21 deposit not protected returns error', () => {
 test('validateSection8 valid ground 8 returns no errors', () => {
   const result = validateSection8({
     ground: 'ground8',
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     possessionDate: '2026-04-29',
     noticeForm: 'form3',
-    rentArrearsMonths: 3,
+    rentFrequency: 'monthly',
+    rentAmount: 1000,
+    arrearsAmountAtNotice: 3000,
+    arrearsAmountAtHearing: 3000,
+    qualifyingUcArrearsAtNotice: 0,
+    qualifyingUcArrearsAtHearing: 0,
+    claimRequestedDate: '2026-05-01',
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, true);
@@ -226,8 +257,16 @@ test('validateSection8 valid ground 8 returns no errors', () => {
 
 test('validateSection8 missing ground returns error', () => {
   const result = validateSection8({
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
-    rentArrearsMonths: 3,
+    tenancyType: 'private-assured',
+    rentFrequency: 'monthly',
+    rentAmount: 1000,
+    arrearsAmountAtNotice: 3000,
+    arrearsAmountAtHearing: 3000,
+    qualifyingUcArrearsAtNotice: 0,
+    qualifyingUcArrearsAtHearing: 0,
+    claimRequestedDate: '2026-05-01',
     serviceMethod: 'personal'
   });
   assert.equal(result.valid, false);
@@ -237,6 +276,7 @@ test('validateSection8 missing ground returns error', () => {
 test('validateSection8 ground 8 with insufficient arrears returns error', () => {
   const result = validateSection8({
     ground: 'ground8',
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     rentArrearsMonths: 1,
     serviceMethod: 'personal'
@@ -252,6 +292,7 @@ test('validateSection8 ground 8 with insufficient arrears returns error', () => 
 test('validateSection8 missing service method returns error', () => {
   const result = validateSection8({
     ground: 'ground8',
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     rentArrearsMonths: 3
   });
@@ -262,6 +303,7 @@ test('validateSection8 missing service method returns error', () => {
 test('validateSection8 ground 12 with no breach details returns error', () => {
   const result = validateSection8({
     ground: 'ground12',
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     serviceMethod: 'personal'
   });
@@ -276,6 +318,7 @@ test('validateSection8 ground 12 with no breach details returns error', () => {
 test('validateSection8 ground 14 with no nuisance details returns error', () => {
   const result = validateSection8({
     ground: 'ground14',
+    tenancyType: 'private-assured',
     noticeServedDate: '2026-04-15',
     serviceMethod: 'personal'
   });
@@ -414,4 +457,130 @@ test('serializeEviction and parseEviction roundtrip', () => {
   assert.equal(roundtripped.length, 2);
   assert.equal(roundtripped[0].tenantName, 'Alice');
   assert.equal(roundtripped[1].tenantName, 'Bob');
+});
+
+test('Ground 8 mapping preserves unknown amounts instead of coercing blanks to zero', () => {
+  const fields = [
+    'rentAmount',
+    'arrearsAmountAtNotice',
+    'arrearsAmountAtHearing',
+    'qualifyingUcArrearsAtNotice',
+    'qualifyingUcArrearsAtHearing'
+  ];
+  for (const ground of ['ground8', 'rra-ground-serious-arrears']) {
+    for (const blank of ['', '   ', undefined, null]) {
+      const mapped = toSection8ValidationData(
+        Object.fromEntries(fields.map((key) => [key, blank])),
+        ground
+      );
+      for (const key of fields) assert.equal(mapped[key], undefined, key);
+    }
+    const zero = toSection8ValidationData({ qualifyingUcArrearsAtNotice: '0' }, ground);
+    assert.equal(zero.qualifyingUcArrearsAtNotice, 0);
+  }
+});
+
+test('all new residential fields have explicit labels and conditional groups', () => {
+  const html = readFileSync(
+    fileURLToPath(new URL('../index.html', import.meta.url)),
+    'utf8'
+  ).replace(/\s+/g, ' ');
+  for (const name of [
+    'tenancyType',
+    'rentFrequency',
+    'rentAmount',
+    'arrearsAmountAtNotice',
+    'arrearsAmountAtHearing',
+    'qualifyingUcArrearsAtNotice',
+    'qualifyingUcArrearsAtHearing',
+    'orderEffectiveDate',
+    'claimRequestedDate'
+  ]) {
+    assert.match(html, new RegExp(`name="${name}"`));
+    assert.match(html, new RegExp(`for="${name}"`));
+  }
+  assert.match(html, /id="ground14-order-options" hidden/);
+  assert.match(html, /id="ground10-arrears-options" hidden/);
+  assert.match(html, /not a\s+blanket exclusion/);
+});
+
+test('app renders warnings separately and saves new inputs without using warnings in letters', () => {
+  const app = readFileSync(fileURLToPath(new URL('../src/app.js', import.meta.url)), 'utf8');
+  const logic = app.slice(app.indexOf('// ===== App logic ====='));
+  assert.match(logic, /record.result\?\.warnings/);
+  assert.match(logic, /record.result\?\.earliestOrderDate/);
+  for (const field of [
+    'tenancyType',
+    'rentFrequency',
+    'rentAmount',
+    'arrearsAmountAtNotice',
+    'arrearsAmountAtHearing',
+    'qualifyingUcArrearsAtNotice',
+    'qualifyingUcArrearsAtHearing',
+    'orderEffectiveDate',
+    'claimRequestedDate'
+  ]) {
+    assert.match(logic, new RegExp(`${field}: data\\.${field}`));
+  }
+  assert.doesNotMatch(logic, /issues:.*warnings/);
+  assert.match(logic, /field.type === 'checkbox'/);
+});
+
+test('bundled theme initializer applies preference, toggles accessibly and persists', () => {
+  const app = readFileSync(fileURLToPath(new URL('../src/app.js', import.meta.url)), 'utf8');
+  const logic = app.slice(app.indexOf('// ===== App logic ====='));
+  const initializer = logic.slice(
+    logic.indexOf('function initTheme('),
+    logic.indexOf('const STORAGE_KEY')
+  );
+  const attributes = {};
+  const rootAttributes = {};
+  const stored = new Map([[THEME_STORAGE_KEY, 'dark']]);
+  let click;
+  const toggle = {
+    setAttribute: (name, value) => {
+      attributes[name] = value;
+    },
+    addEventListener: (event, handler) => {
+      if (event === 'click') click = handler;
+    }
+  };
+  const context = {
+    THEME_STORAGE_KEY,
+    resolveInitialTheme,
+    nextTheme,
+    window: {
+      localStorage: {
+        getItem: (key) => stored.get(key),
+        setItem: (key, value) => stored.set(key, value)
+      },
+      matchMedia: () => ({ matches: false })
+    },
+    document: {
+      querySelector: () => toggle,
+      documentElement: {
+        setAttribute: (name, value) => {
+          rootAttributes[name] = value;
+        }
+      }
+    }
+  };
+  runInNewContext(initializer + '\ninitTheme();', context);
+  assert.equal(rootAttributes['data-theme'], 'dark');
+  assert.equal(attributes['aria-pressed'], 'true');
+  assert.equal(toggle.textContent, 'Light theme');
+  click();
+  assert.equal(rootAttributes['data-theme'], 'light');
+  assert.equal(attributes['aria-pressed'], 'false');
+  assert.equal(stored.get(THEME_STORAGE_KEY), 'light');
+  context.window.localStorage = {
+    getItem() {
+      throw new Error('blocked');
+    },
+    setItem() {
+      throw new Error('blocked');
+    }
+  };
+  assert.doesNotThrow(() => runInNewContext(initializer + '\ninitTheme();', context));
+  assert.doesNotThrow(() => click());
 });

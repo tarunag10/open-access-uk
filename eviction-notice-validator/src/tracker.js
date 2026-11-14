@@ -1,3 +1,4 @@
+import { parseLocalDate, toLocalDateString } from '../../shared/eviction/dates.mjs';
 import {
   getNoticeTypes,
   getGroundsOfSection8,
@@ -34,19 +35,30 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+function optionalNumber(value) {
+  return value === undefined || value === null || String(value).trim() === ''
+    ? undefined
+    : Number(value);
+}
+
 function toSection8ValidationData(data, ground) {
   return {
     ground,
+    tenancyType: data.tenancyType,
     noticeServedDate: data.noticeServedDate,
     possessionDate: data.possessionDate,
+    orderEffectiveDate: data.orderEffectiveDate,
+    claimRequestedDate: data.claimRequestedDate,
     tenancyStartDate: data.tenancyStartDate,
     noticeForm: data.noticeForm,
     serviceMethod: data.serviceMethod,
-    rentArrearsMonths: data.rentArrearsMonths ? Number(data.rentArrearsMonths) : 0,
-    rentArrearsMonthsAtNotice: data.rentArrearsMonths ? Number(data.rentArrearsMonths) : 0,
-    rentArrearsMonthsAtHearing: data.rentArrearsMonthsAtHearing
-      ? Number(data.rentArrearsMonthsAtHearing)
-      : 0,
+    rentFrequency: data.rentFrequency,
+    rentAmount: optionalNumber(data.rentAmount),
+    arrearsAmountAtNotice: optionalNumber(data.arrearsAmountAtNotice),
+    arrearsAmountAtHearing: optionalNumber(data.arrearsAmountAtHearing),
+    qualifyingUcArrearsAtNotice: optionalNumber(data.qualifyingUcArrearsAtNotice),
+    qualifyingUcArrearsAtHearing: optionalNumber(data.qualifyingUcArrearsAtHearing),
+    rentArrearsMonths: optionalNumber(data.rentArrearsMonths),
     landlordIntentionEvidence: data.landlordIntentionEvidence?.trim(),
     breachDescription: data.breachDescription,
     nuisanceDescription: data.nuisanceDescription
@@ -215,5 +227,7 @@ export {
   BUSINESS_TENANCY_SOURCES,
   validateBusinessTenancyNotice,
   initBusinessTenancyUI,
-  toSection8ValidationData
+  toSection8ValidationData,
+  parseLocalDate,
+  toLocalDateString
 };
