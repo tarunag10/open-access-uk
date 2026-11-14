@@ -35,13 +35,14 @@
         <div class="banner-content">
           <strong>Law changed 1 May 2026</strong>
           <p>
-            Section 21 no-fault evictions were abolished in England on 1 May 2026 under the Renters'
-            Rights Act 2025. A pre-abolition Section 21 notice could only be used to start a court
-            claim by
-            <strong>31 July 2026</strong>. That deadline has passed; claims issued by then may
-            continue. From 1 May 2026, all possession claims use the revised Section 8 grounds with
-            new mandatory grounds and a raised serious-arrears threshold (3+ months). For current
-            guidance, visit
+            For private assured tenancies in England outside PRP social housing, new Section 21
+            notices ended on 1 May 2026. A claimant relying on a pre-abolition notice had to request
+            court issue before the applicable transition deadline, no later than
+            <strong>31 July 2026</strong>, and satisfy the notice’s own time limits. Preserved
+            proceedings may continue. Revised Ground 8 uses three months’ rent for monthly payments
+            or thirteen weeks’ rent for weekly or fortnightly payments, with qualifying unpaid
+            Universal Credit amounts disregarded. Historical notices and PRP social housing need
+            separate rules. For current guidance, visit
             <a
               href="https://www.gov.uk/guidance/repossessing-your-privately-rented-property-after-1-may-2026"
               >GOV.UK guidance for landlords</a
@@ -110,6 +111,21 @@
             <a href="https://www.gov.uk/guidance/assured-tenancy-forms">Form 3A</a>. Check GOV.UK
             for the current form and guidance.
           </p>
+          <p id="tenancy-scope">
+            Residential checks cover private assured tenancies in England only, not social housing
+            provided by a private registered provider (PRP), licences or other tenancy types.
+            Multiple grounds and cases where the court dispenses with notice need specialist review
+            and are outside this checklist.
+          </p>
+          <label for="tenancyType">Tenancy category</label>
+          <select id="tenancyType" name="tenancyType" aria-describedby="tenancy-scope">
+            <option value="">Select or leave unknown...</option>
+            <option value="private-assured">
+              Private assured tenancy in England (not PRP social housing)
+            </option>
+            <option value="prp-social">PRP social housing (not covered)</option>
+            <option value="other">Other or unsure (not covered)</option>
+          </select>
           <label for="noticeType">Notice type</label>
           <select id="noticeType" name="noticeType">
             <option value="section21">Section 21 (historic notices only)</option>
@@ -125,7 +141,7 @@
               Section 8 - Ground 1 (landlord or family member moving in)
             </option>
             <option value="rra-ground-serious-arrears">
-              Section 8 - Ground 8 (serious rent arrears, 3 months)
+              Section 8 - Ground 8 (revised rent arrears rules)
             </option>
           </select>
 
@@ -154,15 +170,18 @@
           <label for="noticeServedDate">Date notice served</label>
           <input id="noticeServedDate" name="noticeServedDate" type="date" />
 
-          <label for="possessionDate">Date the notice requires possession</label>
+          <label for="possessionDate">Date after which the notice says proceedings may start</label>
           <input id="possessionDate" name="possessionDate" type="date" />
 
           <div id="section21-transition-options" hidden>
-            <label for="proceedingsIssuedDate">Date Section 21 court proceedings were issued</label>
-            <input id="proceedingsIssuedDate" name="proceedingsIssuedDate" type="date" />
+            <label for="claimRequestedDate"
+              >Date the claimant requested the court to issue proceedings</label
+            >
+            <input id="claimRequestedDate" name="claimRequestedDate" type="date" />
             <p>
-              Pre-1 May 2026 notices could only be used to start a possession claim by 31 July 2026.
-              Existing issued cases may continue.
+              For pre-1 May 2026 notices, record when the claimant requested the court to issue the
+              claim. Transition rules and the notice’s own time limit apply. Existing issued cases
+              may continue; this does not extend the deadline for starting a claim.
             </p>
           </div>
 
@@ -215,29 +234,89 @@
               <option value="other">Other or unsure</option>
             </select>
 
-            <label for="rentArrearsMonths"
-              >Months of rent arrears at date notice served (Ground 8/10)</label
-            >
-            <input
-              id="rentArrearsMonths"
-              name="rentArrearsMonths"
-              type="number"
-              min="0"
-              step="0.5"
-              placeholder="e.g. 3"
-            />
-
-            <div id="serious-arrears-options" hidden>
-              <label for="rentArrearsMonthsAtHearing"
-                >Months of rent arrears at hearing (Ground 8)</label
+            <div id="ground10-arrears-options" hidden>
+              <label for="rentArrearsMonths"
+                >Months of rent arrears at notice (Ground 10 only)</label
               >
               <input
-                id="rentArrearsMonthsAtHearing"
-                name="rentArrearsMonthsAtHearing"
+                id="rentArrearsMonths"
+                name="rentArrearsMonths"
                 type="number"
                 min="0"
-                step="0.5"
+                step="0.01"
               />
+            </div>
+            <div id="serious-arrears-options" hidden>
+              <p>
+                For Ground 8, enter rent lawfully due and arrears in pounds. Monthly, weekly and
+                fortnightly rent have different thresholds. Both the notice and hearing positions
+                matter. Leave hearing figures blank if unknown; do not predict them.
+              </p>
+              <label for="rentFrequency">How often is rent payable?</label>
+              <select id="rentFrequency" name="rentFrequency">
+                <option value="">Select...</option>
+                <option value="monthly">Monthly</option>
+                <option value="weekly">Weekly</option>
+                <option value="fortnightly">Fortnightly</option>
+                <option value="other">Other (specialist review required)</option>
+              </select>
+              <label for="rentAmount">Rent per payment period (£)</label>
+              <input id="rentAmount" name="rentAmount" type="number" min="0.01" step="0.01" />
+              <label for="arrearsAmountAtNotice">Total unpaid rent at notice (£)</label>
+              <input
+                id="arrearsAmountAtNotice"
+                name="arrearsAmountAtNotice"
+                type="number"
+                min="0"
+                step="0.01"
+              />
+              <label for="arrearsAmountAtHearing">Total unpaid rent at hearing (£)</label>
+              <input
+                id="arrearsAmountAtHearing"
+                name="arrearsAmountAtHearing"
+                type="number"
+                min="0"
+                step="0.01"
+              />
+              <p id="uc-arrears-help">
+                For the revised rules, exclude only rent unpaid because an entitled Universal Credit
+                award including housing costs had not yet been received. This is not a blanket
+                exclusion for benefits or all rent arrears. Enter 0 if none; leave blank if unknown.
+                Check the evidence separately at notice and hearing.
+              </p>
+              <label for="qualifyingUcArrearsAtNotice"
+                >Qualifying unpaid Universal Credit rent at notice (£)</label
+              >
+              <input
+                id="qualifyingUcArrearsAtNotice"
+                name="qualifyingUcArrearsAtNotice"
+                type="number"
+                min="0"
+                step="0.01"
+                aria-describedby="uc-arrears-help"
+              />
+              <label for="qualifyingUcArrearsAtHearing"
+                >Qualifying unpaid Universal Credit rent at hearing (£)</label
+              >
+              <input
+                id="qualifyingUcArrearsAtHearing"
+                name="qualifyingUcArrearsAtHearing"
+                type="number"
+                min="0"
+                step="0.01"
+                aria-describedby="uc-arrears-help"
+              />
+            </div>
+            <div id="ground14-order-options" hidden>
+              <p>
+                Ground 14 permits immediate proceedings after notice. This is different from the
+                date a possession order can take effect. This checklist covers a single ground with
+                a served notice, not court dispensation or mixed-ground cases.
+              </p>
+              <label for="orderEffectiveDate"
+                >Date the court order takes effect, if known (Ground 14)</label
+              >
+              <input id="orderEffectiveDate" name="orderEffectiveDate" type="date" />
             </div>
 
             <div id="landlord-intention-options" hidden>
@@ -683,17 +762,19 @@
 
       <section id="guidance" class="footer-band">
         <p>
-          Legal sources last checked: 25 October 2026. Check the linked official guidance for later
-          changes.
+          Ground 8, Ground 14 and transition rules reviewed for this update: 14 November 2026. Other
+          checklist content was last reviewed on 25 October 2026. Check the linked official guidance
+          for later changes.
         </p>
         <h2>Before relying on a possession notice</h2>
         <div class="cards">
           <article class="card">
             <h3>Historic Section 21 cases</h3>
             <p>
-              Private landlords cannot serve a new Section 21 notice. The deadline to start a court
-              claim using a pre-1 May 2026 notice was 31 July 2026. Claims started by then may
-              continue. For a live case, get advice on the notice and court papers.
+              For the private assured tenancies covered here, no new Section 21 notice can be
+              served. A pre-1 May 2026 notice required a request for court issue by the applicable
+              deadline, no later than 31 July 2026, subject to its own time limits. Preserved
+              proceedings may continue. Get advice on the notice, request evidence and court papers.
             </p>
           </article>
           <article class="card">

@@ -1,6 +1,33 @@
 // eviction-notice-validator/src/app.js — generated bundle (all shared modules inlined)
 // Do not edit directly. Edit shared/ modules and re-run: node scripts/bundle-tool.mjs eviction-notice-validator
 
+// ===== ../../shared/eviction/dates.mjs =====
+// Browser-safe civil date helpers. Kept equivalent to shared/deadlines helpers.
+function parseLocalDate(value) {
+  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const [, year, month, day] = match.map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
+}
+
+function toLocalDateString(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+  const y = date.getUTCFullYear ? date.getUTCFullYear() : date.getFullYear();
+  const m = date.getUTCMonth ? date.getUTCMonth() : date.getMonth();
+  const d = date.getUTCDate ? date.getUTCDate() : date.getDate();
+  return [y, String(m + 1).padStart(2, '0'), String(d).padStart(2, '0')].join('-');
+}
+
+
 // ===== ../../shared/eviction/index.mjs =====
 /**
  * Eviction notice validation — England.
@@ -25,7 +52,7 @@ const NOTICE_TYPES = [
     noticeDays: 62,
     noticePeriodText: '2 calendar months',
     description:
-      "Abolished in England on 1 May 2026 by the Renters' Rights Act 2025. Cannot be served on any tenancy after that date.",
+      "Abolished in England on 1 May 2026 by the Renters' Rights Act 2025. Cannot be served on an in-scope private assured tenancy after that date.",
     source: 'housing-act-1988-s21',
     abolished: true,
     abolishedDate: '2026-05-01'
@@ -35,7 +62,7 @@ const NOTICE_TYPES = [
     name: 'Section 8 - Ground 8 (Mandatory)',
     noticeDays: 28,
     description:
-      'At least 2 months rent arrears at time of notice and at hearing (pre-RRA). RRA raised threshold to at least 3 months arrears.',
+      'Ground 8: from 1 May 2026, at least 3 months (monthly rent) or 13 weeks (weekly/fortnightly rent), at notice and hearing, excluding qualifying unpaid Universal Credit amounts.',
     source: 'housing-act-1988-s8'
   },
   {
@@ -64,7 +91,7 @@ const NOTICE_TYPES = [
     name: 'Section 8 - Ground 14',
     noticeDays: 0,
     description:
-      'Nuisance or anti-social behaviour — under pre-RRA law proceedings could commence immediately after notice; RRA retains immediacy.',
+      'Proceedings may start immediately after service. Under the revised rules, where only Grounds 7A and/or 14 are established, a possession order cannot take effect within 14 days beginning with service.',
     source: 'housing-act-1988-s8'
   },
   // RRA-introduced grounds (post-1 May 2026)
@@ -88,10 +115,10 @@ const NOTICE_TYPES = [
   },
   {
     id: 'rra-ground-serious-arrears',
-    name: 'RRA Ground — Serious Rent Arrears (3+ months)',
+    name: 'RRA Ground — Serious Rent Arrears',
     noticeDays: 28,
     description:
-      'Ground 8: at least 3 months’ rent arrears at notice and hearing. Four weeks’ notice.',
+      'Ground 8: at least 3 months (monthly rent) or 13 weeks (weekly/fortnightly rent) at notice and hearing, after qualifying Universal Credit deductions. Four weeks’ notice.',
     source: 'renters-rights-act-2025'
   }
 ];
@@ -102,7 +129,7 @@ const GROUNDS_OF_SECTION8 = [
     noticeDays: 28,
     type: 'mandatory',
     requirement:
-      'At least 3 months’ rent arrears at the notice date and hearing date for notices under the law in force from 1 May 2026. Earlier notices are subject to the former rules and transition limits.',
+      'From 1 May 2026: at least 3 months (monthly rent) or 13 weeks (weekly/fortnightly rent) at notice and hearing, after qualifying Universal Credit deductions. Earlier notices use former thresholds and transition limits.',
     source: 'housing-act-1988-s8'
   },
   {
@@ -131,7 +158,7 @@ const GROUNDS_OF_SECTION8 = [
     noticeDays: 0,
     type: 'discretionary',
     requirement:
-      'Nuisance or anti-social behaviour — proceedings may commence immediately after notice under pre-RRA and RRA law.',
+      'Proceedings may start immediately after service. The revised rules separately restrict when a possession order can take effect (14 days beginning with service where only Grounds 7A and/or 14 are established).',
     source: 'housing-act-1988-s8'
   },
   // RRA new grounds
@@ -155,7 +182,8 @@ const GROUNDS_OF_SECTION8 = [
     id: 'rra-ground-serious-arrears',
     noticeDays: 28,
     type: 'mandatory',
-    requirement: 'At least 3 months rent arrears at the notice date and hearing date.',
+    requirement:
+      'At least 3 months (monthly rent) or 13 weeks (weekly/fortnightly rent) at notice and hearing, after qualifying Universal Credit deductions.',
     source: 'renters-rights-act-2025'
   }
 ];
@@ -192,9 +220,9 @@ const DEPOSIT_PROTECTION_CHECKLIST = [
 /**
  * Checks whether a Section 21 notice is within the transition window.
  * Pre-1 May 2026: valid if served correctly.
- * 1 May – 31 July 2026: court proceedings may still be issued for
+ * 1 May – 31 July 2026: a court claim may still be requested for
  *   a pre-abolition S21 notice (served before 1 May).
- * Post-31 July 2026: no S21 notice can be enforced.
+ * After 31 July 2026, no new claim request; saved pending proceedings may continue.
  */
 function checkSection21Transition(noticeServedDate) {
   const served = parseLocalDate(noticeServedDate);
@@ -210,14 +238,14 @@ function checkSection21Transition(noticeServedDate) {
   if (served < commencement) {
     return {
       status: 'transition',
-      message: `This Section 21 notice was served before the law changed on 1 May 2026. It could only be used to start court proceedings by 31 July 2026. Existing proceedings started by that deadline may continue. Check the court record.`
+      message: `This Section 21 notice was served before the law changed on 1 May 2026. It could only be used to start court proceedings by 31 July 2026. A timely request to issue a claim may preserve pending proceedings. Check the notice’s own time limits and the court record.`
     };
   }
 
   if (served >= commencement && served <= courtDeadline) {
     return {
       status: 'critical',
-      message: `Section 21 was abolished on 1 May 2026. A notice served after abolition is invalid. If court proceedings were issued before 31 July 2026 on a pre-abolition notice, they may still proceed. Seek urgent advice from Shelter or a housing solicitor.`
+      message: `Section 21 was abolished on 1 May 2026. A notice served after abolition is invalid. A timely request to issue a claim on a pre-abolition notice may preserve pending proceedings. Seek urgent advice from Shelter or a housing solicitor.`
     };
   }
 
@@ -281,21 +309,30 @@ function validateSection21(data) {
     return { valid: false, errors, transition: null };
   }
 
+  if (data.tenancyType !== 'private-assured') {
+    errors.push(
+      'Confirm a private assured tenancy in England. PRP social housing and other or unknown tenancy types are outside this checklist.'
+    );
+    return { valid: false, errors, transition: null };
+  }
+  for (const key of ['noticeServedDate', 'possessionDate', 'claimRequestedDate']) {
+    if (data[key] && !parseLocalDate(data[key])) errors.push(`A valid ${key} is required.`);
+  }
   const transition = checkSection21Transition(data.noticeServedDate);
   if (transition.status === 'invalid' || transition.status === 'critical') {
     errors.push(transition.message);
     return { valid: false, errors, transition };
   }
 
-  if (!data.proceedingsIssuedDate) {
+  if (!data.claimRequestedDate) {
     errors.push(
-      'For a pre-1 May 2026 Section 21 notice, confirm whether court proceedings were issued by 31 July 2026.'
+      'For a pre-1 May 2026 Section 21 notice, confirm whether the court was requested to issue the claim by 31 July 2026.'
     );
-  } else if (data.proceedingsIssuedDate > SECTION_21_COURT_DEADLINE) {
+  } else if (data.claimRequestedDate > SECTION_21_COURT_DEADLINE) {
     errors.push('A Section 21 possession claim could not be started after 31 July 2026.');
-  } else if (data.possessionDate && data.proceedingsIssuedDate < data.possessionDate) {
+  } else if (data.possessionDate && data.claimRequestedDate < data.possessionDate) {
     errors.push(
-      'The Section 21 possession claim date is earlier than the date stated in the notice. Check the court record and notice.'
+      'The Section 21 claim request date is earlier than the date stated in the notice. Check the court record and notice.'
     );
   }
 
@@ -326,8 +363,68 @@ function validateSection21(data) {
 // Validation — Section 8 / RRA Grounds
 // ---------------------------------------------------------------------------
 
+// Money comparisons are in pence; blank/unknown inputs must not become zero.
+function pence(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
+  const rounded = Math.round(value * 100);
+  return Number.isSafeInteger(rounded) && Math.abs(value * 100 - rounded) < 0.000001
+    ? rounded
+    : null;
+}
+
+function checkRentArrears(data, revised, errors) {
+  const frequency = data.rentFrequency;
+  if (!['monthly', 'weekly', 'fortnightly'].includes(frequency)) {
+    errors.push(
+      'Confirm whether rent is payable monthly, weekly or fortnightly. Other or unknown payment periods require specialist review.'
+    );
+    return;
+  }
+  const rent = pence(data.rentAmount);
+  if (rent === null || rent === 0) {
+    errors.push('Enter a positive rent amount per payment period, to the nearest penny.');
+    return;
+  }
+  const periods =
+    frequency === 'monthly'
+      ? revised
+        ? 3
+        : 2
+      : frequency === 'weekly'
+        ? revised
+          ? 13
+          : 8
+        : revised
+          ? 6.5
+          : 4;
+  const threshold = rent * periods;
+  const label = frequency === 'monthly' ? `${revised ? 3 : 2} months` : `${revised ? 13 : 8} weeks`;
+  for (const stage of ['Notice', 'Hearing']) {
+    const arrears = pence(data[`arrearsAmountAt${stage}`]);
+    const uc = revised ? pence(data[`qualifyingUcArrearsAt${stage}`]) : 0;
+    if (arrears === null) {
+      errors.push(
+        `Confirm unpaid rent at the ${stage.toLowerCase()} date in pounds. An unknown hearing-date position is not a failed ground.`
+      );
+      continue;
+    }
+    if (uc === null || uc > arrears) {
+      errors.push(
+        `Confirm qualifying unpaid Universal Credit arrears at the ${stage.toLowerCase()} date (0 if none), no greater than total arrears. Only rent unpaid because an entitled UC housing award has not yet been received is disregarded.`
+      );
+      continue;
+    }
+    if (arrears - uc < threshold) {
+      errors.push(
+        `Ground 8 requires at least ${label} rent unpaid at the ${stage.toLowerCase()} date (${(threshold / 100).toFixed(2)} pounds), after any qualifying Universal Credit deduction.`
+      );
+    }
+  }
+}
+
 function validateSection8(data) {
   const errors = [];
+  const warnings = [];
   if (!data || !data.ground) {
     errors.push('Ground is required');
     return { valid: false, errors };
@@ -339,13 +436,55 @@ function validateSection8(data) {
     );
     return { valid: false, errors };
   }
-  if (!data.noticeServedDate) {
-    errors.push('Notice served date is required');
+  if (data.tenancyType !== 'private-assured') {
+    errors.push(
+      'Confirm a private assured tenancy in England. PRP social housing and other or unknown tenancy types are outside this checklist.'
+    );
+  }
+  if (!parseLocalDate(data.noticeServedDate)) {
+    errors.push('A valid notice served date is required');
+  }
+  for (const key of [
+    'possessionDate',
+    'claimRequestedDate',
+    'orderEffectiveDate',
+    'tenancyStartDate'
+  ]) {
+    if (data[key] && !parseLocalDate(data[key])) errors.push(`A valid ${key} is required.`);
   }
   if (!data.serviceMethod) {
     errors.push('Service method is required (personal or first/second class post)');
   }
   const noticeDate = parseLocalDate(data.noticeServedDate);
+  const isPostCommencement = noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT);
+  if (noticeDate && !isPostCommencement) {
+    const annualExpiry = addCalendarMonths(data.noticeServedDate, 12);
+    const requestDate = parseLocalDate(data.claimRequestedDate);
+    warnings.push(
+      'Pre-1 May 2026 notice: a timely request to the court to issue a claim may preserve the old rules until proceedings conclude. Check the notice, claim request and court record; actual court issue can be later.'
+    );
+    if (!requestDate) {
+      errors.push(
+        'Confirm the date the court was requested to issue the claim for this pre-1 May 2026 Section 8 notice.'
+      );
+    } else if (
+      data.claimRequestedDate >= annualExpiry ||
+      data.claimRequestedDate > SECTION_21_COURT_DEADLINE
+    ) {
+      errors.push(
+        `The claim request must be before ${annualExpiry} and no later than 31 July 2026 for this pre-1 May 2026 Section 8 notice (subject to statutory savings).`
+      );
+    } else if (
+      requestDate < noticeDate ||
+      (data.ground !== 'ground14' &&
+        data.possessionDate &&
+        data.claimRequestedDate < data.possessionDate)
+    ) {
+      errors.push(
+        'The claim request predates service or the date proceedings could begin. Check the court record.'
+      );
+    }
+  }
   const expectedForm =
     noticeDate && noticeDate >= parseLocalDate(RRA_COMMENCEMENT) ? 'form3a' : 'form3';
   if (data.noticeForm !== expectedForm) {
@@ -362,7 +501,6 @@ function validateSection8(data) {
     data.possessionDate &&
     !['rra-ground-landlord-sale', 'rra-ground-landlord-move-in'].includes(data.ground)
   ) {
-    const isPostCommencement = noticeDate >= parseLocalDate(RRA_COMMENCEMENT);
     const minimumNoticeDays = isPostCommencement
       ? ground.noticeDays
       : ['ground8', 'ground10', 'ground11'].includes(data.ground)
@@ -376,24 +514,14 @@ function validateSection8(data) {
     }
   }
 
-  // RRA ground: serious arrears (3+ months)
-  if (data.ground === 'rra-ground-serious-arrears') {
-    if (parseLocalDate(data.noticeServedDate) < parseLocalDate(RRA_COMMENCEMENT)) {
+  if (['ground8', 'rra-ground-serious-arrears'].includes(data.ground)) {
+    if (data.ground === 'rra-ground-serious-arrears' && noticeDate && !isPostCommencement) {
       errors.push(
         'The revised Ground 8 threshold applies to notices served on or after 1 May 2026.'
       );
     }
-    if (!data.rentArrearsMonthsAtNotice || data.rentArrearsMonthsAtNotice < 3) {
-      errors.push(
-        `Ground 8 requires at least 3 months rent arrears at the notice date. ${data.rentArrearsMonthsAtNotice || 0} month(s) provided.`
-      );
-    }
-    if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
-      errors.push(
-        'Ground 8 also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.'
-      );
-    }
-    return { valid: errors.length === 0, errors };
+    checkRentArrears(data, isPostCommencement, errors);
+    return { valid: errors.length === 0, errors, warnings };
   }
 
   // RRA grounds: landlord sale or move-in
@@ -434,30 +562,11 @@ function validateSection8(data) {
     return { valid: errors.length === 0, errors };
   }
 
-  // Pre-RRA grounds
-  if (data.ground === 'ground8' || data.ground === 'ground10') {
-    const threshold =
-      data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)
-        ? 3
-        : data.ground === 'ground8'
-          ? 2
-          : 0;
-    if (
-      data.rentArrearsMonths === undefined ||
-      data.rentArrearsMonths < threshold ||
-      (data.ground === 'ground10' && data.rentArrearsMonths <= 0)
-    ) {
-      errors.push(
-        `${ground.id} requires at least ${threshold} month(s) of rent arrears at time of notice`
-      );
-    }
-    if (data.ground === 'ground8' && noticeDate >= parseLocalDate(RRA_COMMENCEMENT)) {
-      if (!data.rentArrearsMonthsAtHearing || data.rentArrearsMonthsAtHearing < 3) {
-        errors.push(
-          'Ground 8 under the revised law also requires at least 3 months rent arrears at the hearing. This tool cannot determine the hearing-date position in advance.'
-        );
-      }
-    }
+  if (
+    data.ground === 'ground10' &&
+    (!Number.isFinite(data.rentArrearsMonths) || data.rentArrearsMonths <= 0)
+  ) {
+    errors.push('Ground 10 requires unpaid rent; confirm the position at service and hearing.');
   }
   if (data.ground === 'ground12' && !data.breachDescription) {
     errors.push('Description of the breach of tenancy obligation is required');
@@ -465,7 +574,25 @@ function validateSection8(data) {
   if (data.ground === 'ground14' && !data.nuisanceDescription) {
     errors.push('Description of the nuisance or anti-social behaviour is required');
   }
-  return { valid: errors.length === 0, errors };
+  let earliestOrderDate;
+  if (data.ground === 'ground14' && isPostCommencement) {
+    const date = new Date(noticeDate);
+    date.setUTCDate(date.getUTCDate() + 14);
+    earliestOrderDate = toLocalDateString(date);
+    warnings.push(
+      `Proceedings may start immediately after service; this is not immediate eviction. Where only Grounds 7A and/or 14 are established, a possession order cannot take effect before ${earliestOrderDate}. Court-dispensed notice and mixed-ground cases need specialist review.`
+    );
+    if (
+      data.orderEffectiveDate &&
+      parseLocalDate(data.orderEffectiveDate) &&
+      data.orderEffectiveDate < earliestOrderDate
+    ) {
+      errors.push(
+        `The possession order cannot take effect before ${earliestOrderDate} on this Ground 14-only basis.`
+      );
+    }
+  }
+  return { valid: errors.length === 0, errors, warnings, earliestOrderDate };
 }
 
 // ---------------------------------------------------------------------------
@@ -481,7 +608,7 @@ const NOTICE_TYPE_MAP = {
   'section8-ground14': 'Section 8 (Ground 14)',
   'rra-ground-landlord-sale': 'RRA Ground — Landlord Intends to Sell',
   'rra-ground-landlord-move-in': 'RRA Ground — Landlord or Family Move In',
-  'rra-ground-serious-arrears': 'RRA Ground — Serious Rent Arrears (3+ months)'
+  'rra-ground-serious-arrears': 'RRA Ground — Serious Rent Arrears'
 };
 
 function generateChallengeText(data) {
@@ -922,19 +1049,30 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+function optionalNumber(value) {
+  return value === undefined || value === null || String(value).trim() === ''
+    ? undefined
+    : Number(value);
+}
+
 function toSection8ValidationData(data, ground) {
   return {
     ground,
+    tenancyType: data.tenancyType,
     noticeServedDate: data.noticeServedDate,
     possessionDate: data.possessionDate,
+    orderEffectiveDate: data.orderEffectiveDate,
+    claimRequestedDate: data.claimRequestedDate,
     tenancyStartDate: data.tenancyStartDate,
     noticeForm: data.noticeForm,
     serviceMethod: data.serviceMethod,
-    rentArrearsMonths: data.rentArrearsMonths ? Number(data.rentArrearsMonths) : 0,
-    rentArrearsMonthsAtNotice: data.rentArrearsMonths ? Number(data.rentArrearsMonths) : 0,
-    rentArrearsMonthsAtHearing: data.rentArrearsMonthsAtHearing
-      ? Number(data.rentArrearsMonthsAtHearing)
-      : 0,
+    rentFrequency: data.rentFrequency,
+    rentAmount: optionalNumber(data.rentAmount),
+    arrearsAmountAtNotice: optionalNumber(data.arrearsAmountAtNotice),
+    arrearsAmountAtHearing: optionalNumber(data.arrearsAmountAtHearing),
+    qualifyingUcArrearsAtNotice: optionalNumber(data.qualifyingUcArrearsAtNotice),
+    qualifyingUcArrearsAtHearing: optionalNumber(data.qualifyingUcArrearsAtHearing),
+    rentArrearsMonths: optionalNumber(data.rentArrearsMonths),
     landlordIntentionEvidence: data.landlordIntentionEvidence?.trim(),
     breachDescription: data.breachDescription,
     nuisanceDescription: data.nuisanceDescription
@@ -1103,11 +1241,42 @@ export {
   BUSINESS_TENANCY_SOURCES,
   validateBusinessTenancyNotice,
   initBusinessTenancyUI,
-  toSection8ValidationData
+  toSection8ValidationData,
+  parseLocalDate,
+  toLocalDateString
 };
 
 
 // ===== App logic =====
+function initTheme(toggleSelector = '#theme-toggle') {
+  let stored = null;
+  try {
+    stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    // Storage may be unavailable; the theme still works for this session.
+  }
+  const toggle = document.querySelector(toggleSelector);
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  let theme = resolveInitialTheme({ stored, prefersDark });
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', String(theme === 'dark'));
+      toggle.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
+    }
+  }
+  applyTheme();
+  toggle?.addEventListener('click', () => {
+    theme = nextTheme(theme);
+    applyTheme();
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Keep the applied theme even when storage is unavailable.
+    }
+  });
+}
+
 const STORAGE_KEY = 'open-access-uk:eviction-notice-validator:validations';
 const FORM_KEY = 'open-access-uk:eviction-notice-validator:form-draft';
 
@@ -1123,83 +1292,9 @@ const section21TransitionOptions = document.querySelector('#section21-transition
 const section21PostAbolition = document.querySelector('#section21-post-abolition');
 const landlordIntentionOptions = document.querySelector('#landlord-intention-options');
 const seriousArrearsOptions = document.querySelector('#serious-arrears-options');
+const ground10ArrearsOptions = document.querySelector('#ground10-arrears-options');
+const ground14OrderOptions = document.querySelector('#ground14-order-options');
 let activeId = null;
-
-function selectWorkflow(workflow) {
-  const isBusiness = workflow === 'business';
-  if (businessPanel) businessPanel.hidden = !isBusiness;
-  if (residentialPanel) residentialPanel.hidden = isBusiness;
-  businessTab?.setAttribute('aria-selected', String(isBusiness));
-  residentialTab?.setAttribute('aria-selected', String(!isBusiness));
-  businessTab?.setAttribute('tabindex', isBusiness ? '0' : '-1');
-  residentialTab?.setAttribute('tabindex', isBusiness ? '-1' : '0');
-}
-
-function updateBusinessFields() {
-  const type = businessForm?.elements.namedItem('noticeType')?.value;
-  const __app_is25 = type === 'section25';
-  const is26 = type === 'section26';
-  const opposition = businessForm?.elements.namedItem('opposition')?.value === 'opposed';
-  const responseOpposes = businessForm?.elements.namedItem('landlordResponse')?.value === 'opposes';
-  if (section25Fields) section25Fields.hidden = !__app_is25;
-  if (section26Fields) section26Fields.hidden = !is26;
-  if (oppositionFields) oppositionFields.hidden = !(__app_is25 && opposition) && !(is26 && responseOpposes);
-  const termination = businessForm?.elements.namedItem('terminationDate');
-  const newTenancy = businessForm?.elements.namedItem('newTenancyDate');
-  const terms = businessForm?.elements.namedItem('proposedTerms');
-  const oppositionSelect = businessForm?.elements.namedItem('opposition');
-  const response = businessForm?.elements.namedItem('landlordResponse');
-  if (termination) termination.required = __app_is25;
-  if (oppositionSelect) oppositionSelect.required = __app_is25;
-  if (newTenancy) newTenancy.required = is26;
-  if (terms) terms.required = is26;
-  if (response) response.required = is26;
-}
-
-function renderBusinessResult(result) {
-  const heading = document.createElement('p');
-  heading.textContent = result.valid
-    ? 'No issues found in the limited fields checked. This is not confirmation of validity.'
-    : `${result.errors.length} item(s) need review.`;
-  const list = document.createElement('ul');
-  for (const message of [...result.errors, ...result.warnings]) {
-    const item = document.createElement('li');
-    item.textContent = message;
-    list.append(item);
-  }
-  businessResult?.replaceChildren(heading, list);
-}
-
-businessTab?.addEventListener('click', () => selectWorkflow('business'));
-residentialTab?.addEventListener('click', () => selectWorkflow('residential'));
-for (const [button, workflow] of [[businessTab, 'business'], [residentialTab, 'residential']]) {
-  button?.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      const next = workflow === 'business' ? residentialTab : businessTab;
-      selectWorkflow(workflow === 'business' ? 'residential' : 'business');
-      next?.focus();
-    }
-  });
-}
-businessForm?.addEventListener('change', updateBusinessFields);
-businessForm?.addEventListener('input', updateBusinessFields);
-businessForm?.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const data = Object.fromEntries(new FormData(businessForm).entries());
-  const result = validateBusinessTenancyNotice(data);
-  renderBusinessResult(result);
-  businessStatus.textContent = result.valid
-    ? 'Checklist complete. Verify the notice against the current prescribed form and obtain legal advice as needed.'
-    : 'Some details need review. This checklist does not determine legal validity.';
-});
-businessForm?.addEventListener('reset', () => {
-  queueMicrotask(() => {
-    updateBusinessFields();
-    businessResult.textContent = 'Complete the form to see date and completeness checks.';
-    businessStatus.textContent = 'Business tenancy form cleared.';
-  });
-});
 
 function loadAll() {
   return parseEviction(localStorage.getItem(STORAGE_KEY));
@@ -1337,8 +1432,17 @@ function renderDetail(record) {
     ['Landlord', record.landlordName || 'Not specified'],
     ['Property', record.propertyAddress || 'Not specified'],
     ['Notice served', record.noticeServedDate || 'Not recorded'],
-    ['Required possession date', record.possessionDate || 'Not recorded'],
-    ['Section 21 claim issued', record.proceedingsIssuedDate || 'Not recorded'],
+    ['Notice proceedings date', record.possessionDate || 'Not recorded'],
+    ['Claim issue requested', record.claimRequestedDate || 'Not recorded'],
+    ['Historical court issue date (not the request date)', record.proceedingsIssuedDate || 'Not recorded'],
+    ['Tenancy category', record.tenancyType || 'Not recorded'],
+    ['Order effective date entered', record.orderEffectiveDate || 'Not recorded'],
+    ['Earliest order effective date (preliminary)', record.result?.earliestOrderDate || 'Not calculated'],
+    ['Rent frequency', record.rentFrequency || 'Not recorded'],
+    ...['rentAmount', 'arrearsAmountAtNotice', 'arrearsAmountAtHearing', 'qualifyingUcArrearsAtNotice', 'qualifyingUcArrearsAtHearing'].map((key, index) => [
+      ['Rent per period', 'Unpaid rent at notice', 'Unpaid rent at hearing', 'Qualifying UC arrears at notice', 'Qualifying UC arrears at hearing'][index],
+      record[key] !== undefined && record[key] !== '' ? `£${record[key]}` : 'Not recorded'
+    ]),
     ['Tenancy started', record.tenancyStartDate || 'Not recorded'],
     ['Landlord intention evidence entered', record.landlordIntentionEvidence || 'Not recorded'],
     ['Deposit amount', record.depositAmount ? `£${record.depositAmount}` : 'Not specified'],
@@ -1364,13 +1468,24 @@ function renderDetail(record) {
   issueList.className = `issue-list${isValid ? ' valid' : ''}`;
   const issues =
     record.result?.errors ||
-    (isValid ? ['Notice meets all legal requirements'] : ['No validation data available']);
+    (isValid ? ['No listed issues found in this limited checklist.'] : ['No validation data available']);
   for (const issue of issues) {
     const li = document.createElement('li');
     li.textContent = issue;
     issueList.append(li);
   }
   issuesSection.append(issueList);
+  const warningsSection = document.createElement('section');
+  const warningsHeading = document.createElement('h3');
+  warningsHeading.textContent = 'Important limitations and next steps';
+  const warningsList = document.createElement('ul');
+  for (const warning of record.result?.warnings || []) {
+    const item = document.createElement('li');
+    item.textContent = warning;
+    warningsList.append(item);
+  }
+  warningsSection.append(warningsHeading, warningsList);
+  warningsSection.hidden = !record.result?.warnings?.length;
 
   const timelineSection = document.createElement('section');
   const timelineHeading = document.createElement('h3');
@@ -1429,7 +1544,7 @@ function renderDetail(record) {
   printBtn.addEventListener('click', () => window.print());
 
   actions.append(copyChallenge, downloadChallenge, printBtn);
-  detailContent.append(header, grid, issuesSection, timelineSection, actions);
+  detailContent.append(header, grid, issuesSection, warningsSection, timelineSection, actions);
 }
 
 function updateNoticeType() {
@@ -1444,8 +1559,10 @@ function updateNoticeType() {
   if (section8Options) section8Options.hidden = isS21;
   if (landlordIntentionOptions) landlordIntentionOptions.hidden = !isSaleOrMoveIn;
   if (seriousArrearsOptions) seriousArrearsOptions.hidden = !isSeriousArrears;
+  if (ground10ArrearsOptions) ground10ArrearsOptions.hidden = noticeType !== 'section8-ground10';
+  if (ground14OrderOptions) ground14OrderOptions.hidden = noticeType !== 'section8-ground14';
   if (section21TransitionOptions) {
-    section21TransitionOptions.hidden = !isPreAbolitionS21;
+    section21TransitionOptions.hidden = !(servedDate && servedDate < '2026-05-01');
   }
   if (section21PostAbolition) section21PostAbolition.hidden = !isPostAbolitionS21;
 }
@@ -1489,7 +1606,10 @@ function restoreFormDraft() {
     const data = JSON.parse(raw);
     for (const [name, value] of Object.entries(data)) {
       const field = form.elements.namedItem(name);
-      if (field && value) field.value = value;
+      if (field && value !== undefined && value !== null) {
+        if (field.type === 'checkbox') field.checked = value === field.value;
+        else field.value = value;
+      }
     }
     updateNoticeType();
   } catch {
@@ -1542,13 +1662,14 @@ function handleValidate(event) {
 
   if (noticeType === 'section21') {
     result = validateSection21({
+      tenancyType: data.tenancyType,
       noticeServedDate: data.noticeServedDate,
       prescribedForm: data.prescribedForm === 'true',
       depositProtected: data.depositProtected === 'true',
       hmoLicense: data.hmoLicense === 'true' ? true : undefined,
       epcProvided: data.epcProvided === 'true',
       gasSafetyCertificate: data.gasSafetyCertificate === 'true',
-      proceedingsIssuedDate: data.proceedingsIssuedDate,
+      claimRequestedDate: data.claimRequestedDate,
       possessionDate: data.possessionDate
     });
   } else {
@@ -1566,11 +1687,18 @@ function handleValidate(event) {
     noticeDate: data.noticeDate,
     noticeServedDate: data.noticeServedDate,
     possessionDate: data.possessionDate,
-    proceedingsIssuedDate: data.proceedingsIssuedDate,
+    claimRequestedDate: data.claimRequestedDate,
     tenancyStartDate: data.tenancyStartDate,
     landlordIntentionEvidence: data.landlordIntentionEvidence,
-    rentArrearsMonthsAtNotice: data.rentArrearsMonths,
-    rentArrearsMonthsAtHearing: data.rentArrearsMonthsAtHearing,
+    tenancyType: data.tenancyType,
+    rentFrequency: data.rentFrequency,
+    rentAmount: data.rentAmount,
+    arrearsAmountAtNotice: data.arrearsAmountAtNotice,
+    arrearsAmountAtHearing: data.arrearsAmountAtHearing,
+    qualifyingUcArrearsAtNotice: data.qualifyingUcArrearsAtNotice,
+    qualifyingUcArrearsAtHearing: data.qualifyingUcArrearsAtHearing,
+    rentArrearsMonths: data.rentArrearsMonths,
+    orderEffectiveDate: data.orderEffectiveDate,
     depositAmount: data.depositAmount,
     depositScheme: data.depositScheme,
     groundsDetails: data.groundsDetails,

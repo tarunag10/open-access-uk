@@ -4,7 +4,7 @@
  * not a determination of statutory validity.
  */
 
-import { parseLocalDate, toLocalDateString } from '../deadlines/index.mjs';
+import { parseLocalDate, toLocalDateString } from './dates.mjs';
 
 export const BUSINESS_TENANCY_SOURCES = {
   guidance:
